@@ -268,5 +268,28 @@ platforms = os.detect_platforms()</code></pre>
         </a>
       </div>
     </main>
+
+    <script>
+      // Scroll reveal animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+      
+      document.querySelectorAll('.reveal, .content-section').forEach(el => {
+        observer.observe(el);
+      });
+
+      // Sidebar active state based on current page
+      const currentPage = window.location.pathname.split('/').pop();
+      document.querySelectorAll('.sidebar-link').forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+          link.classList.add('active');
+        }
+      });
+    </script>
   </body>
 </html>
