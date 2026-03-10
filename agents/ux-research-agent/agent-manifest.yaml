@@ -65,3 +65,35 @@ success-criteria:
   - "Pain points are specific not vague"
   - "Journey maps reveal opportunities"
   - "Designers know what to prioritize"
+
+# Agent Card — machine-readable metadata for discovery and routing
+card:
+  capabilities:
+    streaming: false
+    multi-turn: true
+    file-output: true
+    self-evaluation: false
+    context-aware: true
+  skills-provided:
+    - id: user-persona-creation
+      name: User Persona Creation
+      description: "Creates 3-5 data-driven personas based on research and behavioral patterns"
+      tags: [ux-research, personas, user-centered]
+    - id: journey-mapping
+      name: Journey Mapping
+      description: "Maps user journeys with emotions, pain points, and opportunity identification"
+      tags: [ux-research, journey-maps, user-flows]
+    - id: competitive-analysis
+      name: Competitive Analysis
+      description: "Analyzes 3-5 competitors for insights, patterns, and differentiation opportunities"
+      tags: [ux-research, competitive, market-analysis]
+  input-modes:
+    - "text/plain"
+    - "text/markdown"
+  output-modes:
+    - "text/markdown"
+  cost-tier: standard
+  avg-tokens:
+    input: 2000
+    output: 10000
+  quality-metrics: null

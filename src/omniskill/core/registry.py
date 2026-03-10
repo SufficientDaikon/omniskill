@@ -34,12 +34,25 @@ class Skill:
 
 
 @dataclass
+class AgentCard:
+    """Machine-readable metadata card for an agent."""
+    capabilities: dict[str, bool] = field(default_factory=dict)
+    skills_provided: list[dict] = field(default_factory=list)
+    input_modes: list[str] = field(default_factory=list)
+    output_modes: list[str] = field(default_factory=list)
+    cost_tier: str = "standard"
+    avg_tokens: dict[str, int] = field(default_factory=dict)
+    quality_metrics: dict | None = None
+
+
+@dataclass
 class Agent:
     name: str
     path: str
     version: str = "0.0.0"
     role: str = ""
     description: str = ""
+    card: AgentCard | None = None
     _manifest: dict | None = field(default=None, repr=False)
 
 
@@ -291,6 +304,18 @@ class Registry:
         agent.version = agent._manifest.get("version", agent.version)
         agent.role = agent._manifest.get("role", agent.role)
         agent.description = agent._manifest.get("description", agent.description)
+        # Parse card section
+        card_data = agent._manifest.get("card")
+        if card_data and isinstance(card_data, dict):
+            agent.card = AgentCard(
+                capabilities=card_data.get("capabilities", {}),
+                skills_provided=card_data.get("skills-provided", []),
+                input_modes=card_data.get("input-modes", []),
+                output_modes=card_data.get("output-modes", []),
+                cost_tier=card_data.get("cost-tier", "standard"),
+                avg_tokens=card_data.get("avg-tokens", {}),
+                quality_metrics=card_data.get("quality-metrics"),
+            )
         return agent._manifest
 
     def load_bundle_manifest(self, bundle: Bundle) -> dict:

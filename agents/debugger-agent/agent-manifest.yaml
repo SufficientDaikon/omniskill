@@ -68,3 +68,36 @@ success-criteria:
   - "Solution addresses cause not symptom"
   - "Stakeholder understands WHY"
   - "Regression test prevents recurrence"
+
+# Agent Card — machine-readable metadata for discovery and routing
+card:
+  capabilities:
+    streaming: false
+    multi-turn: true
+    file-output: true
+    self-evaluation: true
+    context-aware: true
+  skills-provided:
+    - id: root-cause-analysis
+      name: Root Cause Analysis
+      description: "Systematically identifies root causes through a four-phase investigation framework"
+      tags: [debugging, root-cause, investigation]
+    - id: hypothesis-driven-investigation
+      name: Hypothesis-Driven Investigation
+      description: "Forms and tests hypotheses with evidence before proposing solutions"
+      tags: [debugging, hypothesis, evidence]
+    - id: regression-test-definition
+      name: Regression Test Definition
+      description: "Defines regression tests to prevent recurrence of identified bugs"
+      tags: [testing, regression, prevention]
+  input-modes:
+    - "text/plain"
+    - "text/markdown"
+    - "application/x-source-code"
+  output-modes:
+    - "text/markdown"
+  cost-tier: standard
+  avg-tokens:
+    input: 4000
+    output: 6000
+  quality-metrics: null

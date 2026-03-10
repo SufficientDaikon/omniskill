@@ -65,3 +65,36 @@ success-criteria:
   - "Developer knows what to fix"
 
 read-only: true
+
+# Agent Card — machine-readable metadata for discovery and routing
+card:
+  capabilities:
+    streaming: false
+    multi-turn: false
+    file-output: true
+    self-evaluation: false
+    context-aware: true
+  skills-provided:
+    - id: spec-compliance-verification
+      name: Spec Compliance Verification
+      description: "Verifies implementation completeness against specification requirements"
+      tags: [review, compliance, verification]
+    - id: gap-identification
+      name: Gap Identification
+      description: "Identifies missing features, edge cases, and deviations from spec"
+      tags: [review, gap-analysis, quality]
+    - id: compliance-reporting
+      name: Compliance Reporting
+      description: "Generates detailed HTML compliance reports with scores and findings"
+      tags: [reporting, html, scoring]
+  input-modes:
+    - "text/markdown"
+    - "application/x-source-code"
+  output-modes:
+    - "text/html"
+    - "application/json"
+  cost-tier: standard
+  avg-tokens:
+    input: 10000
+    output: 6000
+  quality-metrics: null

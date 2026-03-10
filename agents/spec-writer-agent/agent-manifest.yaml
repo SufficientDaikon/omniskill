@@ -58,3 +58,35 @@ success-criteria:
   - "Reviewer can verify compliance objectively"
   - "Zero ambiguous requirements"
   - "100% testable acceptance criteria"
+
+# Agent Card — machine-readable metadata for discovery and routing
+card:
+  capabilities:
+    streaming: false
+    multi-turn: true
+    file-output: true
+    self-evaluation: true
+    context-aware: true
+  skills-provided:
+    - id: requirements-engineering
+      name: Requirements Engineering
+      description: "Transforms ambiguous ideas into crystal-clear, testable specifications"
+      tags: [specification, requirements, acceptance-criteria]
+    - id: user-story-writing
+      name: User Story Writing
+      description: "Creates prioritized user stories with Given/When/Then acceptance scenarios"
+      tags: [user-stories, agile, acceptance-criteria]
+    - id: edge-case-analysis
+      name: Edge Case Analysis
+      description: "Identifies boundary conditions, error scenarios, and failure modes"
+      tags: [edge-cases, error-handling, validation]
+  input-modes:
+    - "text/plain"
+    - "text/markdown"
+  output-modes:
+    - "text/markdown"
+  cost-tier: standard
+  avg-tokens:
+    input: 2000
+    output: 8000
+  quality-metrics: null

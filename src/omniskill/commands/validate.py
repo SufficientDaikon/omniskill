@@ -64,6 +64,113 @@ def _validate_field(field_name: str, value, schema: dict) -> list[str]:
     return errors
 
 
+_ALLOWED_COST_TIERS = {"fast", "standard", "premium"}
+_REQUIRED_CAPABILITIES = {"streaming", "multi-turn", "file-output", "self-evaluation", "context-aware"}
+
+
+def _validate_card_section(agent_name: str, card_data: dict) -> list[str]:
+    """Validate the card: section of an agent manifest. Returns list of error strings."""
+    errors: list[str] = []
+
+    # Capabilities
+    caps = card_data.get("capabilities")
+    if caps is None:
+        errors.append(f"card.capabilities: required field missing")
+    elif not isinstance(caps, dict):
+        errors.append(f"card.capabilities: expected object, got {type(caps).__name__}")
+    else:
+        for cap_name in _REQUIRED_CAPABILITIES:
+            if cap_name not in caps:
+                errors.append(f"card.capabilities.{cap_name}: required field missing")
+            elif not isinstance(caps[cap_name], bool):
+                errors.append(f"card.capabilities.{cap_name}: expected boolean, got {type(caps[cap_name]).__name__}")
+
+    # Skills provided
+    skills = card_data.get("skills-provided")
+    if skills is None:
+        errors.append(f"card.skills-provided: required field missing")
+    elif not isinstance(skills, list):
+        errors.append(f"card.skills-provided: expected list, got {type(skills).__name__}")
+    elif len(skills) < 1:
+        errors.append(f"card.skills-provided: 0 items < minimum 1")
+    else:
+        for i, skill in enumerate(skills):
+            if not isinstance(skill, dict):
+                errors.append(f"card.skills-provided[{i}]: expected object, got {type(skill).__name__}")
+                continue
+            for req_field in ("id", "name", "description"):
+                if req_field not in skill:
+                    errors.append(f"card.skills-provided[{i}].{req_field}: required field missing")
+
+    # Input modes
+    in_modes = card_data.get("input-modes")
+    if in_modes is None:
+        errors.append(f"card.input-modes: required field missing")
+    elif not isinstance(in_modes, list):
+        errors.append(f"card.input-modes: expected list, got {type(in_modes).__name__}")
+    elif len(in_modes) < 1:
+        errors.append(f"card.input-modes: 0 items < minimum 1")
+
+    # Output modes
+    out_modes = card_data.get("output-modes")
+    if out_modes is None:
+        errors.append(f"card.output-modes: required field missing")
+    elif not isinstance(out_modes, list):
+        errors.append(f"card.output-modes: expected list, got {type(out_modes).__name__}")
+    elif len(out_modes) < 1:
+        errors.append(f"card.output-modes: 0 items < minimum 1")
+
+    # Cost tier
+    cost_tier = card_data.get("cost-tier")
+    if cost_tier is None:
+        errors.append(f"card.cost-tier: required field missing")
+    elif cost_tier not in _ALLOWED_COST_TIERS:
+        errors.append(f"card.cost-tier: '{cost_tier}' not in allowed values [fast, standard, premium]")
+
+    # Avg tokens
+    avg_tokens = card_data.get("avg-tokens")
+    if avg_tokens is None:
+        errors.append(f"card.avg-tokens: required field missing")
+    elif not isinstance(avg_tokens, dict):
+        errors.append(f"card.avg-tokens: expected object, got {type(avg_tokens).__name__}")
+    else:
+        for token_field in ("input", "output"):
+            val = avg_tokens.get(token_field)
+            if val is None:
+                errors.append(f"card.avg-tokens.{token_field}: required field missing")
+            elif isinstance(val, bool):
+                errors.append(f"card.avg-tokens.{token_field}: expected integer, got boolean")
+            elif isinstance(val, float):
+                errors.append(f"card.avg-tokens.{token_field}: expected integer, got float")
+            elif not isinstance(val, int):
+                errors.append(f"card.avg-tokens.{token_field}: expected integer, got {type(val).__name__}")
+            elif val < 0:
+                errors.append(f"card.avg-tokens.{token_field}: must be ≥ 0")
+
+    # Quality metrics (optional)
+    qm = card_data.get("quality-metrics")
+    if qm is not None and isinstance(qm, dict):
+        for float_field in ("completeness", "last-eval-score"):
+            if float_field in qm:
+                fv = qm[float_field]
+                if not isinstance(fv, (int, float)):
+                    errors.append(f"card.quality-metrics.{float_field}: expected float, got {type(fv).__name__}")
+                elif fv < 0.0:
+                    errors.append(f"card.quality-metrics.{float_field}: {fv} below minimum 0.0")
+                elif fv > 1.0:
+                    errors.append(f"card.quality-metrics.{float_field}: {fv} exceeds maximum 1.0")
+        if "eval-count" in qm:
+            ec = qm["eval-count"]
+            if isinstance(ec, bool):
+                errors.append(f"card.quality-metrics.eval-count: expected integer, got boolean")
+            elif not isinstance(ec, int):
+                errors.append(f"card.quality-metrics.eval-count: expected integer, got {type(ec).__name__}")
+            elif ec < 0:
+                errors.append(f"card.quality-metrics.eval-count: must be ≥ 0")
+
+    return errors
+
+
 def _validate_skill(skill_dir: Path, root: Path) -> dict:
     """Validate a single skill directory. Returns a result dict."""
     result = {"path": str(skill_dir.relative_to(root)), "errors": [], "warnings": [], "status": "passed"}
@@ -167,6 +274,15 @@ def _validate_agent(agent_dir: Path, root: Path) -> dict:
                 result["errors"].append(f"Required field missing: {field_name}")
             else:
                 result["errors"].extend(_validate_field(field_name, manifest[field_name], field_schema))
+
+    # Card validation (FR-AC-033 through FR-AC-035)
+    card_data = manifest.get("card")
+    if card_data is not None and isinstance(card_data, dict) and card_data:
+        result["errors"].extend(_validate_card_section(agent_dir.name, card_data))
+    elif card_data is not None and (not isinstance(card_data, dict) or not card_data):
+        result["warnings"].append("card section is empty or null (treated as absent)")
+    else:
+        result["warnings"].append("card section missing (recommended)")
 
     if not agent_md_path.exists():
         result["errors"].append("AGENT.md not found")
@@ -289,6 +405,7 @@ def _validate_synapse(synapse_dir: Path, root: Path) -> dict:
 def validate_cmd(
     path: Optional[str] = typer.Argument(None, help="Path to a skill/agent/bundle directory to validate."),
     check_llms_txt: bool = typer.Option(False, "--check-llms-txt", help="Check if llms.txt files are up to date."),
+    check_agent_cards: bool = typer.Option(False, "--check-agent-cards", help="Check if agent-cards.json is up to date."),
 ) -> None:
     """Validate manifests, SKILL.md / AGENT.md, and dependency references."""
 
@@ -427,6 +544,35 @@ def validate_cmd(
                 else:
                     if not is_json():
                         console.print(f"  [yellow]⚠[/yellow] {filename} is stale — regenerate with: omniskill generate llms-txt")
+
+        if not is_json():
+            console.print()
+
+    # ── agent-cards.json freshness check (FR-AC-036) ────────────
+    if check_agent_cards:
+        from omniskill.core.agent_cards import generate_agent_cards
+
+        if not is_json():
+            console.print()
+            console.rule("[bold]agent-cards.json Freshness Check[/bold]")
+
+        file_path = root / "agent-cards.json"
+        if not file_path.exists():
+            if not is_json():
+                console.print(f"  [yellow]⚠[/yellow] agent-cards.json not found — generate with: omniskill generate agent-cards")
+        else:
+            expected = generate_agent_cards(root)
+            actual = file_path.read_text(encoding="utf-8")
+            # Ignore the "generated" timestamp when comparing
+            expected_cmp = re.sub(r'"generated":\s*"[^"]+"', '"generated": ""', expected)
+            actual_cmp = re.sub(r'"generated":\s*"[^"]+"', '"generated": ""', actual)
+
+            if expected_cmp == actual_cmp:
+                if not is_json():
+                    console.print(f"  [green]✓[/green] agent-cards.json is up to date")
+            else:
+                if not is_json():
+                    console.print(f"  [yellow]⚠[/yellow] agent-cards.json is stale — regenerate with: omniskill generate agent-cards")
 
         if not is_json():
             console.print()

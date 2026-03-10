@@ -52,3 +52,26 @@ output-contract:
 
 # Preferred model tier
 # model-preference: standard    # premium | standard | fast
+
+# Agent Card (recommended) — machine-readable metadata for discovery and routing
+# card:
+#   capabilities:
+#     streaming: false          # Supports streaming output
+#     multi-turn: false         # Supports multi-turn conversations
+#     file-output: false        # Produces file artifacts
+#     self-evaluation: false    # Validates own output quality
+#     context-aware: false      # Uses prior pipeline context
+#   skills-provided:
+#     - id: your-skill-id
+#       name: "Your Skill Name"
+#       description: "What this skill does"
+#       tags: [tag1, tag2]
+#   input-modes:
+#     - "text/plain"
+#   output-modes:
+#     - "text/markdown"
+#   cost-tier: standard          # fast | standard | premium
+#   avg-tokens:
+#     input: 2000
+#     output: 4000
+#   quality-metrics: null        # Populated by evaluation tools

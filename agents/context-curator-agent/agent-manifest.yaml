@@ -67,3 +67,41 @@ success-criteria:
   - "Pipeline state is recoverable from disk at any point"
   - "Recipient agent can begin work without requesting additional context"
   - "Dashboard accurately reflects current pipeline status"
+
+# Agent Card — machine-readable metadata for discovery and routing
+card:
+  capabilities:
+    streaming: false
+    multi-turn: true
+    file-output: true
+    self-evaluation: true
+    context-aware: true
+  skills-provided:
+    - id: context-summarization
+      name: Context Summarization
+      description: "Distills large phase artifacts into concise, role-targeted context briefs"
+      tags: [context, summarization, compression]
+    - id: pipeline-state-tracking
+      name: Pipeline State Tracking
+      description: "Tracks and persists pipeline state across agent transitions"
+      tags: [pipeline, state, orchestration]
+    - id: handoff-validation
+      name: Handoff Validation
+      description: "Validates artifacts exist and context is complete before agent handoffs"
+      tags: [handoff, validation, pipeline]
+    - id: context-budget-management
+      name: Context Budget Management
+      description: "Manages token budgets to ensure context fits recipient agent's window"
+      tags: [tokens, budget, optimization]
+  input-modes:
+    - "text/markdown"
+    - "application/json"
+  output-modes:
+    - "text/markdown"
+    - "application/json"
+    - "text/html"
+  cost-tier: fast
+  avg-tokens:
+    input: 8000
+    output: 4000
+  quality-metrics: null

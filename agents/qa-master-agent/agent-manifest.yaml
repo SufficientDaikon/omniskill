@@ -71,3 +71,37 @@ success-criteria:
   - "Tests are reliable and maintainable"
   - "Bugs found early"
   - "Quality verdict respected"
+
+# Agent Card — machine-readable metadata for discovery and routing
+card:
+  capabilities:
+    streaming: false
+    multi-turn: true
+    file-output: true
+    self-evaluation: true
+    context-aware: true
+  skills-provided:
+    - id: e2e-test-implementation
+      name: E2E Test Implementation
+      description: "Implements end-to-end tests using Playwright or Cypress with reliable selectors"
+      tags: [testing, e2e, playwright, cypress]
+    - id: test-plan-creation
+      name: Test Plan Creation
+      description: "Creates comprehensive test plans covering happy paths, edge cases, and error scenarios"
+      tags: [testing, planning, test-strategy]
+    - id: bug-reporting
+      name: Bug Reporting
+      description: "Documents bugs with reproduction steps, evidence, and severity classification"
+      tags: [bugs, reporting, quality]
+  input-modes:
+    - "text/markdown"
+    - "application/x-source-code"
+  output-modes:
+    - "text/markdown"
+    - "application/x-source-code"
+    - "text/html"
+  cost-tier: standard
+  avg-tokens:
+    input: 5000
+    output: 10000
+  quality-metrics: null

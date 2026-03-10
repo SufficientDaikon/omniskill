@@ -76,6 +76,7 @@ OMNISKILL is a **universal framework** for AI coding assistant skills, agents, a
 | 🔄 **Self-Improving**   | Uses its own pipelines to improve its own skills                        |
 | 🩺 **Admin Dashboard**  | Comprehensive health checks, stats, and diagnostics via CLI             |
 | 📄 **llms.txt**         | Machine-readable framework index for AI assistants — [llms.txt convention](https://llmstxt.org/) |
+| 🃏 **Agent Cards**      | Machine-readable agent metadata — capabilities, cost tiers, quality metrics, and skills via `omniskill cards` |
 
 ---
 
@@ -214,6 +215,19 @@ agents/my-agent/
 ```
 
 See [`agents/_template/`](agents/_template/) for the full template.
+
+### Agent Cards
+
+Every agent carries a machine-readable **Agent Card** describing its capabilities, input/output modes, cost tier, and quality metrics. Run `omniskill cards` to view them, or consume the auto-generated `agent-cards.json` programmatically.
+
+```bash
+omniskill cards                      # Rich table of all agents
+omniskill cards spec-writer-agent    # Detailed card for one agent
+omniskill cards --json               # JSON export
+omniskill generate agent-cards       # Generate agent-cards.json
+```
+
+> 📖 Full docs: [docs/agent-cards.md](docs/agent-cards.md)
 
 ---
 

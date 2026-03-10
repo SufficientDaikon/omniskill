@@ -85,6 +85,40 @@ def doctor_cmd() -> None:
             "remediation": "Check omniskill.yaml for syntax errors.",
         })
 
+    # ── Agent card checks (FR-AC-037 through FR-AC-039) ─────────
+    agents_with_cards = 0
+    if registry_ok:
+        for agent in reg.agents:
+            reg.load_agent_manifest(agent)
+            if agent.card is not None:
+                agents_with_cards += 1
+        missing_cards = agents_count - agents_with_cards
+        if missing_cards > 0:
+            issues.append({
+                "severity": "warning",
+                "message": f"{missing_cards} agent(s) missing card section in manifest.",
+                "remediation": "Add card: section to agent-manifest.yaml. See: omniskill docs agent-cards",
+            })
+
+        # Check agent-cards.json staleness
+        agent_cards_path = reg.root / "agent-cards.json"
+        if agent_cards_path.exists():
+            try:
+                import re as _re
+                from omniskill.core.agent_cards import generate_agent_cards
+                expected = generate_agent_cards(reg.root, reg)
+                actual = agent_cards_path.read_text(encoding="utf-8")
+                expected_cmp = _re.sub(r'"generated":\s*"[^"]+"', '"generated": ""', expected)
+                actual_cmp = _re.sub(r'"generated":\s*"[^"]+"', '"generated": ""', actual)
+                if expected_cmp != actual_cmp:
+                    issues.append({
+                        "severity": "info",
+                        "message": "agent-cards.json is stale.",
+                        "remediation": "Regenerate with: omniskill generate agent-cards",
+                    })
+            except Exception:
+                pass  # Don't let card check break doctor
+
     # ── Platform detection (FR-024) ─────────────────────────────
     platforms = detect_platforms()
     detected = [p for p in platforms if p.detected]
@@ -142,6 +176,7 @@ def doctor_cmd() -> None:
                     "ok": registry_ok,
                     "skills": skills_count,
                     "agents": agents_count,
+                    "agents_with_cards": agents_with_cards,
                     "bundles": bundles_count,
                     "pipelines": pipelines_count,
                     "synapses": synapses_count,
@@ -193,12 +228,13 @@ def doctor_cmd() -> None:
 
     # Component inventory (FR-027)
     console.print("[bold]Component Inventory:[/bold]")
-    console.print(f"  Skills:    {skills_count}")
-    console.print(f"  Agents:    {agents_count}")
-    console.print(f"  Bundles:   {bundles_count}")
-    console.print(f"  Pipelines: {pipelines_count}")
-    console.print(f"  Synapses:  {synapses_count}")
-    console.print(f"  Installed: {total_installed} record(s)")
+    console.print(f"  Skills:      {skills_count}")
+    console.print(f"  Agents:      {agents_count}")
+    console.print(f"  Agent Cards: {agents_with_cards}/{agents_count}")
+    console.print(f"  Bundles:     {bundles_count}")
+    console.print(f"  Pipelines:   {pipelines_count}")
+    console.print(f"  Synapses:    {synapses_count}")
+    console.print(f"  Installed:   {total_installed} record(s)")
     console.print()
 
     # Issues (FR-025, FR-026)

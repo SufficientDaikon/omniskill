@@ -90,6 +90,43 @@ communication-style: "Structured progress reporting with phase indicators, factu
 
 model-preference: standard
 
+# Agent Card — machine-readable metadata for discovery and routing
+card:
+  capabilities:
+    streaming: false
+    multi-turn: false
+    file-output: true
+    self-evaluation: true
+    context-aware: true
+  skills-provided:
+    - id: static-code-analysis
+      name: Static Code Analysis
+      description: "Reverse-engineers codebase structure through 13 systematic analysis phases"
+      tags: [analysis, reverse-engineering, code]
+    - id: architecture-mapping
+      name: Architecture Mapping
+      description: "Maps project architecture, module boundaries, and dependency graphs"
+      tags: [architecture, mapping, dependencies]
+    - id: documentation-generation
+      name: Documentation Generation
+      description: "Generates 17+ interlinked markdown documents from codebase analysis"
+      tags: [documentation, generation, markdown]
+    - id: convention-extraction
+      name: Convention Extraction
+      description: "Extracts coding conventions, patterns, and style guides from existing code"
+      tags: [conventions, patterns, style-guide]
+  input-modes:
+    - "text/plain"
+    - "application/x-directory"
+  output-modes:
+    - "text/markdown"
+    - "application/json"
+  cost-tier: premium
+  avg-tokens:
+    input: 50000
+    output: 80000
+  quality-metrics: null
+
 success-criteria:
   - "Developer can understand project architecture within 2 hours of reading"
   - "Developer can submit a convention-following PR without asking maintainers"

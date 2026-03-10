@@ -139,3 +139,73 @@ def llms_txt_cmd(
 
     print_verbose(f"Generation time: {elapsed:.2f}s")
     console.print()
+
+
+@generate_app.command("agent-cards")
+def agent_cards_cmd(
+    output: Optional[str] = typer.Option(None, "--output", "-o", help="Output directory (default: repo root)."),
+) -> None:
+    """Generate agent-cards.json — machine-readable agent card index."""
+
+    from omniskill.core.agent_cards import write_agent_cards
+
+    # Resolve root
+    try:
+        root = get_omniskill_root()
+        reg = Registry(root=root)
+        reg.load()
+    except FileNotFoundError as exc:
+        print_error(str(exc))
+        raise typer.Exit(1)
+
+    # Resolve output dir
+    output_dir: Path | None = None
+    if output:
+        output_dir = Path(output)
+        if output_dir.exists() and output_dir.is_file():
+            print_error(f"Output path is a file, not a directory: {output_dir}")
+            raise typer.Exit(1)
+
+    # Verbose: announce
+    if not is_json():
+        print_verbose("Loading registry...")
+        for agent in sorted(reg.agents, key=lambda a: a.name):
+            print_verbose(f"Processing agent: {agent.name}")
+
+    start = time.time()
+
+    try:
+        result = write_agent_cards(root=root, output_dir=output_dir, registry=reg)
+    except PermissionError as exc:
+        print_error(f"Permission denied: {exc}")
+        raise typer.Exit(1)
+    except OSError as exc:
+        print_error(str(exc))
+        raise typer.Exit(1)
+
+    elapsed = time.time() - start
+
+    # JSON output mode
+    if is_json():
+        print_json(json_envelope(
+            command="generate agent-cards",
+            data={
+                "files_generated": [{"path": str(result["path"]), "size_bytes": result["size"]}],
+                "stats": {"agents": result["agent_count"]},
+            },
+        ))
+        return
+
+    # Rich output
+    console.print()
+    console.rule("[bold cyan]agent-cards.json Generation[/bold cyan]")
+    console.print()
+
+    size_kb = result["size"] / 1024
+    print_success(f"agent-cards.json  ({size_kb:.1f} KB) → {result['path']}")
+
+    console.print()
+    console.print(f"  🤖 Agents: [bold cyan]{result['agent_count']}[/bold cyan]")
+
+    print_verbose(f"Generation time: {elapsed:.2f}s")
+    console.print()

@@ -33,6 +33,9 @@ jobs:
       - name: Generate llms.txt
         run: python scripts/generate-llms-txt.py
 
+      - name: Generate agent-cards.json
+        run: python scripts/generate-agent-cards.py
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
@@ -46,6 +49,8 @@ jobs:
           # Copy llms.txt files
           cp llms.txt _site/
           cp llms-full.txt _site/
+          # Copy agent cards
+          cp agent-cards.json _site/
           # Add .nojekyll to prevent Jekyll processing
           touch _site/.nojekyll
 
