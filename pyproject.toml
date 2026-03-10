@@ -1,46 +1,27 @@
 [build-system]
 requires = ["hatchling"]
-build-backend = "hatchling.build"
+build-backend = "hatchling.backends"
 
 [project]
 name = "omniskill"
-version = "0.2.0"
-description = "Universal AI Agent & Skills Framework — CLI for managing skills, agents, bundles, and pipelines across AI coding platforms"
+version = "1.0.0"
+description = "Universal AI Agent & Skills Framework — 49 skills, 8 bundles, 7 agents, 5 pipelines"
 readme = "README.md"
-license = { text = "MIT" }
-requires-python = ">=3.10"
+license = {text = "MIT"}
+requires-python = ">=3.9"
 authors = [
-    { name = "tahaa" },
+    {name = "Ahmed Taha", email = "tahaa755@gmail.com"}
 ]
-keywords = ["ai", "skills", "agents", "cli", "omniskill", "copilot", "cursor", "claude"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Environment :: Console",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Topic :: Software Development :: Libraries :: Application Frameworks",
-    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Libraries",
 ]
-dependencies = [
-    "typer>=0.9.0",
-    "rich>=13.0",
-    "pyyaml>=6.0",
-    "platformdirs>=3.0",
-]
+keywords = ["ai", "agents", "skills", "copilot", "claude", "cursor", "windsurf"]
 
 [project.urls]
 Homepage = "https://github.com/SufficientDaikon/omniskill"
+Documentation = "https://sufficientdaikon.github.io/omniskill/"
 Repository = "https://github.com/SufficientDaikon/omniskill"
-Issues = "https://github.com/SufficientDaikon/omniskill/issues"
-
-[project.scripts]
-omniskill = "omniskill.cli:app"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/omniskill"]
