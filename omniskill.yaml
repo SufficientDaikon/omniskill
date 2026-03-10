@@ -256,6 +256,8 @@ agents:
     path: agents/qa-master-agent
   - name: context-curator-agent
     path: agents/context-curator-agent
+  - name: dissector-agent
+    path: agents/dissector-agent
 
 # All registered synapses
 synapses:

@@ -288,6 +288,7 @@ def _validate_synapse(synapse_dir: Path, root: Path) -> dict:
 
 def validate_cmd(
     path: Optional[str] = typer.Argument(None, help="Path to a skill/agent/bundle directory to validate."),
+    check_llms_txt: bool = typer.Option(False, "--check-llms-txt", help="Check if llms.txt files are up to date."),
 ) -> None:
     """Validate manifests, SKILL.md / AGENT.md, and dependency references."""
 
@@ -395,3 +396,37 @@ def validate_cmd(
     # FR-038: exit code 2 for validation failures
     if failed:
         raise typer.Exit(2)
+
+    # ── llms.txt freshness check (FR-043 through FR-048) ────────
+    if check_llms_txt:
+        from omniskill.core.llms_txt import generate_concise, generate_full
+
+        if not is_json():
+            console.print()
+            console.rule("[bold]llms.txt Freshness Check[/bold]")
+
+        for filename, gen_fn in [("llms.txt", generate_concise), ("llms-full.txt", generate_full)]:
+            file_path = root / filename
+            if not file_path.exists():
+                if not is_json():
+                    console.print(f"  [yellow]⚠[/yellow] {filename} not found — generate with: omniskill generate llms-txt")
+            else:
+                expected = gen_fn(root)
+                actual = file_path.read_text(encoding="utf-8")
+                # For llms-full.txt, ignore the Generated: date line
+                if filename == "llms-full.txt":
+                    expected_cmp = re.sub(r"^- Generated: .+$", "", expected, count=1, flags=re.MULTILINE)
+                    actual_cmp = re.sub(r"^- Generated: .+$", "", actual, count=1, flags=re.MULTILINE)
+                else:
+                    expected_cmp = expected
+                    actual_cmp = actual
+
+                if expected_cmp == actual_cmp:
+                    if not is_json():
+                        console.print(f"  [green]✓[/green] {filename} is up to date")
+                else:
+                    if not is_json():
+                        console.print(f"  [yellow]⚠[/yellow] {filename} is stale — regenerate with: omniskill generate llms-txt")
+
+        if not is_json():
+            console.print()

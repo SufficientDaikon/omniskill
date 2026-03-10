@@ -75,6 +75,7 @@ OMNISKILL is a **universal framework** for AI coding assistant skills, agents, a
 | 🧠 **Cognitive Synapses** | Enhance HOW agents think — metacognition, confidence calibration, structured reflection |
 | 🔄 **Self-Improving**   | Uses its own pipelines to improve its own skills                        |
 | 🩺 **Admin Dashboard**  | Comprehensive health checks, stats, and diagnostics via CLI             |
+| 📄 **llms.txt**         | Machine-readable framework index for AI assistants — [llms.txt convention](https://llmstxt.org/) |
 
 ---
 

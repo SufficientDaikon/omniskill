@@ -383,6 +383,7 @@ Examples:
     parser.add_argument('--skills', action='store_true', help='Validate all skills')
     parser.add_argument('--bundles', action='store_true', help='Validate all bundles')
     parser.add_argument('--check-triggers', action='store_true', help='Check for duplicate triggers')
+    parser.add_argument('--check-llms-txt', action='store_true', help='Check if llms.txt files are up to date')
     
     args = parser.parse_args()
     
@@ -418,6 +419,10 @@ Examples:
         else:
             print("✅ No trigger conflicts found")
             return 0
+    
+    elif args.check_llms_txt and not args.path:
+        # Standalone llms.txt check (no other validation)
+        return check_llms_txt_freshness()
     
     elif args.path:
         path = Path(args.path)
@@ -460,7 +465,64 @@ Examples:
     print(f"⚠️  Warnings: {warnings}")
     print(f"📊 Total: {len(results)}")
     
+    # llms.txt freshness check
+    if args.check_llms_txt:
+        print("\n" + "=" * 60)
+        print("llms.txt FRESHNESS CHECK")
+        print("=" * 60)
+        llms_result = check_llms_txt_freshness()
+        if llms_result != 0:
+            return llms_result
+    
     return 0 if failed == 0 else 1
+
+
+def check_llms_txt_freshness() -> int:
+    """Check if llms.txt files are up to date. Returns 0 if fresh, 1 if stale."""
+    import re
+    from datetime import date
+
+    stale = False
+
+    # Try the omniskill package first
+    try:
+        from omniskill.core.llms_txt import generate_concise, generate_full
+
+        for filename, gen_fn in [("llms.txt", generate_concise), ("llms-full.txt", generate_full)]:
+            file_path = OMNISKILL_ROOT / filename
+            if not file_path.exists():
+                print(f"⚠️  {filename} not found — generate with: omniskill generate llms-txt")
+            else:
+                expected = gen_fn(OMNISKILL_ROOT)
+                actual = file_path.read_text(encoding="utf-8")
+                if filename == "llms-full.txt":
+                    expected_cmp = re.sub(r"^- Generated: .+$", "", expected, count=1, flags=re.MULTILINE)
+                    actual_cmp = re.sub(r"^- Generated: .+$", "", actual, count=1, flags=re.MULTILINE)
+                else:
+                    expected_cmp = expected
+                    actual_cmp = actual
+                if expected_cmp == actual_cmp:
+                    print(f"✅ {filename} is up to date")
+                else:
+                    print(f"⚠️  {filename} is stale — regenerate with: omniskill generate llms-txt")
+                    stale = True
+    except ImportError:
+        # Fallback: use the generate script's fallback
+        try:
+            sys.path.insert(0, str(OMNISKILL_ROOT / "scripts"))
+            from importlib import import_module
+            gen_mod_path = OMNISKILL_ROOT / "scripts" / "generate-llms-txt.py"
+            # Can't easily import with hyphens; just check file existence
+            for filename in ("llms.txt", "llms-full.txt"):
+                file_path = OMNISKILL_ROOT / filename
+                if not file_path.exists():
+                    print(f"⚠️  {filename} not found — generate with: python scripts/generate-llms-txt.py")
+                else:
+                    print(f"ℹ️  {filename} exists (install omniskill package for full freshness check)")
+        except Exception:
+            print("⚠️  Could not perform llms.txt freshness check")
+
+    return 1 if stale else 0
 
 
 if __name__ == "__main__":
