@@ -77,6 +77,7 @@ OMNISKILL is a **universal framework** for AI coding assistant skills, agents, a
 | 🩺 **Admin Dashboard**  | Comprehensive health checks, stats, and diagnostics via CLI             |
 | 📄 **llms.txt**         | Machine-readable framework index for AI assistants — [llms.txt convention](https://llmstxt.org/) |
 | 🃏 **Agent Cards**      | Machine-readable agent metadata — capabilities, cost tiers, quality metrics, and skills via `omniskill cards` |
+| 🔌 **MCP Catalog**     | Curated catalog of 20 MCP servers — browse, search, auto-generate platform configs via `omniskill catalog` |
 
 ---
 

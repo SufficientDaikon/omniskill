@@ -400,6 +400,132 @@ def _validate_synapse(synapse_dir: Path, root: Path) -> dict:
     return result
 
 
+# ── Catalog validation (FR-CAT-061) ────────────────────────────
+
+_CATALOG_VALID_CATEGORIES = {"core", "development", "database", "research", "design", "ai", "cloud", "communication"}
+_KEBAB_PATTERN = re.compile(r"^[a-z][a-z0-9-]*$")
+
+
+def _validate_catalog(root: Path) -> dict:
+    """Validate the MCP server catalog file against its schema."""
+    result = {"path": "catalog/mcp-servers.yaml", "errors": [], "warnings": [], "status": "passed"}
+
+    catalog_path = root / "catalog" / "mcp-servers.yaml"
+    if not catalog_path.exists():
+        # Catalog is optional — just note it
+        result["warnings"].append("MCP catalog file not found (optional)")
+        result["status"] = "warnings"
+        return result
+
+    try:
+        with open(catalog_path, "r", encoding="utf-8") as fh:
+            data = yaml.safe_load(fh) or {}
+    except Exception as exc:
+        result["errors"].append(f"YAML parse error: {exc}")
+        result["status"] = "failed"
+        return result
+
+    # Root fields
+    if "schema_version" not in data:
+        result["errors"].append("Missing required field: schema_version")
+
+    servers = data.get("servers")
+    if servers is None:
+        result["errors"].append("Missing required field: servers")
+        result["status"] = "failed"
+        return result
+
+    if not isinstance(servers, list):
+        result["errors"].append("Field 'servers' must be a list")
+        result["status"] = "failed"
+        return result
+
+    if len(servers) == 0:
+        result["errors"].append("Field 'servers' must have at least 1 entry")
+
+    # Validate each server entry
+    seen_names: set[str] = set()
+    for i, entry in enumerate(servers):
+        prefix = f"servers[{i}]"
+        if not isinstance(entry, dict):
+            result["errors"].append(f"{prefix}: expected object, got {type(entry).__name__}")
+            continue
+
+        # Required fields
+        name = entry.get("name")
+        if name is None:
+            result["errors"].append(f"{prefix}: missing required field 'name'")
+        elif not isinstance(name, str):
+            result["errors"].append(f"{prefix}.name: expected string, got {type(name).__name__}")
+        else:
+            prefix = f"servers[{i}] ({name})"
+            if not _KEBAB_PATTERN.match(name):
+                result["errors"].append(f"{prefix}.name: '{name}' doesn't match kebab-case pattern")
+            if name in seen_names:
+                result["errors"].append(f"{prefix}.name: duplicate name '{name}'")
+            seen_names.add(name)
+
+        package = entry.get("package")
+        if package is None:
+            result["errors"].append(f"{prefix}: missing required field 'package'")
+        elif not isinstance(package, str):
+            result["errors"].append(f"{prefix}.package: expected string")
+
+        category = entry.get("category")
+        if category is None:
+            result["errors"].append(f"{prefix}: missing required field 'category'")
+        elif category not in _CATALOG_VALID_CATEGORIES:
+            result["errors"].append(f"{prefix}.category: '{category}' not in allowed values")
+
+        desc = entry.get("description")
+        if desc is None:
+            result["errors"].append(f"{prefix}: missing required field 'description'")
+        elif not isinstance(desc, str):
+            result["errors"].append(f"{prefix}.description: expected string")
+        elif len(desc) < 10:
+            result["errors"].append(f"{prefix}.description: length {len(desc)} < minimum 10")
+        elif len(desc) > 300:
+            result["errors"].append(f"{prefix}.description: length {len(desc)} > maximum 300")
+
+        install_cmd = entry.get("install-command")
+        if install_cmd is None:
+            result["errors"].append(f"{prefix}: missing required field 'install-command'")
+        elif not isinstance(install_cmd, str):
+            result["errors"].append(f"{prefix}.install-command: expected string")
+
+        tags = entry.get("tags")
+        if tags is None:
+            result["errors"].append(f"{prefix}: missing required field 'tags'")
+        elif not isinstance(tags, list):
+            result["errors"].append(f"{prefix}.tags: expected list")
+        elif len(tags) < 1:
+            result["errors"].append(f"{prefix}.tags: must have at least 1 tag")
+
+        # Optional: required-env
+        req_env = entry.get("required-env")
+        if req_env is not None:
+            if not isinstance(req_env, list):
+                result["errors"].append(f"{prefix}.required-env: expected list")
+            else:
+                for j, ev in enumerate(req_env):
+                    if isinstance(ev, dict):
+                        if "name" not in ev:
+                            result["errors"].append(f"{prefix}.required-env[{j}]: missing 'name'")
+                        if "description" not in ev:
+                            result["errors"].append(f"{prefix}.required-env[{j}]: missing 'description'")
+
+        # Optional: server-type
+        stype = entry.get("server-type")
+        if stype is not None and stype not in ("stdio", "sse"):
+            result["errors"].append(f"{prefix}.server-type: '{stype}' not in [stdio, sse]")
+
+    if result["errors"]:
+        result["status"] = "failed"
+    elif result["warnings"]:
+        result["status"] = "warnings"
+    return result
+
+
 # ── Command ─────────────────────────────────────────────────────
 
 def validate_cmd(
@@ -464,6 +590,11 @@ def validate_cmd(
             for d in sorted(synapses_dir.iterdir()):
                 if d.is_dir() and d.name != "_template" and (d / "manifest.yaml").exists():
                     results.append(_validate_synapse(d, root))
+
+        # MCP Catalog (FR-CAT-061)
+        catalog_path = root / "catalog" / "mcp-servers.yaml"
+        if catalog_path.exists():
+            results.append(_validate_catalog(root))
 
     # ── Output ──────────────────────────────────────────────────
 

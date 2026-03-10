@@ -20,6 +20,7 @@ def _compute_health(
     registry_ok: bool,
     skills_count: int,
     issues: list[dict],
+    catalog_issues: int = 0,
 ) -> int:
     """Compute health score 0-100 (FR-023)."""
     score = 100
@@ -35,6 +36,9 @@ def _compute_health(
     warnings = [i for i in issues if i["severity"] == "warning"]
     score -= min(len(errors) * 10, 30)
     score -= min(len(warnings) * 3, 15)
+
+    # Catalog issues capped at 5 points (FR-CAT-043)
+    score -= min(catalog_issues, 5)
 
     return max(0, min(100, score))
 
@@ -130,6 +134,53 @@ def doctor_cmd() -> None:
             "remediation": "Install at least one supported platform (Claude Code, Copilot CLI, Cursor, etc.).",
         })
 
+    # ── MCP Catalog checks (FR-CAT-040 through FR-CAT-044) ─────
+    catalog_ok = False
+    catalog_entries = 0
+    catalog_missing_deps = 0
+    catalog_missing_details: list[dict] = []
+    catalog_issue_count = 0
+
+    if registry_ok:
+        try:
+            from omniskill.core.catalog import Catalog, check_dependencies
+            cat = Catalog(root=reg.root)
+            cat.load()
+            catalog_ok = True
+            catalog_entries = len(cat.servers)
+
+            # Check missing MCP dependencies across platforms
+            missing_deps = check_dependencies(cat, reg)
+            catalog_missing_deps = len(missing_deps)
+            for md in missing_deps:
+                detail = {
+                    "skill": md.skill_name,
+                    "server": md.server_name,
+                    "platforms": md.platforms_missing,
+                    "in_catalog": md.in_catalog,
+                }
+                catalog_missing_details.append(detail)
+                issues.append({
+                    "severity": "warning",
+                    "message": f"Skill '{md.skill_name}' requires MCP server '{md.server_name}' but it is not configured.",
+                    "remediation": f"Run: omniskill catalog install {md.server_name}",
+                })
+                catalog_issue_count += 1
+        except FileNotFoundError:
+            issues.append({
+                "severity": "info",
+                "message": "MCP catalog not found or invalid.",
+                "remediation": "Ensure catalog/mcp-servers.yaml exists in the OMNISKILL root.",
+            })
+            catalog_issue_count += 2
+        except Exception:
+            issues.append({
+                "severity": "info",
+                "message": "MCP catalog not found or invalid.",
+                "remediation": "Ensure catalog/mcp-servers.yaml exists and is valid YAML.",
+            })
+            catalog_issue_count += 2
+
     # Per-platform checks
     platform_statuses: list[dict] = []
     for p in platforms:
@@ -162,6 +213,7 @@ def doctor_cmd() -> None:
         registry_ok=registry_ok,
         skills_count=skills_count,
         issues=issues,
+        catalog_issues=catalog_issue_count,
     )
 
     # ── JSON output ─────────────────────────────────────────────
@@ -180,6 +232,12 @@ def doctor_cmd() -> None:
                     "bundles": bundles_count,
                     "pipelines": pipelines_count,
                     "synapses": synapses_count,
+                    "mcp_catalog": {
+                        "ok": catalog_ok,
+                        "entries": catalog_entries,
+                        "missing_dependencies": catalog_missing_deps,
+                        "missing_details": catalog_missing_details,
+                    },
                 },
                 "platforms": platform_statuses,
                 "installed_components": total_installed,
@@ -234,6 +292,7 @@ def doctor_cmd() -> None:
     console.print(f"  Bundles:     {bundles_count}")
     console.print(f"  Pipelines:   {pipelines_count}")
     console.print(f"  Synapses:    {synapses_count}")
+    console.print(f"  MCP Catalog: {catalog_entries} server(s)" + (" ✓" if catalog_ok else " (not loaded)"))
     console.print(f"  Installed:   {total_installed} record(s)")
     console.print()
 

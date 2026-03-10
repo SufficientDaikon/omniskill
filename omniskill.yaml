@@ -304,3 +304,8 @@ platforms:
   - id: antigravity
     adapter: adapters/antigravity
     target: ".antigravity/skills/"
+
+# MCP Server Integration Catalog
+catalog:
+  path: catalog/mcp-servers.yaml
+  schema: schemas/mcp-catalog.schema.yaml

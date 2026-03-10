@@ -64,6 +64,7 @@ from omniskill.commands.migrate import migrate_cmd        # noqa: E402
 from omniskill.commands.admin import admin_cmd            # noqa: E402
 from omniskill.commands.config import config_cmd          # noqa: E402
 from omniskill.commands.generate import generate_app      # noqa: E402
+from omniskill.commands.catalog import catalog_app        # noqa: E402
 from omniskill.commands.cards import cards_cmd             # noqa: E402
 
 app.command("init", help="Initialize OMNISKILL — detect platforms, create config.")(init_cmd)
@@ -80,4 +81,5 @@ app.command("migrate", help="Convert legacy skill formats to OMNISKILL format.")
 app.command("admin", help="Administration dashboard with aggregate statistics.")(admin_cmd)
 app.command("config", help="Get or set configuration values.")(config_cmd)
 app.add_typer(generate_app, name="generate", help="Generate framework artifacts.")
+app.add_typer(catalog_app, name="catalog", help="Browse and manage MCP server integrations.")
 app.command("cards", help="View and manage agent cards.")(cards_cmd)
