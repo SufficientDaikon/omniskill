@@ -29,17 +29,35 @@ handoff:
     - "Pain points prioritized"
     - "Recommendations are actionable"
 
+guardrail-enforcement: standard
+
 guardrails:
   must-not:
-    - "Assume user behavior without validation"
-    - "Create stereotypical personas"
-    - "Copy competitors without understanding"
-    - "Use vague pain points"
+    - rule: "Assume user behavior without validation"
+      severity: critical
+      on-violation: halt
+    - rule: "Create stereotypical personas"
+      severity: major
+      on-violation: warn
+    - rule: "Copy competitors without understanding"
+      severity: major
+      on-violation: warn
+    - rule: "Use vague pain points"
+      severity: minor
+      on-violation: log
   must-do:
-    - "Base personas on research"
-    - "Map user journeys with emotions"
-    - "Analyze competitors for insights not features"
-    - "Prioritize pain points by severity"
+    - rule: "Base personas on research"
+      severity: critical
+      on-violation: halt
+    - rule: "Map user journeys with emotions"
+      severity: major
+      on-violation: warn
+    - rule: "Analyze competitors for insights not features"
+      severity: major
+      on-violation: warn
+    - rule: "Prioritize pain points by severity"
+      severity: minor
+      on-violation: log
 
 input-format: "Project brief or stakeholder requirements (can be vague)"
 output-format: "UX research brief with personas, journey maps, and competitive analysis"

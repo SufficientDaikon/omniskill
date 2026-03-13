@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNISKILL v2.0 — Sequential Thinking Guide — OMNISKILL v2.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-card: #1c2128;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-subtle: #388bfd26;
+            --border: #30363d;
+            --border-muted: #21262d;
+            --green: #3fb950;
+            --red: #f85149;
+            --orange: #d29922;
+            --purple: #bc8cff;
+            --pink: #f778ba;
+            --cyan: #39d2c0;
+            --nav-width: 280px;
+            --header-height: 60px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .header-brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-brand span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
+        .header-nav {
+            margin-left: auto;
+            display: flex;
+            gap: 16px;
+        }
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .header-nav a:hover { color: var(--accent); }
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            width: var(--nav-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 50;
+            transition: transform 0.3s;
+        }
+        .sidebar-section {
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+        .nav-link {
+            display: block;
+            padding: 8px 20px 8px 28px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+        }
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: var(--nav-width);
+            margin-top: var(--header-height);
+            padding: 40px 48px 80px;
+            max-width: 920px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-primary);
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        p {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        a:hover { text-decoration: underline; }
+
+        strong { color: var(--text-primary); font-weight: 600; }
+
+        /* Lists */
+        ul, ol {
+            margin: 0 0 16px 24px;
+            color: var(--text-primary);
+        }
+        li { margin-bottom: 6px; }
+        li > ul, li > ol { margin-top: 6px; margin-bottom: 0; }
+
+        /* Code */
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+            font-size: 85%;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--orange);
+        }
+        pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            line-height: 1.5;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        /* ASCII diagram styling */
+        pre.ascii-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 24px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--cyan);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        thead {
+            background: var(--bg-tertiary);
+        }
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+        }
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--accent-subtle);
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 12px 20px;
+            margin: 16px 0;
+            background: var(--accent-subtle);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-secondary);
+        }
+
+        /* Horizontal rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 32px 0;
+        }
+
+        /* Mermaid diagrams */
+        .mermaid {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        /* ASCII original toggle */
+        details.ascii-original {
+            margin: -16px 0 24px;
+            font-size: 13px;
+        }
+        details.ascii-original summary {
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 0;
+            user-select: none;
+        }
+        details.ascii-original summary:hover {
+            color: var(--text-secondary);
+        }
+        details.ascii-original pre {
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Badge pills */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-green { background: #238636; color: #fff; }
+        .badge-blue { background: #1f6feb; color: #fff; }
+        .badge-purple { background: #8957e5; color: #fff; }
+        .badge-red { background: #da3633; color: #fff; }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 24px 20px 60px; }
+            .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+        <a href="index.html" class="header-brand">
+            ⚡ OMNISKILL <span>v2.0 Documentation</span>
+        </a>
+        <nav class="header-nav">
+            <a href="https://github.com/SufficientDaikon/omniskill" target="_blank">GitHub</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">Getting Started</div>
+        <a href="index.html" class="nav-link">📚 Documentation Home</a>
+        <a href="Getting-Started.html" class="nav-link">🚀 Getting Started</a>
+        <a href="Cli-Guide.html" class="nav-link">💻 CLI Guide</a>
+        <a href="Migration-V2.html" class="nav-link">📦 Migration to v2.0</a>
+        <div class="sidebar-section">Architecture</div>
+        <a href="Architecture.html" class="nav-link">🏗️ 5-Layer Architecture</a>
+        <a href="Pipeline-Orchestration.html" class="nav-link">🔧 Pipeline Orchestration</a>
+        <a href="Guardrails.html" class="nav-link">🛡️ Guardrails Engine</a>
+        <a href="Sequential-Thinking.html" class="nav-link active">🧠 Sequential Thinking</a>
+        <div class="sidebar-section">Guides</div>
+        <a href="Creating-Skills.html" class="nav-link">✨ Creating Skills</a>
+        <a href="Creating-Agents.html" class="nav-link">🤖 Creating Agents</a>
+        <a href="Creating-Pipelines.html" class="nav-link">🔄 Creating Pipelines</a>
+        <a href="Creating-Bundles.html" class="nav-link">📦 Creating Bundles</a>
+        <a href="Creating-Synapses.html" class="nav-link">🧬 Creating Synapses</a>
+        <a href="Platform-Guide.html" class="nav-link">🌐 Platform Guide</a>
+        <div class="sidebar-section">Reference</div>
+        <a href="Agent-Cards.html" class="nav-link">🃏 Agent Cards</a>
+        <a href="Integration-Catalog.html" class="nav-link">🔌 Integration Catalog</a>
+        <a href="Faq.html" class="nav-link">❓ FAQ</a>
+        <a href="Llms-Txt.html" class="nav-link">📄 LLMs.txt</a>
+        <a href="Changelog.html" class="nav-link">📋 Changelog</a>
+        <a href="Contributing.html" class="nav-link">🤝 Contributing</a>
+        <a href="Readme.html" class="nav-link">📖 README</a>
+    </nav>
+
+    <main class="main">
+        <h1 id="omniskill-v20-sequential-thinking-guide">OMNISKILL v2.0 — Sequential Thinking Guide</h1>
+<h2 id="overview">Overview</h2>
+<p>Sequential thinking is a structured reasoning protocol that forces agents to show their work before producing output. It prevents premature conclusions, missed edge cases, and shallow analysis by requiring explicit reasoning phases.</p>
+<hr>
+<h2 id="the-4-phases">The 4 Phases</h2>
+<p>Every non-trivial reasoning task passes through four phases in strict order:</p>
+<div class="mermaid">
+flowchart LR
+    D["🔍 DECOMPOSE"] --> R["🧠 REASON"]
+    R --> V["✓ VALIDATE"]
+    V --> S["📋 SYNTHESIZE"]
+
+    style D fill:#2196F3,color:#fff
+    style R fill:#FF9800,color:#fff
+    style V fill:#4CAF50,color:#fff
+    style S fill:#9C27B0,color:#fff
+</div>
+
+<details class="ascii-original"><summary>View original ASCII</summary><pre><code>DECOMPOSE → REASON → VALIDATE → SYNTHESIZE</code></pre></details>
+
+<h3 id="phase-1-decompose">Phase 1: DECOMPOSE</h3>
+<p>Break the problem into atomic sub-problems. No reasoning yet — only structure.</p>
+<div class="highlight"><pre><span></span><code>[THINKING]
+PHASE: DECOMPOSE
+
+The user wants authentication for a REST API.
+
+Sub-problems:
+1. Authentication method selection (JWT vs session vs OAuth)
+2. Token storage strategy (httpOnly cookie vs localStorage)
+3. Password hashing algorithm selection
+4. Session expiry and refresh logic
+5. Route protection middleware
+6. Error responses for auth failures
+[/THINKING]
+</code></pre></div>
+
+<p><strong>Rules:</strong>
+- Each sub-problem must be independently addressable
+- No sub-problem should contain hidden assumptions
+- List at least 3 sub-problems (if fewer, the task may not need sequential thinking)</p>
+<h3 id="phase-2-reason">Phase 2: REASON</h3>
+<p>Address each sub-problem with explicit reasoning. State trade-offs, not just conclusions.</p>
+<div class="mermaid">
+flowchart LR
+    DT["🔎 DETECT"] --> HY["💡 HYPOTHESIZE"]
+    HY --> EN["📋 ENUMERATE"]
+    EN --> VR["✅ VERIFY"]
+    VR --> CO["🔄 CONTINUE"]
+    CO -.->|"questions remain"| DT
+
+    style DT fill:#F44336,color:#fff
+    style HY fill:#FF9800,color:#fff
+    style EN fill:#2196F3,color:#fff
+    style VR fill:#4CAF50,color:#fff
+    style CO fill:#9C27B0,color:#fff
+</div>
+
+<details class="ascii-original"><summary>View original ASCII</summary><pre><code>[THINKING]
+PHASE: REASON
+
+1. Authentication method:
+   - JWT: Stateless, scalable, but revocation is complex
+   - Session: Server-side state, simpler revocation, but requires session store
+   - Spec says "server-side sessions" → session-based auth (no choice to make)
+
+2. Token storage:
+   - httpOnly cookie: XSS-resistant, automatic sending
+   - localStorage: Vulnerable to XSS, manual header management
+   → httpOnly cookie (spec doesn't specify, defaulting to more secure option)
+
+3. Password hashing:
+   - bcrypt: Well-tested, configurable rounds, widely supported
+   - argon2: Memory-hard, newer, better against GPU attacks
+   → bcrypt with cost factor 12 (spec doesn't specify, using industry default)
+[/THINKING]</code></pre></details>
+
+<p><strong>Rules:</strong>
+- Every sub-problem from DECOMPOSE must be addressed
+- Trade-offs must be stated, not just the chosen option
+- If the spec dictates the answer, cite the spec section</p>
+<h3 id="phase-3-validate">Phase 3: VALIDATE</h3>
+<p>Check reasoning against constraints, edge cases, and the original problem statement.</p>
+<pre class="ascii-diagram"><code>[THINKING]
+PHASE: VALIDATE
+
+Checking against spec requirements:
+✓ Server-side sessions — addressed in sub-problem 1
+✓ HTTPS required — not yet addressed, adding to implementation
+✗ Rate limiting on login — missed this, adding sub-problem
+
+Edge cases:
+- What if session store goes down? → Need fallback/error handling
+- Concurrent sessions from same user? → Spec says "single session only"
+- Session fixation attacks? → Regenerate session ID on login
+
+Contradictions found: None
+Missing requirements found: Rate limiting, HTTPS enforcement
+[/THINKING]</code></pre>
+
+<p><strong>Rules:</strong>
+- Every spec requirement must have a ✓ or ✗ check
+- At least 3 edge cases must be considered
+- Any ✗ items must be resolved before SYNTHESIZE</p>
+<h3 id="phase-4-synthesize">Phase 4: SYNTHESIZE</h3>
+<p>Combine validated reasoning into a coherent plan or output. This is the only phase that produces user-facing content.</p>
+<div class="highlight"><pre><span></span><code>[THINKING]
+PHASE: SYNTHESIZE
+
+Implementation plan:
+1. Session-based auth with express-session + Redis store
+2. httpOnly cookies for session ID transport
+3. bcrypt (cost 12) for password hashing
+4. Session regeneration on login (fixation prevention)
+5. Single-session enforcement (invalidate previous on new login)
+6. Rate limiting: 5 attempts per 15 minutes per IP
+7. HTTPS enforcement via middleware
+8. Error responses: 401 (unauthenticated), 403 (unauthorized)
+[/THINKING]
+</code></pre></div>
+
+<hr>
+<h2 id="thinking-block-format">[THINKING] Block Format</h2>
+<p>All reasoning is wrapped in <code>[THINKING]...[/THINKING]</code> blocks. These blocks:</p>
+<ol>
+<li><strong>Are required</strong> for any task rated complexity ≥ 3 (see metacognition scaling)</li>
+<li><strong>Are captured</strong> as part of the thinking trace artifact</li>
+<li><strong>Are auditable</strong> — reviewers can inspect the reasoning chain</li>
+<li><strong>Are not shown</strong> to end users unless they request the trace</li>
+</ol>
+<h3 id="format-rules">Format Rules</h3>
+<div class="highlight"><pre><span></span><code>[THINKING]
+PHASE: &lt;DECOMPOSE|REASON|VALIDATE|SYNTHESIZE&gt;
+
+&lt;structured reasoning content&gt;
+[/THINKING]
+</code></pre></div>
+
+<ul>
+<li>One <code>[THINKING]</code> block per phase (4 blocks total for a full trace)</li>
+<li>Phases must appear in order — no skipping, no reordering</li>
+<li>Content inside blocks uses plain text and markdown lists</li>
+<li>No code execution inside thinking blocks — reasoning only</li>
+</ul>
+<hr>
+<h2 id="thinking-trace-schema">Thinking Trace Schema</h2>
+<p><strong>File:</strong> <code>schemas/thinking-trace.schema.yaml</code></p>
+<p>Thinking traces are persisted as structured artifacts for audit and debugging.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">task_id</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">agent</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">phases</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">timestamp</span><span class="p p-Indicator">]</span>
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">task_id</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Unique identifier for the task</span>
+<span class="w">  </span><span class="nt">agent</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Agent that produced the trace</span>
+<span class="w">  </span><span class="nt">timestamp</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">date-time</span>
+<span class="w">  </span><span class="nt">phases</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">decompose</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">reason</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">validate</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">synthesize</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">decompose</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">sub_problems</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">sub_problems</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">            </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">            </span><span class="nt">minItems</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">      </span><span class="nt">reason</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">analysis</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">analysis</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">            </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">              </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">sub_problem</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">reasoning</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">decision</span><span class="p p-Indicator">]</span>
+<span class="w">              </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">sub_problem</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">                </span><span class="nt">reasoning</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">                </span><span class="nt">decision</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">                </span><span class="nt">trade_offs</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">                  </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">validate</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">spec_checks</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">edge_cases</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">spec_checks</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">            </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">              </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">requirement</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">status</span><span class="p p-Indicator">]</span>
+<span class="w">              </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">requirement</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">                </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">                  </span><span class="nt">enum</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">pass</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">fail</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">partial</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">edge_cases</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">            </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">              </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">case</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">mitigation</span><span class="p p-Indicator">]</span>
+<span class="w">              </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">case</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">                </span><span class="nt">mitigation</span><span class="p">:</span>
+<span class="w">                  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">          </span><span class="nt">contradictions</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">            </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">      </span><span class="nt">synthesize</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">plan</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">plan</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">            </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">  </span><span class="nt">metadata</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">complexity</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">        </span><span class="nt">minimum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">        </span><span class="nt">maximum</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">      </span><span class="nt">duration_ms</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">      </span><span class="nt">token_count</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+</code></pre></div>
+
+<hr>
+<h2 id="browsecomp-reasoning-pattern">BrowseComp Reasoning Pattern</h2>
+<p>For research-heavy tasks (codebase exploration, competitive analysis, information gathering), use the BrowseComp pattern instead of the standard 4-phase approach:</p>
+<pre class="ascii-diagram"><code>DETECT → HYPOTHESIZE → ENUMERATE → VERIFY → CONTINUE</code></pre>
+
+<h3 id="detect">DETECT</h3>
+<p>Identify what information is needed and what is currently unknown.</p>
+<div class="highlight"><pre><span></span><code>[THINKING]
+PHASE: DETECT
+Need: How does the auth middleware work in this codebase?
+Known: Express.js project, has middleware/ directory
+Unknown: Which middleware handles auth, how sessions are managed
+[/THINKING]
+</code></pre></div>
+
+<h3 id="hypothesize">HYPOTHESIZE</h3>
+<p>Form hypotheses about where the answer lives and what it looks like.</p>
+<div class="highlight"><pre><span></span><code>[THINKING]
+PHASE: HYPOTHESIZE
+H1: Auth middleware is in middleware/auth.js
+H2: Session config is in config/session.js or app.js
+H3: Passport.js is used (common in Express projects)
+[/THINKING]
+</code></pre></div>
+
+<h3 id="enumerate">ENUMERATE</h3>
+<p>List all sources to check and check them systematically.</p>
+<div class="highlight"><pre><span></span><code>[THINKING]
+PHASE: ENUMERATE
+Sources to check:
+1. middleware/*.js — grep for &quot;auth&quot;, &quot;session&quot;, &quot;passport&quot;
+2. package.json — check for passport, express-session deps
+3. app.js — check middleware registration order
+4. routes/*.js — check how auth is applied to routes
+[/THINKING]
+</code></pre></div>
+
+<h3 id="verify">VERIFY</h3>
+<p>Confirm or reject each hypothesis with evidence.</p>
+<h3 id="continue">CONTINUE</h3>
+<p>If questions remain, loop back to DETECT with updated knowledge. Stop when all unknowns are resolved.</p>
+<hr>
+<h2 id="complexity-scaling">Complexity Scaling</h2>
+<p>The metacognition synapse (<code>synapses/metacognition.md</code>) determines how much thinking is required based on task complexity:</p>
+<table>
+<thead>
+<tr>
+<th>Complexity</th>
+<th>Thinking Required</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1-2</td>
+<td>None — direct response</td>
+<td>"What's the project name?"</td>
+</tr>
+<tr>
+<td>3-4</td>
+<td>Lightweight — DECOMPOSE + SYNTHESIZE only</td>
+<td>"Add a new API endpoint"</td>
+</tr>
+<tr>
+<td>5-6</td>
+<td>Standard — all 4 phases</td>
+<td>"Implement auth system"</td>
+</tr>
+<tr>
+<td>7-8</td>
+<td>Deep — 4 phases + BrowseComp for research</td>
+<td>"Design microservice architecture"</td>
+</tr>
+<tr>
+<td>9-10</td>
+<td>Exhaustive — 4 phases + multiple iterations</td>
+<td>"Full-stack product from scratch"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="complexity-assessment">Complexity Assessment</h3>
+<p>The agent self-assesses complexity at the start of each task:</p>
+<div class="highlight"><pre><span></span><code>[THINKING]
+PHASE: COMPLEXITY_ASSESSMENT
+Task: &quot;Add pagination to the users endpoint&quot;
+Factors:
+- Scope: Single endpoint modification (low)
+- Ambiguity: Clear requirement (low)
+- Dependencies: Database query changes, response format (medium)
+- Risk: Could break existing clients (medium)
+Assessment: Complexity 4 → Lightweight thinking (DECOMPOSE + SYNTHESIZE)
+[/THINKING]
+</code></pre></div>
+
+<hr>
+<h2 id="pipeline-integration">Pipeline Integration</h2>
+<p>Thinking traces are first-class artifacts in the pipeline system.</p>
+<h3 id="traces-as-audit-artifacts">Traces as Audit Artifacts</h3>
+<p>Every pipeline step produces a thinking trace alongside its primary artifact. These traces are:</p>
+<ol>
+<li><strong>Stored</strong> in the pipeline state file under <code>thinking_traces[]</code></li>
+<li><strong>Validated</strong> by <code>post_step.py</code> — missing traces for complexity ≥ 3 tasks cause validation failure</li>
+<li><strong>Available</strong> to downstream agents — the context-curator can include relevant traces in handoffs</li>
+<li><strong>Reviewable</strong> — the reviewer agent checks traces for reasoning quality</li>
+</ol>
+<h3 id="example-trace-in-pipeline-state">Example: Trace in Pipeline State</h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;pipeline_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sdd-abc123&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;step&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;implement-auth&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;thinking_trace&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;task_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;impl-auth-001&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;implementer&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;phases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;decompose&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;sub_problems&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;reason&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;analysis&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;validate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;spec_checks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">],</span><span class="w"> </span><span class="nt">&quot;edge_cases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;synthesize&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;plan&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;complexity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;duration_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4500</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="reviewer-trace-inspection">Reviewer Trace Inspection</h3>
+<p>The reviewer agent checks thinking traces as part of its compliance review:</p>
+<ul>
+<li><strong>Completeness:</strong> All 4 phases present for tasks rated ≥ 5</li>
+<li><strong>Spec alignment:</strong> Every spec requirement appears in the VALIDATE phase</li>
+<li><strong>Reasoning quality:</strong> REASON phase shows trade-offs, not just conclusions</li>
+<li><strong>Edge coverage:</strong> VALIDATE phase lists ≥ 3 edge cases for tasks rated ≥ 5</li>
+</ul>
+<p>Traces with gaps are flagged as <code>INCOMPLETE_REASONING</code> in the review report.</p>
+        <div class="footer">
+            OMNISKILL v2.0 — Enforced Intelligence Framework<br>
+            <a href="https://github.com/SufficientDaikon/omniskill">GitHub</a> ·
+            <a href="index.html">Documentation Home</a>
+        </div>
+    </main>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1f6feb',
+                primaryTextColor: '#e6edf3',
+                primaryBorderColor: '#30363d',
+                lineColor: '#8b949e',
+                secondaryColor: '#21262d',
+                tertiaryColor: '#161b22',
+                fontSize: '14px'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            stateDiagram: {
+                useMaxWidth: true
+            }
+        });
+
+        // Highlight active nav link
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

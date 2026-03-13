@@ -6,15 +6,72 @@
 
 **One repo. One format. Every platform. Best-in-class.**
 
+[![Version](https://img.shields.io/badge/version-2.0.0-brightgreen)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Skills](https://img.shields.io/badge/skills-49-blue)]()
 [![Bundles](https://img.shields.io/badge/bundles-8-green)]()
-[![Agents](https://img.shields.io/badge/agents-8-orange)]()
+[![Agents](https://img.shields.io/badge/agents-9-orange)]()
+[![Pipelines](https://img.shields.io/badge/pipelines-6-red)]()
+[![Synapses](https://img.shields.io/badge/synapses-3-blueviolet)]()
+[![Hooks](https://img.shields.io/badge/hooks-5-yellow)]()
+[![Schemas](https://img.shields.io/badge/schemas-9-lightgrey)]()
 [![Platforms](https://img.shields.io/badge/platforms-5-purple)]()
+[![Tests](https://img.shields.io/badge/tests-282-success)]()
 
 _Write skills once. Run them on Claude Code, Copilot CLI, Cursor, Windsurf, and Antigravity._
 
 </div>
+
+---
+
+## 🆕 What's New in v2.0
+
+OMNISKILL v2.0 is a major architecture upgrade — from a skill library to an **enforced intelligence framework** built on a 5-Layer Architecture:
+
+| Layer | What It Does |
+| --- | --- |
+| **Layer 1 — Skills & Knowledge** | 49 skills, 8 bundles, prompt library, knowledge sources |
+| **Layer 2 — Agents & Personas** | 9 agents with formal personas, handoff contracts, and quality gates |
+| **Layer 3 — Synapses & Cognition** | 3 cognitive synapses (metacognition, anti-rationalization, sequential thinking) that shape HOW agents reason |
+| **Layer 4 — Pipelines & Orchestration** | 6 pipelines with real execution, context curation between steps, failure recovery |
+| **Layer 5 — Guardrails & Hooks** | 5 lifecycle hooks enforcing discipline — not just documented rules, but runtime enforcement |
+
+### Key Highlights
+
+- **🛡️ Guardrails Engine** — Every agent has `guardrail-enforcement: strict` with must-not / must-do rules, severity levels (critical/major/minor), and on-violation actions (halt/warn/log). Guardrails are _enforced_, not just documented.
+- **🧠 Sequential Thinking Protocol** — Agents decompose complex tasks step-by-step via the sequential-thinking synapse. No more jumping to conclusions.
+- **🔄 Pipeline Orchestrator Engine** — Real multi-agent pipeline execution with `on-failure` strategies (halt/skip/loop), context curation between steps, and resumable state.
+- **🧪 282 Tests** — Comprehensive validation across skills, bundles, agents, pipelines, synapses, and hooks.
+- **🏗️ 5-Layer Architecture** — Clean separation from knowledge (L1) through enforcement (L5), with each layer building on the one below.
+
+---
+
+## 🏁 Getting Started with v2.0
+
+### Run a Pipeline
+
+```bash
+omniskill pipeline run sdd-pipeline --project ./myapp
+```
+
+This triggers the full Spec-Driven Development flow: **spec-writer → context-curator → implementer → context-curator → reviewer** — with automatic failure recovery and context curation between each step.
+
+### Guardrails Auto-Enforce
+
+Every agent loaded in v2.0 automatically enforces its guardrails. For example, the spec-writer-agent will **halt** if it detects assumed requirements (severity: critical), and **warn** if ambiguous language slips through (severity: major). No configuration needed — guardrails are built into every agent manifest.
+
+### Sequential Thinking Auto-Activates
+
+The sequential-thinking synapse is a **core synapse** — it fires automatically for every agent. Complex tasks are decomposed into numbered steps, each validated before proceeding. This prevents the "jump to solution" anti-pattern that plagues AI assistants.
+
+```bash
+# Other useful v2.0 commands
+omniskill validate --all          # Validate everything (skills, bundles, agents, pipelines, synapses, hooks)
+omniskill validate --agents       # Validate agent guardrails specifically
+omniskill validate --hooks        # Validate hook system
+omniskill cards                   # View machine-readable agent cards
+omniskill doctor                  # Full health check
+```
 
 ---
 
@@ -137,9 +194,11 @@ python scripts/doctor.py               # Check installation health
 
 Synapses are **cognitive capabilities** that enhance HOW agents think, not WHAT they do. Unlike skills (domain methodologies), synapses shape the agent's reasoning process itself.
 
-| Synapse            | Type | Firing Phases           | Description                                       |
-| ------------------ | ---- | ----------------------- | ------------------------------------------------- |
-| **metacognition**  | core | PLAN → MONITOR → REFLECT | Structured self-awareness: plan before acting, tag confidence, reflect on quality |
+| Synapse                     | Type | Firing Phases                          | Description                                                                          |
+| --------------------------- | ---- | -------------------------------------- | ------------------------------------------------------------------------------------ |
+| **metacognition**           | core | PLAN → MONITOR → REFLECT              | Structured self-awareness: plan before acting, tag confidence, reflect on quality     |
+| **anti-rationalization**    | core | DETECT → CHALLENGE → ENFORCE          | Prevents excuse-making and shortcut rationalization via 10 Iron Laws                 |
+| **sequential-thinking**     | core | DECOMPOSE → REASON → VALIDATE → SYNTHESIZE | Step-by-step task decomposition — prevents jumping to conclusions                    |
 
 **Core synapses** fire automatically for every agent. **Optional synapses** require explicit binding.
 
@@ -151,34 +210,50 @@ Synapses are **cognitive capabilities** that enhance HOW agents think, not WHAT 
 
 ```
 omniskill/
-├── skills/           # 48 individual skills (SKILL.md + manifest.yaml)
+├── skills/           # 49 individual skills (SKILL.md + manifest.yaml)
 │   ├── _template/    # Skill template for new skills
-│   ├── complexity-router/  # 🧠 Smart task routing (NEW)
-│   ├── context-curator/   # 🔗 Pipeline context management (NEW)
-│   ├── knowledge-sources/  # 📚 External knowledge management (NEW)
-│   ├── add-skill/    # 🔧 AI-assisted skill creation (NEW)
-│   ├── add-bundle/   # 🔧 AI-assisted bundle creation (NEW)
-│   ├── add-agent/    # 🔧 AI-assisted agent creation (NEW)
-│   ├── add-adapter/  # 🔧 AI-assisted adapter creation (NEW)
-│   ├── rename-project/ # 🔧 Fork & rename OMNISKILL (NEW)
-│   └── ...           # 41 domain skills
-├── bundles/          # Domain bundles (bundle.yaml + meta-skill)
-├── agents/           # Agent definitions (AGENT.md + agent-manifest.yaml)
-├── pipelines/        # Multi-agent workflow definitions
-├── synapses/         # 🧠 Cognitive synapses (SYNAPSE.md + manifest.yaml)
-│   ├── _template/    # Synapse template for new synapses
-│   └── metacognition/ # Core synapse — thinking about thinking
-├── prompts/          # 🎭 Prompt library — router, system, personas (NEW)
+│   ├── complexity-router/  # 🧠 Smart task routing (P0 priority)
+│   ├── context-curator/    # 🔗 Pipeline context management
+│   ├── knowledge-sources/  # 📚 External knowledge management
+│   ├── add-skill/    # 🔧 AI-assisted skill creation
+│   ├── add-bundle/   # 🔧 AI-assisted bundle creation
+│   ├── add-agent/    # 🔧 AI-assisted agent creation
+│   ├── add-adapter/  # 🔧 AI-assisted adapter creation
+│   ├── rename-project/ # 🔧 Fork & rename OMNISKILL
+│   └── ...           # 40 domain skills
+├── bundles/          # 8 domain bundles (bundle.yaml + meta-skill)
+├── agents/           # 9 agent definitions (AGENT.md + agent-manifest.yaml + guardrails)
+├── pipelines/        # 6 multi-agent workflow definitions with failure recovery
+├── synapses/         # 3 cognitive synapses (SYNAPSE.md + manifest.yaml)
+│   ├── _template/           # Synapse template for new synapses
+│   ├── metacognition/       # Core — structured self-awareness
+│   ├── anti-rationalization/ # Core — prevents excuse-making (10 Iron Laws)
+│   └── sequential-thinking/ # Core — step-by-step decomposition (DECOMPOSE→REASON→VALIDATE→SYNTHESIZE)
+├── hooks/            # 5 lifecycle hooks (hooks.yaml + handler .py files)
+│   ├── hooks.yaml           # Hook configuration & lifecycle event mapping
+│   ├── session_start.py     # Injects discipline rules at session start
+│   ├── pre_step.py          # Validates prerequisites before pipeline steps
+│   ├── post_step.py         # Validates outputs after pipeline steps
+│   ├── on_failure.py        # Handles failures — retry, loop, escalate
+│   └── on_deviation.py      # STOP → DOCUMENT → ASK → LOG protocol
+├── src/              # 🔧 Core engine (v2.0)
+│   └── omniskill/core/
+│       ├── pipeline_engine.py    # PipelineExecutor state machine
+│       ├── pipeline_state.py     # Accumulated state persistence
+│       └── artifact_validator.py # 5 artifact validation methods
+├── prompts/          # 🎭 Prompt library — router, system, personas
 │   ├── router.md     # Complexity classification prompts
 │   ├── system.md     # Master system prompt
 │   ├── shared.md     # Shared utilities & formatting
 │   └── personas/     # Expert, Quick, Teacher personas
-├── sdk/              # 🐍 Python SDK (NEW)
+├── sdk/              # 🐍 Python SDK
 │   └── omniskill.py  # Programmatic framework access
 ├── adapters/         # Cross-platform adapters (5 platforms)
-├── scripts/          # install, doctor, validate, migrate, update, admin
-├── schemas/          # YAML validation schemas
-└── docs/             # Beautiful HTML documentation site
+├── schemas/          # 9 YAML validation schemas
+├── scripts/          # install, doctor, validate, migrate, update, admin, build_docs
+├── tests/            # 282 automated tests (pytest)
+└── docs/             # 18 Markdown guides + HTML documentation site
+    └── html/         # Generated HTML docs with Mermaid diagrams
 ```
 
 ---
@@ -247,11 +322,15 @@ omniskill generate agent-cards       # Generate agent-cards.json
 ## 🧪 Validation & Admin
 
 ```bash
-python scripts/validate.py skills/my-skill     # Validate one skill
-python scripts/validate.py bundles/my-kit       # Validate one bundle
-python scripts/validate.py --all                # Validate everything
-python scripts/admin.py --stats                 # Show framework statistics
-python scripts/admin.py --report                # Generate full health report
+python scripts/validate.py --all                   # Validate everything (skills, bundles, pipelines, agents, synapses, hooks)
+python scripts/validate.py skills/my-skill         # Validate one skill
+python scripts/validate.py bundles/my-kit          # Validate one bundle
+python scripts/validate.py --pipelines             # Validate all pipelines
+python scripts/validate.py --agents                # Validate agent guardrails
+python scripts/validate.py --synapses              # Validate all synapses
+python scripts/validate.py --hooks                 # Validate hook system
+python scripts/admin.py --stats                    # Show framework statistics
+python scripts/admin.py --report                   # Generate full health report
 ```
 
 ---
@@ -336,33 +415,52 @@ os.route("build a React dashboard")  # Complexity routing
 os.install(platform="cursor")        # Install to platform
 os.sync_sources()                    # Sync knowledge sources
 os.health_check()                    # Comprehensive diagnostics
+
+# v2.0 Pipeline Methods
+os.execute_pipeline("sdd-pipeline", project_name="myapp")
+os.get_pipeline_status(pipeline_id)
+os.resume_pipeline(pipeline_id)
+os.list_active_pipelines()
+os.cancel_pipeline(pipeline_id)
+
+# v2.0 Synapse Methods
+os.list_synapses()                   # All registered synapses
+os.get_core_synapses()               # Core synapses only
 ```
 
 ---
 
 ## 📖 Documentation
 
-**🌐 [Browse the Full Documentation Site →](https://sufficientdaikon.github.io/omniskill/docs/getting-started.html)**
+**🌐 [Browse the Full Documentation Site →](https://sufficientdaikon.github.io/omniskill/docs/html/index.html)**
 
 | Guide | Description |
 | --- | --- |
-| [Getting Started](https://sufficientdaikon.github.io/omniskill/docs/getting-started.html) | Installation, setup, your first skill |
-| [Creating Skills](https://sufficientdaikon.github.io/omniskill/docs/creating-skills.html) | Skill anatomy, manifest, SKILL.md authoring |
-| [Creating Bundles](https://sufficientdaikon.github.io/omniskill/docs/creating-bundles.html) | Domain kits with meta-skill routing |
-| [Creating Agents](https://sufficientdaikon.github.io/omniskill/docs/creating-agents.html) | Agent personas, skill bindings, handoffs |
-| [Creating Pipelines](https://sufficientdaikon.github.io/omniskill/docs/creating-pipelines.html) | Multi-agent workflows with branching |
-| [Platform Guide](https://sufficientdaikon.github.io/omniskill/docs/platform-guide.html) | Claude Code, Copilot, Cursor, Windsurf, Antigravity |
-| [Architecture](https://sufficientdaikon.github.io/omniskill/docs/architecture.html) | Layered design, data flow, validation |
-| [FAQ](https://sufficientdaikon.github.io/omniskill/docs/faq.html) | Common questions answered |
+| [Getting Started](docs/getting-started.md) | Installation, setup, your first skill |
+| [Creating Skills](docs/creating-skills.md) | Skill anatomy, manifest, SKILL.md authoring |
+| [Creating Bundles](docs/creating-bundles.md) | Domain kits with meta-skill routing |
+| [Creating Agents](docs/creating-agents.md) | Agent personas, skill bindings, handoffs |
+| [Creating Pipelines](docs/creating-pipelines.md) | Multi-agent workflows with branching |
+| [Creating Synapses](docs/creating-synapses.md) | Custom cognitive capabilities |
+| [Platform Guide](docs/platform-guide.md) | Claude Code, Copilot, Cursor, Windsurf, Antigravity |
+| [CLI Guide](docs/cli-guide.md) | Full CLI command reference |
+| [Architecture](docs/architecture.md) | 5-Layer design, data flow, validation |
+| [Guardrails](docs/guardrails.md) | Guardrails engine, Iron Laws, deviation protocol |
+| [Sequential Thinking](docs/sequential-thinking.md) | Chain-of-thought protocol, decomposition patterns |
+| [Pipeline Orchestration](docs/pipeline-orchestration.md) | Real execution engine, state persistence, context curation |
+| [Migration Guide (v2.0)](docs/migration-v2.md) | Upgrading from v0.x to v2.0 |
+| [Agent Cards](docs/agent-cards.md) | Machine-readable agent metadata |
+| [MCP Integration Catalog](docs/integration-catalog.md) | 20 curated MCP servers |
+| [FAQ](docs/faq.md) | Common questions answered |
 
 ---
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding skills, bundles, agents, and pipelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on adding skills, bundles, agents, pipelines, synapses, and hooks.
 
 ---
 
 ## License
 
-MIT © tahaa
+MIT © [SufficientDaikon](https://github.com/SufficientDaikon)

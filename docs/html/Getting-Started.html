@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started with OMNISKILL — OMNISKILL v2.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-card: #1c2128;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-subtle: #388bfd26;
+            --border: #30363d;
+            --border-muted: #21262d;
+            --green: #3fb950;
+            --red: #f85149;
+            --orange: #d29922;
+            --purple: #bc8cff;
+            --pink: #f778ba;
+            --cyan: #39d2c0;
+            --nav-width: 280px;
+            --header-height: 60px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .header-brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-brand span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
+        .header-nav {
+            margin-left: auto;
+            display: flex;
+            gap: 16px;
+        }
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .header-nav a:hover { color: var(--accent); }
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            width: var(--nav-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 50;
+            transition: transform 0.3s;
+        }
+        .sidebar-section {
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+        .nav-link {
+            display: block;
+            padding: 8px 20px 8px 28px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+        }
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: var(--nav-width);
+            margin-top: var(--header-height);
+            padding: 40px 48px 80px;
+            max-width: 920px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-primary);
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        p {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        a:hover { text-decoration: underline; }
+
+        strong { color: var(--text-primary); font-weight: 600; }
+
+        /* Lists */
+        ul, ol {
+            margin: 0 0 16px 24px;
+            color: var(--text-primary);
+        }
+        li { margin-bottom: 6px; }
+        li > ul, li > ol { margin-top: 6px; margin-bottom: 0; }
+
+        /* Code */
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+            font-size: 85%;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--orange);
+        }
+        pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            line-height: 1.5;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        /* ASCII diagram styling */
+        pre.ascii-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 24px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--cyan);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        thead {
+            background: var(--bg-tertiary);
+        }
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+        }
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--accent-subtle);
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 12px 20px;
+            margin: 16px 0;
+            background: var(--accent-subtle);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-secondary);
+        }
+
+        /* Horizontal rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 32px 0;
+        }
+
+        /* Mermaid diagrams */
+        .mermaid {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        /* ASCII original toggle */
+        details.ascii-original {
+            margin: -16px 0 24px;
+            font-size: 13px;
+        }
+        details.ascii-original summary {
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 0;
+            user-select: none;
+        }
+        details.ascii-original summary:hover {
+            color: var(--text-secondary);
+        }
+        details.ascii-original pre {
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Badge pills */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-green { background: #238636; color: #fff; }
+        .badge-blue { background: #1f6feb; color: #fff; }
+        .badge-purple { background: #8957e5; color: #fff; }
+        .badge-red { background: #da3633; color: #fff; }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 24px 20px 60px; }
+            .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+        <a href="index.html" class="header-brand">
+            ⚡ OMNISKILL <span>v2.0 Documentation</span>
+        </a>
+        <nav class="header-nav">
+            <a href="https://github.com/SufficientDaikon/omniskill" target="_blank">GitHub</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">Getting Started</div>
+        <a href="index.html" class="nav-link">📚 Documentation Home</a>
+        <a href="Getting-Started.html" class="nav-link active">🚀 Getting Started</a>
+        <a href="Cli-Guide.html" class="nav-link">💻 CLI Guide</a>
+        <a href="Migration-V2.html" class="nav-link">📦 Migration to v2.0</a>
+        <div class="sidebar-section">Architecture</div>
+        <a href="Architecture.html" class="nav-link">🏗️ 5-Layer Architecture</a>
+        <a href="Pipeline-Orchestration.html" class="nav-link">🔧 Pipeline Orchestration</a>
+        <a href="Guardrails.html" class="nav-link">🛡️ Guardrails Engine</a>
+        <a href="Sequential-Thinking.html" class="nav-link">🧠 Sequential Thinking</a>
+        <div class="sidebar-section">Guides</div>
+        <a href="Creating-Skills.html" class="nav-link">✨ Creating Skills</a>
+        <a href="Creating-Agents.html" class="nav-link">🤖 Creating Agents</a>
+        <a href="Creating-Pipelines.html" class="nav-link">🔄 Creating Pipelines</a>
+        <a href="Creating-Bundles.html" class="nav-link">📦 Creating Bundles</a>
+        <a href="Creating-Synapses.html" class="nav-link">🧬 Creating Synapses</a>
+        <a href="Platform-Guide.html" class="nav-link">🌐 Platform Guide</a>
+        <div class="sidebar-section">Reference</div>
+        <a href="Agent-Cards.html" class="nav-link">🃏 Agent Cards</a>
+        <a href="Integration-Catalog.html" class="nav-link">🔌 Integration Catalog</a>
+        <a href="Faq.html" class="nav-link">❓ FAQ</a>
+        <a href="Llms-Txt.html" class="nav-link">📄 LLMs.txt</a>
+        <a href="Changelog.html" class="nav-link">📋 Changelog</a>
+        <a href="Contributing.html" class="nav-link">🤝 Contributing</a>
+        <a href="Readme.html" class="nav-link">📖 README</a>
+    </nav>
+
+    <main class="main">
+        <h1 id="getting-started-with-omniskill">Getting Started with OMNISKILL</h1>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><strong>Git</strong> installed</li>
+<li><strong>Python 3.8+</strong> installed</li>
+<li>At least one supported AI coding assistant:</li>
+<li>Claude Code</li>
+<li>GitHub Copilot CLI</li>
+<li>Cursor</li>
+<li>Windsurf</li>
+<li>Antigravity</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<h3 id="full-install-all-bundles-all-detected-platforms">Full Install (all bundles, all detected platforms)</h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/SufficientDaikon/omniskill.git
+<span class="nb">cd</span><span class="w"> </span>omniskill
+python<span class="w"> </span>scripts/install.py
+</code></pre></div>
+
+<h3 id="install-a-specific-bundle">Install a Specific Bundle</h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/install.py<span class="w"> </span>--bundle<span class="w"> </span>web-dev-kit
+python<span class="w"> </span>scripts/install.py<span class="w"> </span>--bundle<span class="w"> </span>godot-kit
+</code></pre></div>
+
+<h3 id="install-for-a-specific-platform">Install for a Specific Platform</h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/install.py<span class="w"> </span>--platform<span class="w"> </span>claude-code
+python<span class="w"> </span>scripts/install.py<span class="w"> </span>--platform<span class="w"> </span>cursor
+</code></pre></div>
+
+<h3 id="verify-installation">Verify Installation</h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/doctor.py
+</code></pre></div>
+
+<h2 id="your-first-skill">Your First Skill</h2>
+<h3 id="option-a-use-the-skill-factory-recommended">Option A: Use the Skill Factory (recommended)</h3>
+<p>Tell your AI assistant:</p>
+<blockquote>
+<p>"Create a new skill for [your domain]"</p>
+</blockquote>
+<p>This triggers the <strong>skill-factory pipeline</strong> which guides you through the entire process.</p>
+<h3 id="option-b-manual-creation">Option B: Manual Creation</h3>
+<ol>
+<li>Copy the template: <code>cp -r skills/_template skills/my-skill</code></li>
+<li>Edit <code>skills/my-skill/manifest.yaml</code> — fill in name, description, triggers</li>
+<li>Edit <code>skills/my-skill/SKILL.md</code> — define identity, workflow, rules</li>
+<li>Validate: <code>python scripts/validate.py skills/my-skill</code></li>
+<li>Install: <code>python scripts/install.py --skill my-skill</code></li>
+</ol>
+<h2 id="using-bundles">Using Bundles</h2>
+<p>Bundles are domain kits that install multiple related skills at once:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install the web development kit</span>
+python<span class="w"> </span>scripts/install.py<span class="w"> </span>--bundle<span class="w"> </span>web-dev-kit
+
+<span class="c1"># This installs: frontend-design, react-best-practices,</span>
+<span class="c1"># vercel-react-best-practices, web-design-guidelines, backend-development</span>
+<span class="c1"># Plus the web-fullstack-expert meta-skill that composes them</span>
+</code></pre></div>
+
+<h2 id="using-pipelines">Using Pipelines</h2>
+<p>Pipelines are multi-agent workflows. Trigger them with natural language:</p>
+<ul>
+<li><strong>"Build feature X from scratch"</strong> → SDD Pipeline (spec → implement → review)</li>
+<li><strong>"Design feature X"</strong> → UX Pipeline (research → wireframe → visual → review)</li>
+<li><strong>"Fix bug X"</strong> → Debug Pipeline (investigate → fix → test → review)</li>
+<li><strong>"Create a new skill for X"</strong> → Skill Factory</li>
+</ul>
+<p>Behind the scenes, every request passes through the <strong>Complexity Router</strong> which classifies your task (trivial → simple → moderate → complex → expert) and routes it to the optimal model tier and skill/agent/pipeline.</p>
+<h2 id="knowledge-sources">Knowledge Sources</h2>
+<p>OMNISKILL can tap into external knowledge repositories:</p>
+<ul>
+<li><strong>GitHub repos</strong> — Point to any public or private repository</li>
+<li><strong>Local directories</strong> — Reference your project docs, specs, or notes</li>
+<li><strong>URLs</strong> — Web documentation or API references</li>
+<li><strong>APIs</strong> — Dynamic data sources</li>
+</ul>
+<p>Knowledge sources use file-based search (grep/find/cat) — no vector databases or embeddings required. Configure sources in <code>templates/source-config.yaml</code> and sync them with:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/admin.py<span class="w"> </span>--sync
+</code></pre></div>
+
+<h2 id="self-customization">Self-Customization</h2>
+<p>OMNISKILL includes AI-guided skills for extending itself:</p>
+<ul>
+<li><strong><code>add-skill</code></strong> — Tell your AI: "Follow the add-skill skill to create a skill for [domain]"</li>
+<li><strong><code>add-bundle</code></strong> — AI-guided bundle creation with checklists</li>
+<li><strong><code>add-agent</code></strong> — AI-guided agent creation</li>
+<li><strong><code>add-adapter</code></strong> — Create adapters for new platforms</li>
+<li><strong><code>rename-project</code></strong> — Fork OMNISKILL and customize it for your organization</li>
+</ul>
+<p>These skills provide step-by-step guidance and validation checks.</p>
+<h2 id="using-the-sdk">Using the SDK</h2>
+<p>For programmatic access, use the Python SDK:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sdk.omniskill</span><span class="w"> </span><span class="kn">import</span> <span class="n">OmniSkill</span>
+
+<span class="n">os</span> <span class="o">=</span> <span class="n">OmniSkill</span><span class="p">()</span>
+
+<span class="c1"># List available skills</span>
+<span class="n">skills</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">list_skills</span><span class="p">()</span>
+
+<span class="c1"># Route a task to the right skill/agent</span>
+<span class="n">route</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;Create a React component&quot;</span><span class="p">)</span>
+
+<span class="c1"># Sync knowledge sources</span>
+<span class="n">os</span><span class="o">.</span><span class="n">sync_sources</span><span class="p">()</span>
+
+<span class="c1"># Health check</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">health_check</span><span class="p">()</span>
+</code></pre></div>
+
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><a href="creating-skills.md">Creating Skills</a> — Deep dive into skill authoring</li>
+<li><a href="creating-bundles.md">Creating Bundles</a> — Group skills into installable kits</li>
+<li><a href="creating-agents.md">Creating Agents</a> — Define formal agent definitions</li>
+<li><a href="creating-pipelines.md">Creating Pipelines</a> — Build multi-agent workflows</li>
+<li><a href="creating-synapses.md">Creating Synapses</a> — Custom cognitive capabilities</li>
+<li><a href="architecture.md">Architecture</a> — Understand the 5-Layer architecture</li>
+<li><a href="guardrails.md">Guardrails</a> — How guardrails enforce agent discipline</li>
+<li><a href="sequential-thinking.md">Sequential Thinking</a> — Chain-of-thought protocol</li>
+<li><a href="pipeline-orchestration.md">Pipeline Orchestration</a> — Real pipeline execution engine</li>
+<li><a href="platform-guide.md">Platform Guide</a> — Platform-specific setup details</li>
+<li><a href="migration-v2.md">Migration Guide (v2.0)</a> — Upgrading from v0.x to v2.0</li>
+<li><a href="faq.md">FAQ</a> — Common questions about new features</li>
+</ul>
+<h2 id="v20-features">v2.0 Features</h2>
+<h3 id="guardrails-engine">Guardrails Engine</h3>
+<p>Every agent in v2.0 has <strong>enforced guardrails</strong> — structured rules with severity levels and violation actions:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">guardrails</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Never</span><span class="nv"> </span><span class="s">assume</span><span class="nv"> </span><span class="s">requirements&quot;</span>
+<span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">critical</span>
+<span class="w">    </span><span class="nt">on-violation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">halt</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">rule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Always</span><span class="nv"> </span><span class="s">validate</span><span class="nv"> </span><span class="s">output&quot;</span>
+<span class="w">    </span><span class="nt">severity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">major</span>
+<span class="w">    </span><span class="nt">on-violation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">warn</span>
+</code></pre></div>
+
+<p>Guardrails are enforced by the hook system, not just documented. The anti-rationalization synapse prevents agents from rationalizing their way around rules.</p>
+<h3 id="sequential-thinking">Sequential Thinking</h3>
+<p>The sequential-thinking synapse fires automatically for every agent, enforcing step-by-step reasoning:</p>
+<ol>
+<li><strong>DECOMPOSE</strong> — Break the task into numbered steps</li>
+<li><strong>REASON</strong> — Think through each step with evidence</li>
+<li><strong>VALIDATE</strong> — Check conclusions against evidence</li>
+<li><strong>SYNTHESIZE</strong> — Combine step conclusions into final answer</li>
+</ol>
+<h3 id="pipeline-execution">Pipeline Execution</h3>
+<p>Pipelines are now real executable workflows:</p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>pipeline<span class="w"> </span>run<span class="w"> </span>sdd-pipeline<span class="w"> </span>--project<span class="w"> </span>./myapp
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>status
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>resume<span class="w"> </span>&lt;state-id&gt;
+</code></pre></div>
+
+<p>The pipeline engine handles failure recovery, context curation between steps, and persistent state.</p>
+        <div class="footer">
+            OMNISKILL v2.0 — Enforced Intelligence Framework<br>
+            <a href="https://github.com/SufficientDaikon/omniskill">GitHub</a> ·
+            <a href="index.html">Documentation Home</a>
+        </div>
+    </main>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1f6feb',
+                primaryTextColor: '#e6edf3',
+                primaryBorderColor: '#30363d',
+                lineColor: '#8b949e',
+                secondaryColor: '#21262d',
+                tertiaryColor: '#161b22',
+                fontSize: '14px'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            stateDiagram: {
+                useMaxWidth: true
+            }
+        });
+
+        // Highlight active nav link
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

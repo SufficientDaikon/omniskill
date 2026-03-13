@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNISKILL v2.0 — Pipeline Orchestration Guide — OMNISKILL v2.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-card: #1c2128;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-subtle: #388bfd26;
+            --border: #30363d;
+            --border-muted: #21262d;
+            --green: #3fb950;
+            --red: #f85149;
+            --orange: #d29922;
+            --purple: #bc8cff;
+            --pink: #f778ba;
+            --cyan: #39d2c0;
+            --nav-width: 280px;
+            --header-height: 60px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .header-brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-brand span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
+        .header-nav {
+            margin-left: auto;
+            display: flex;
+            gap: 16px;
+        }
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .header-nav a:hover { color: var(--accent); }
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            width: var(--nav-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 50;
+            transition: transform 0.3s;
+        }
+        .sidebar-section {
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+        .nav-link {
+            display: block;
+            padding: 8px 20px 8px 28px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+        }
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: var(--nav-width);
+            margin-top: var(--header-height);
+            padding: 40px 48px 80px;
+            max-width: 920px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-primary);
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        p {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        a:hover { text-decoration: underline; }
+
+        strong { color: var(--text-primary); font-weight: 600; }
+
+        /* Lists */
+        ul, ol {
+            margin: 0 0 16px 24px;
+            color: var(--text-primary);
+        }
+        li { margin-bottom: 6px; }
+        li > ul, li > ol { margin-top: 6px; margin-bottom: 0; }
+
+        /* Code */
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+            font-size: 85%;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--orange);
+        }
+        pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            line-height: 1.5;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        /* ASCII diagram styling */
+        pre.ascii-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 24px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--cyan);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        thead {
+            background: var(--bg-tertiary);
+        }
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+        }
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--accent-subtle);
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 12px 20px;
+            margin: 16px 0;
+            background: var(--accent-subtle);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-secondary);
+        }
+
+        /* Horizontal rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 32px 0;
+        }
+
+        /* Mermaid diagrams */
+        .mermaid {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        /* ASCII original toggle */
+        details.ascii-original {
+            margin: -16px 0 24px;
+            font-size: 13px;
+        }
+        details.ascii-original summary {
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 0;
+            user-select: none;
+        }
+        details.ascii-original summary:hover {
+            color: var(--text-secondary);
+        }
+        details.ascii-original pre {
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Badge pills */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-green { background: #238636; color: #fff; }
+        .badge-blue { background: #1f6feb; color: #fff; }
+        .badge-purple { background: #8957e5; color: #fff; }
+        .badge-red { background: #da3633; color: #fff; }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 24px 20px 60px; }
+            .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+        <a href="index.html" class="header-brand">
+            ⚡ OMNISKILL <span>v2.0 Documentation</span>
+        </a>
+        <nav class="header-nav">
+            <a href="https://github.com/SufficientDaikon/omniskill" target="_blank">GitHub</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">Getting Started</div>
+        <a href="index.html" class="nav-link">📚 Documentation Home</a>
+        <a href="Getting-Started.html" class="nav-link">🚀 Getting Started</a>
+        <a href="Cli-Guide.html" class="nav-link">💻 CLI Guide</a>
+        <a href="Migration-V2.html" class="nav-link">📦 Migration to v2.0</a>
+        <div class="sidebar-section">Architecture</div>
+        <a href="Architecture.html" class="nav-link">🏗️ 5-Layer Architecture</a>
+        <a href="Pipeline-Orchestration.html" class="nav-link active">🔧 Pipeline Orchestration</a>
+        <a href="Guardrails.html" class="nav-link">🛡️ Guardrails Engine</a>
+        <a href="Sequential-Thinking.html" class="nav-link">🧠 Sequential Thinking</a>
+        <div class="sidebar-section">Guides</div>
+        <a href="Creating-Skills.html" class="nav-link">✨ Creating Skills</a>
+        <a href="Creating-Agents.html" class="nav-link">🤖 Creating Agents</a>
+        <a href="Creating-Pipelines.html" class="nav-link">🔄 Creating Pipelines</a>
+        <a href="Creating-Bundles.html" class="nav-link">📦 Creating Bundles</a>
+        <a href="Creating-Synapses.html" class="nav-link">🧬 Creating Synapses</a>
+        <a href="Platform-Guide.html" class="nav-link">🌐 Platform Guide</a>
+        <div class="sidebar-section">Reference</div>
+        <a href="Agent-Cards.html" class="nav-link">🃏 Agent Cards</a>
+        <a href="Integration-Catalog.html" class="nav-link">🔌 Integration Catalog</a>
+        <a href="Faq.html" class="nav-link">❓ FAQ</a>
+        <a href="Llms-Txt.html" class="nav-link">📄 LLMs.txt</a>
+        <a href="Changelog.html" class="nav-link">📋 Changelog</a>
+        <a href="Contributing.html" class="nav-link">🤝 Contributing</a>
+        <a href="Readme.html" class="nav-link">📖 README</a>
+    </nav>
+
+    <main class="main">
+        <h1 id="omniskill-v20-pipeline-orchestration-guide">OMNISKILL v2.0 — Pipeline Orchestration Guide</h1>
+<h2 id="overview">Overview</h2>
+<p>Pipelines are multi-step workflows that chain agents together to accomplish complex tasks. The <code>PipelineExecutor</code> in <code>src/omniskill/core/pipeline_engine.py</code> manages execution, state, failure recovery, and artifact validation.</p>
+<hr>
+<h2 id="running-pipelines">Running Pipelines</h2>
+<h3 id="cli-usage">CLI Usage</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run the SDD pipeline</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>run<span class="w"> </span>sdd-pipeline<span class="w"> </span>--project<span class="w"> </span>./myapp
+
+<span class="c1"># Run the UX pipeline with a specific target</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>run<span class="w"> </span>ux-pipeline<span class="w"> </span>--project<span class="w"> </span>./myapp<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;dashboard redesign&quot;</span>
+
+<span class="c1"># Resume a paused pipeline</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>resume<span class="w"> </span>sdd-pipeline-abc123
+
+<span class="c1"># Check pipeline status</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>status<span class="w"> </span>sdd-pipeline-abc123
+
+<span class="c1"># List all pipeline runs</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>list
+</code></pre></div>
+
+<h3 id="trigger-phrases">Trigger Phrases</h3>
+<p>Pipelines also activate via natural language:</p>
+<table>
+<thead>
+<tr>
+<th>Phrase</th>
+<th>Pipeline</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"build feature X from scratch"</td>
+<td>sdd-pipeline</td>
+</tr>
+<tr>
+<td>"design feature X"</td>
+<td>ux-pipeline</td>
+</tr>
+<tr>
+<td>"fix bug X"</td>
+<td>debug-pipeline</td>
+</tr>
+<tr>
+<td>"create a new skill for X"</td>
+<td>skill-factory</td>
+</tr>
+<tr>
+<td>"build product X end-to-end"</td>
+<td>full-product</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="pipeline-yaml-format">Pipeline YAML Format</h2>
+<p>Each pipeline is defined in <code>pipelines/&lt;name&gt;.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sdd-pipeline</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Spec-Driven Development — from idea to reviewed implementation</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0.0</span>
+
+<span class="nt">steps</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write-spec</span>
+<span class="w">    </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spec-writer</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Transform requirements into implementable specification</span>
+<span class="w">    </span><span class="nt">expected_artifacts</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artifacts/spec.md</span>
+<span class="w">        </span><span class="nt">required_sections</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;##</span><span class="nv"> </span><span class="s">User</span><span class="nv"> </span><span class="s">Stories&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;##</span><span class="nv"> </span><span class="s">Acceptance</span><span class="nv"> </span><span class="s">Criteria&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;##</span><span class="nv"> </span><span class="s">Technical</span><span class="nv"> </span><span class="s">Architecture&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;##</span><span class="nv"> </span><span class="s">Error</span><span class="nv"> </span><span class="s">Handling&quot;</span>
+<span class="w">        </span><span class="nt">min_word_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
+<span class="w">    </span><span class="nt">on-failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">halt</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curate-spec-context</span>
+<span class="w">    </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">context-curator</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Curate spec output for implementer consumption</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write-spec</span>
+<span class="w">        </span><span class="nt">artifact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artifacts/spec.md</span>
+<span class="w">    </span><span class="nt">on-failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">halt</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">implement</span>
+<span class="w">    </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">implementer</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Build from spec, section by section</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curate-spec-context</span>
+<span class="w">        </span><span class="nt">artifact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artifacts/curated-context.md</span>
+<span class="w">    </span><span class="nt">expected_artifacts</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artifacts/implementation/</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">directory</span>
+<span class="w">    </span><span class="nt">on-failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loop</span>
+<span class="w">    </span><span class="nt">loop-target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">implement</span>
+<span class="w">    </span><span class="nt">max-iterations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curate-impl-context</span>
+<span class="w">    </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">context-curator</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Curate implementation output for reviewer</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">implement</span>
+<span class="w">        </span><span class="nt">artifact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artifacts/implementation/</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">write-spec</span>
+<span class="w">        </span><span class="nt">artifact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artifacts/spec.md</span>
+<span class="w">    </span><span class="nt">on-failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">halt</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">review</span>
+<span class="w">    </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reviewer</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verify implementation against spec</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">curate-impl-context</span>
+<span class="w">        </span><span class="nt">artifact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artifacts/curated-context.md</span>
+<span class="w">    </span><span class="nt">expected_artifacts</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">artifacts/review-report.html</span>
+<span class="w">        </span><span class="nt">required_sections</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Compliance</span><span class="nv"> </span><span class="s">Summary&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Issues</span><span class="nv"> </span><span class="s">Found&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Recommendations&quot;</span>
+<span class="w">    </span><span class="nt">on-failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">halt</span>
+</code></pre></div>
+
+<h3 id="key-fields">Key Fields</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Yes</td>
+<td>Unique step identifier</td>
+</tr>
+<tr>
+<td><code>agent</code></td>
+<td>Yes</td>
+<td>Which agent executes this step</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>Yes</td>
+<td>Human-readable step purpose</td>
+</tr>
+<tr>
+<td><code>inputs</code></td>
+<td>No</td>
+<td>Artifacts from previous steps</td>
+</tr>
+<tr>
+<td><code>expected_artifacts</code></td>
+<td>No</td>
+<td>What this step must produce</td>
+</tr>
+<tr>
+<td><code>on-failure</code></td>
+<td>Yes</td>
+<td><code>halt</code>, <code>skip</code>, or <code>loop</code></td>
+</tr>
+<tr>
+<td><code>loop-target</code></td>
+<td>If loop</td>
+<td>Which step to loop back to</td>
+</tr>
+<tr>
+<td><code>max-iterations</code></td>
+<td>If loop</td>
+<td>Maximum retry attempts</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="state-management">State Management</h2>
+<h3 id="pipelinestate-class">PipelineState Class</h3>
+<p>The <code>PipelineState</code> class tracks everything about a running pipeline:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">PipelineState</span><span class="p">:</span>
+    <span class="n">pipeline_id</span><span class="p">:</span> <span class="nb">str</span>          <span class="c1"># Unique run identifier</span>
+    <span class="n">pipeline_name</span><span class="p">:</span> <span class="nb">str</span>        <span class="c1"># e.g., &quot;sdd-pipeline&quot;</span>
+    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>               <span class="c1"># pending|validating|executing|completed|failed|cancelled|paused</span>
+    <span class="n">current_step</span><span class="p">:</span> <span class="nb">str</span>         <span class="c1"># ID of the currently executing step</span>
+    <span class="n">started_at</span><span class="p">:</span> <span class="n">datetime</span>
+    <span class="n">updated_at</span><span class="p">:</span> <span class="n">datetime</span>
+
+    <span class="c1"># Accumulated state — grows, never shrinks</span>
+    <span class="n">decisions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>      <span class="c1"># Design decisions made during execution</span>
+    <span class="n">constraints</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>    <span class="c1"># Constraints discovered or imposed</span>
+    <span class="n">tech_stack</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>     <span class="c1"># Technologies selected</span>
+
+    <span class="c1"># Step results</span>
+    <span class="n">step_results</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StepResult</span><span class="p">]</span>
+
+    <span class="c1"># Artifacts produced</span>
+    <span class="n">artifacts</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArtifactMetadata</span><span class="p">]</span>
+
+    <span class="c1"># Thinking traces for audit</span>
+    <span class="n">thinking_traces</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ThinkingTrace</span><span class="p">]</span>
+
+    <span class="c1"># Deviation log</span>
+    <span class="n">deviations</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Deviation</span><span class="p">]</span>
+</code></pre></div>
+
+<h3 id="the-accumulated-state-pattern">The Accumulated State Pattern</h3>
+<p>A critical design principle: <strong>accumulated state grows, never shrinks.</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># CORRECT — state accumulates</span>
+<span class="n">state</span><span class="o">.</span><span class="n">decisions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Using PostgreSQL for relational data&quot;</span><span class="p">)</span>
+<span class="n">state</span><span class="o">.</span><span class="n">decisions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Redis for session store&quot;</span><span class="p">)</span>
+<span class="n">state</span><span class="o">.</span><span class="n">tech_stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;PostgreSQL&quot;</span><span class="p">)</span>
+<span class="n">state</span><span class="o">.</span><span class="n">tech_stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Redis&quot;</span><span class="p">)</span>
+
+<span class="c1"># WRONG — never remove accumulated state</span>
+<span class="n">state</span><span class="o">.</span><span class="n">decisions</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;Using PostgreSQL&quot;</span><span class="p">)</span>  <span class="c1"># FORBIDDEN</span>
+<span class="n">state</span><span class="o">.</span><span class="n">tech_stack</span> <span class="o">=</span> <span class="p">[]</span>                       <span class="c1"># FORBIDDEN</span>
+</code></pre></div>
+
+<p>This ensures that:
+- Later steps have full context of all prior decisions
+- The reviewer can verify every decision was implemented
+- Pipeline resumption has complete history
+- Audit trails are never broken</p>
+<h3 id="state-persistence">State Persistence</h3>
+<p>State is written to disk after every step:</p>
+<div class="mermaid">
+flowchart TD
+    SW["📝 spec-writer"] -->|"full spec ~3000 words"| CC1["🔄 context-curator"]
+    CC1 -->|"curated ~800 words"| IM["⚙️ implementer"]
+    IM -->|"full impl ~5000 words"| CC2["🔄 context-curator"]
+    CC2 -->|"curated ~1200 words"| RV["✅ reviewer"]
+    RV --> RP["📊 review report"]
+
+    style SW fill:#9C27B0,color:#fff
+    style CC1 fill:#00BCD4,color:#fff
+    style IM fill:#FF9800,color:#fff
+    style CC2 fill:#00BCD4,color:#fff
+    style RV fill:#4CAF50,color:#fff
+    style RP fill:#607D8B,color:#fff
+</div>
+
+<details class="ascii-original"><summary>View original ASCII</summary><pre><code>~/.copilot/.omniskill/pipeline-states/
+    └── sdd-pipeline-abc123.json</code></pre></details>
+
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;pipeline_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sdd-pipeline-abc123&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;pipeline_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sdd-pipeline&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;executing&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;current_step&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;implement&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;started_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-01-15T10:00:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;updated_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-01-15T10:15:00Z&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;decisions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;REST API with Express.js&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;PostgreSQL with Prisma ORM&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;JWT-free session auth with Redis&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;constraints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">&quot;Must support 1000 concurrent users&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">&quot;Response time &lt; 200ms for all endpoints&quot;</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;tech_stack&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Node.js&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Express&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;PostgreSQL&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Prisma&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Redis&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;step_results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;write-spec&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;completed&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;duration_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12000</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;artifact_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;artifacts/spec.md&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;curate-spec-context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;completed&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;duration_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3000</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;artifact_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;artifacts/curated-context.md&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;thinking_traces&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;deviations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr>
+<h2 id="artifact-validation">Artifact Validation</h2>
+<p>Every step with <code>expected_artifacts</code> is validated by the <code>ArtifactValidator</code> after completion.</p>
+<h3 id="validation-checks">Validation Checks</h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ArtifactValidator</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">artifacts</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">expected</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">expected_artifacts</span><span class="p">:</span>
+            <span class="c1"># 1. Existence check</span>
+            <span class="k">assert</span> <span class="n">expected</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(),</span> \
+                <span class="sa">f</span><span class="s2">&quot;Missing artifact: </span><span class="si">{</span><span class="n">expected</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="c1"># 2. Type check</span>
+            <span class="k">if</span> <span class="n">expected</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;directory&quot;</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="n">expected</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">expected</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()))</span> <span class="o">&gt;</span> <span class="mi">0</span>
+
+            <span class="c1"># 3. Required sections (for markdown/HTML)</span>
+            <span class="k">if</span> <span class="n">expected</span><span class="o">.</span><span class="n">required_sections</span><span class="p">:</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">expected</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">expected</span><span class="o">.</span><span class="n">required_sections</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">content</span><span class="p">,</span> \
+                        <span class="sa">f</span><span class="s2">&quot;Missing section: </span><span class="si">{</span><span class="n">section</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="c1"># 4. Minimum word count</span>
+            <span class="k">if</span> <span class="n">expected</span><span class="o">.</span><span class="n">min_word_count</span><span class="p">:</span>
+                <span class="n">words</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+                <span class="k">assert</span> <span class="n">words</span> <span class="o">&gt;=</span> <span class="n">expected</span><span class="o">.</span><span class="n">min_word_count</span><span class="p">,</span> \
+                    <span class="sa">f</span><span class="s2">&quot;Too short: </span><span class="si">{</span><span class="n">words</span><span class="si">}</span><span class="s2"> words, need </span><span class="si">{</span><span class="n">expected</span><span class="o">.</span><span class="n">min_word_count</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
+
+<h3 id="validation-failure">Validation Failure</h3>
+<p>If validation fails, the step is marked as <code>failed</code> and the <code>on-failure</code> strategy determines what happens next.</p>
+<hr>
+<h2 id="failure-handling">Failure Handling</h2>
+<h3 id="strategy-halt">Strategy: halt</h3>
+<p>Pipeline stops immediately. Human must investigate and either fix the issue manually or cancel the pipeline.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">on-failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">halt</span>
+</code></pre></div>
+
+<p>Use for: critical steps where partial output is dangerous (spec writing, final review).</p>
+<h3 id="strategy-skip">Strategy: skip</h3>
+<p>Step is marked as <code>skipped</code>. The next step receives whatever context is available. A warning is logged.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">on-failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">skip</span>
+</code></pre></div>
+
+<p>Use for: optional enhancement steps where the pipeline can proceed without them.</p>
+<h3 id="strategy-loop">Strategy: loop</h3>
+<p>Step retries, targeting <code>loop-target</code> (usually itself). The agent receives the failure reason and previous output as additional context.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">on-failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loop</span>
+<span class="nt">loop-target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">implement</span>
+<span class="nt">max-iterations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+</code></pre></div>
+
+<p>The loop provides the agent with:
+1. The original inputs
+2. The failed output
+3. The validation error message
+4. Instruction: "Fix the issues identified above"</p>
+<h3 id="the-3-fix-escape-hatch">The 3-Fix Escape Hatch</h3>
+<p>If a looping step fails <code>max-iterations</code> times (default: 3), the pipeline does NOT loop forever. Instead:</p>
+<ol>
+<li>The step is marked as <code>failed</code></li>
+<li>All 3 attempts and their errors are collected</li>
+<li>The pipeline halts with a diagnostic:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>ESCAPE HATCH TRIGGERED
+Step: implement
+Attempts: 3/3
+Errors:
+  Attempt 1: Missing required section &quot;Error Handling&quot;
+  Attempt 2: Missing required section &quot;Error Handling&quot;
+  Attempt 3: Test failures in auth.test.js (3 failing)
+Recommendation: Review spec section on error handling — it may be ambiguous
+</code></pre></div>
+
+<p>This prevents infinite loops while giving the agent a fair chance to self-correct.</p>
+<hr>
+<h2 id="resuming-paused-pipelines">Resuming Paused Pipelines</h2>
+<p>Pipelines pause when:
+- A deviation is detected and awaits human decision
+- The escape hatch triggers
+- A <code>halt</code> failure strategy fires
+- The user manually pauses</p>
+<h3 id="resume-command">Resume Command</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>pipeline<span class="w"> </span>resume<span class="w"> </span>sdd-pipeline-abc123
+</code></pre></div>
+
+<h3 id="what-happens-on-resume">What Happens on Resume</h3>
+<ol>
+<li>The <code>PipelineExecutor</code> loads state from disk</li>
+<li>It identifies the step where execution stopped</li>
+<li>If the step was <code>failed</code>, it re-runs from that step</li>
+<li>If the step was <code>paused</code> (deviation), it checks for a resolution in the state file</li>
+<li>Accumulated state is preserved — all prior decisions, constraints, and tech stack are intact</li>
+</ol>
+<h3 id="manual-state-editing">Manual State Editing</h3>
+<p>Because state files are human-readable JSON, you can manually edit them before resuming:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Open the state file</span>
+code<span class="w"> </span>~/.copilot/.omniskill/pipeline-states/sdd-pipeline-abc123.json
+
+<span class="c1"># Edit: resolve a deviation, adjust constraints, etc.</span>
+<span class="c1"># Then resume</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>resume<span class="w"> </span>sdd-pipeline-abc123
+</code></pre></div>
+
+<hr>
+<h2 id="context-curation-between-steps">Context Curation Between Steps</h2>
+<p>The <code>context-curator</code> agent runs between major steps to prevent context bloat.</p>
+<h3 id="the-problem">The Problem</h3>
+<p>Without curation, each step receives all output from all previous steps. By step 5, the context window is full of irrelevant detail from step 1.</p>
+<h3 id="the-solution">The Solution</h3>
+<p>The context-curator:
+1. Receives the full output of the previous step
+2. Identifies what the next agent actually needs
+3. Produces a curated summary with only relevant information
+4. Preserves critical details (decisions, constraints, schema definitions)
+5. Drops implementation noise (debug logs, intermediate attempts)</p>
+<h3 id="curation-rules">Curation Rules</h3>
+<div class="highlight"><pre><span></span><code>ALWAYS KEEP:
+  - Design decisions and their rationale
+  - Schema definitions and data models
+  - API contracts and interfaces
+  - Constraints and non-functional requirements
+  - Unresolved issues and open questions
+
+ALWAYS DROP:
+  - Intermediate debugging output
+  - Failed attempts (unless instructive)
+  - Verbose logging
+  - Redundant explanations
+  - Thinking traces (available separately if needed)
+</code></pre></div>
+
+<h3 id="pipeline-flow-with-curation">Pipeline Flow with Curation</h3>
+<pre class="ascii-diagram"><code>spec-writer
+    │
+    ▼ (full spec output: ~3000 words)
+context-curator
+    │
+    ▼ (curated for implementer: ~800 words)
+implementer
+    │
+    ▼ (full implementation output: ~5000 words)
+context-curator
+    │
+    ▼ (curated for reviewer: ~1200 words — spec excerpts + code summary)
+reviewer
+    │
+    ▼ (review report)</code></pre>
+
+<p>Each curation step reduces token usage by 60-80% while preserving all decision-critical information.</p>
+<hr>
+<h2 id="quick-reference">Quick Reference</h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run a pipeline</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>run<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--project<span class="w"> </span>&lt;path&gt;
+
+<span class="c1"># Check status</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>status<span class="w"> </span>&lt;pipeline-id&gt;
+
+<span class="c1"># Resume paused pipeline</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>resume<span class="w"> </span>&lt;pipeline-id&gt;
+
+<span class="c1"># List all runs</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>list
+
+<span class="c1"># Cancel a running pipeline</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>cancel<span class="w"> </span>&lt;pipeline-id&gt;
+</code></pre></div>
+
+<h3 id="pipeline-yaml-cheat-sheet">Pipeline YAML Cheat Sheet</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">steps</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-name</span><span class="w">              </span><span class="c1"># Unique ID</span>
+<span class="w">    </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agent-name</span><span class="w">           </span><span class="c1"># Which agent</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;...&quot;</span><span class="w">          </span><span class="c1"># What it does</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w">                     </span><span class="c1"># What it needs</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">previous-step</span>
+<span class="w">        </span><span class="nt">artifact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">path/to/file</span>
+<span class="w">    </span><span class="nt">expected_artifacts</span><span class="p">:</span><span class="w">          </span><span class="c1"># What it must produce</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">output/path</span>
+<span class="w">        </span><span class="nt">required_sections</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<span class="w">        </span><span class="nt">min_word_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500</span>
+<span class="w">    </span><span class="nt">on-failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">halt|skip|loop</span><span class="w">  </span><span class="c1"># What to do on failure</span>
+<span class="w">    </span><span class="nt">loop-target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-name</span><span class="w">      </span><span class="c1"># Where to loop back</span>
+<span class="w">    </span><span class="nt">max-iterations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">           </span><span class="c1"># Max retries</span>
+</code></pre></div>
+        <div class="footer">
+            OMNISKILL v2.0 — Enforced Intelligence Framework<br>
+            <a href="https://github.com/SufficientDaikon/omniskill">GitHub</a> ·
+            <a href="index.html">Documentation Home</a>
+        </div>
+    </main>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1f6feb',
+                primaryTextColor: '#e6edf3',
+                primaryBorderColor: '#30363d',
+                lineColor: '#8b949e',
+                secondaryColor: '#21262d',
+                tertiaryColor: '#161b22',
+                fontSize: '14px'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            stateDiagram: {
+                useMaxWidth: true
+            }
+        });
+
+        // Highlight active nav link
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

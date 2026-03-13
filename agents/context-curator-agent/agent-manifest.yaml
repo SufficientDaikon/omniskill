@@ -32,21 +32,47 @@ handoff:
     - "All required sections are present in the brief"
     - "Dashboard has been generated"
 
+guardrail-enforcement: strict
+
 guardrails:
   must-not:
-    - "Create domain artifacts (specs, code, designs, reviews)"
-    - "Make technical or architectural decisions"
-    - "Modify source code, designs, or other agent outputs"
-    - "Skip artifact validation before handoff"
-    - "Exceed the recipient agent's context budget"
-    - "Discard pipeline state or accumulated context"
+    - rule: "Create domain artifacts (specs, code, designs, reviews)"
+      severity: critical
+      on-violation: halt
+    - rule: "Make technical or architectural decisions"
+      severity: critical
+      on-violation: halt
+    - rule: "Modify source code, designs, or other agent outputs"
+      severity: critical
+      on-violation: halt
+    - rule: "Skip artifact validation before handoff"
+      severity: critical
+      on-violation: halt
+    - rule: "Exceed the recipient agent's context budget"
+      severity: major
+      on-violation: warn
+    - rule: "Discard pipeline state or accumulated context"
+      severity: critical
+      on-violation: halt
   must-do:
-    - "Validate all source artifacts exist before processing"
-    - "Track and respect token budget for every context brief"
-    - "Persist pipeline state to disk after every transition"
-    - "Filter context by recipient agent's role and needs"
-    - "Include provenance references for all curated content"
-    - "Generate a pipeline dashboard after each transition"
+    - rule: "Validate all source artifacts exist before processing"
+      severity: critical
+      on-violation: halt
+    - rule: "Track and respect token budget for every context brief"
+      severity: major
+      on-violation: warn
+    - rule: "Persist pipeline state to disk after every transition"
+      severity: critical
+      on-violation: halt
+    - rule: "Filter context by recipient agent's role and needs"
+      severity: major
+      on-violation: warn
+    - rule: "Include provenance references for all curated content"
+      severity: major
+      on-violation: warn
+    - rule: "Generate a pipeline dashboard after each transition"
+      severity: minor
+      on-violation: log
 
 input-format: "Source phase artifacts + pipeline state (JSON) + pipeline config (YAML)"
 output-format: "Curated context brief (markdown) + updated pipeline state (JSON) + dashboard (HTML)"

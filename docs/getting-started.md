@@ -16,7 +16,7 @@
 ### Full Install (all bundles, all detected platforms)
 
 ```bash
-git clone https://github.com/tahaa/omniskill.git
+git clone https://github.com/SufficientDaikon/omniskill.git
 cd omniskill
 python scripts/install.py
 ```
@@ -138,6 +138,50 @@ report = os.health_check()
 - [Creating Bundles](creating-bundles.md) — Group skills into installable kits
 - [Creating Agents](creating-agents.md) — Define formal agent definitions
 - [Creating Pipelines](creating-pipelines.md) — Build multi-agent workflows
-- [Architecture](architecture.md) — Understand the complexity router and knowledge sources
+- [Creating Synapses](creating-synapses.md) — Custom cognitive capabilities
+- [Architecture](architecture.md) — Understand the 5-Layer architecture
+- [Guardrails](guardrails.md) — How guardrails enforce agent discipline
+- [Sequential Thinking](sequential-thinking.md) — Chain-of-thought protocol
+- [Pipeline Orchestration](pipeline-orchestration.md) — Real pipeline execution engine
 - [Platform Guide](platform-guide.md) — Platform-specific setup details
+- [Migration Guide (v2.0)](migration-v2.md) — Upgrading from v0.x to v2.0
 - [FAQ](faq.md) — Common questions about new features
+
+## v2.0 Features
+
+### Guardrails Engine
+
+Every agent in v2.0 has **enforced guardrails** — structured rules with severity levels and violation actions:
+
+```yaml
+guardrails:
+  - rule: "Never assume requirements"
+    severity: critical
+    on-violation: halt
+  - rule: "Always validate output"
+    severity: major
+    on-violation: warn
+```
+
+Guardrails are enforced by the hook system, not just documented. The anti-rationalization synapse prevents agents from rationalizing their way around rules.
+
+### Sequential Thinking
+
+The sequential-thinking synapse fires automatically for every agent, enforcing step-by-step reasoning:
+
+1. **DECOMPOSE** — Break the task into numbered steps
+2. **REASON** — Think through each step with evidence
+3. **VALIDATE** — Check conclusions against evidence
+4. **SYNTHESIZE** — Combine step conclusions into final answer
+
+### Pipeline Execution
+
+Pipelines are now real executable workflows:
+
+```bash
+omniskill pipeline run sdd-pipeline --project ./myapp
+omniskill pipeline status
+omniskill pipeline resume <state-id>
+```
+
+The pipeline engine handles failure recovery, context curation between steps, and persistent state.

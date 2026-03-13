@@ -34,17 +34,35 @@ handoff:
     - "Regression test defined"
     - "All four phases completed"
 
+guardrail-enforcement: strict
+
 guardrails:
   must-not:
-    - "Jump to solutions without investigation"
-    - "Skip any of the four phases"
-    - "Fix symptoms instead of root cause"
-    - "Guess or assume without evidence"
+    - rule: "Jump to solutions without investigation"
+      severity: critical
+      on-violation: halt
+    - rule: "Skip any of the four phases"
+      severity: critical
+      on-violation: halt
+    - rule: "Fix symptoms instead of root cause"
+      severity: critical
+      on-violation: halt
+    - rule: "Guess or assume without evidence"
+      severity: critical
+      on-violation: halt
   must-do:
-    - "Complete all four phases sequentially"
-    - "Reproduce the issue before claiming root cause"
-    - "Test hypotheses with evidence"
-    - "Address root cause, not symptoms"
+    - rule: "Complete all four phases sequentially"
+      severity: critical
+      on-violation: halt
+    - rule: "Reproduce the issue before claiming root cause"
+      severity: critical
+      on-violation: halt
+    - rule: "Test hypotheses with evidence"
+      severity: critical
+      on-violation: halt
+    - rule: "Address root cause, not symptoms"
+      severity: critical
+      on-violation: halt
 
 input-format: "Bug report, error message, test failure, or unexpected behavior (can be vague)"
 output-format: "Root cause analysis report with solution recommendation"

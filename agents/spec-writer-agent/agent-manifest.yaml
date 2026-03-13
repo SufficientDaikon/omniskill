@@ -30,17 +30,35 @@ handoff:
     - "Architecture is defined (if needed)"
     - "No open clarifying questions remain"
 
+guardrail-enforcement: strict
+
 guardrails:
   must-not:
-    - "Include implementation details or technology choices"
-    - "Assume or guess requirements"
-    - "Use ambiguous language"
-    - "Skip acceptance criteria"
+    - rule: "Include implementation details or technology choices"
+      severity: major
+      on-violation: warn
+    - rule: "Assume or guess requirements"
+      severity: critical
+      on-violation: halt
+    - rule: "Use ambiguous language"
+      severity: major
+      on-violation: warn
+    - rule: "Skip acceptance criteria"
+      severity: critical
+      on-violation: halt
   must-do:
-    - "Ask clarifying questions for any ambiguity"
-    - "Define testable acceptance criteria for every requirement"
-    - "Document all edge cases"
-    - "Separate WHAT from HOW"
+    - rule: "Ask clarifying questions for any ambiguity"
+      severity: critical
+      on-violation: halt
+    - rule: "Define testable acceptance criteria for every requirement"
+      severity: critical
+      on-violation: halt
+    - rule: "Document all edge cases"
+      severity: major
+      on-violation: warn
+    - rule: "Separate WHAT from HOW"
+      severity: major
+      on-violation: warn
 
 input-format: "High-level feature description, plan, or requirements (can be vague)"
 output-format: "Comprehensive specification document in markdown"

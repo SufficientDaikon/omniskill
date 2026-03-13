@@ -100,7 +100,13 @@ class OmniSkill:
                 continue
             
             with open(manifest_path, 'r', encoding='utf-8') as f:
-                skill_manifest = yaml.safe_load(f)
+                try:
+                    skill_manifest = yaml.safe_load(f)
+                except yaml.YAMLError:
+                    continue
+            
+            if not skill_manifest or not isinstance(skill_manifest, dict):
+                continue
             
             # Apply filters
             if tags and not any(tag in skill_manifest.get('tags', []) for tag in tags):
@@ -437,6 +443,8 @@ class OmniSkill:
         agents = self.manifest.get('agents', [])
         pipelines = self.manifest.get('pipelines', [])
         
+        synapses = self.manifest.get('synapses', [])
+        
         return {
             'status': 'healthy',
             'omniskill_version': self.manifest.get('version', 'unknown'),
@@ -445,8 +453,159 @@ class OmniSkill:
             'bundles_count': len(bundles),
             'agents_count': len(agents),
             'pipelines_count': len(pipelines),
+            'synapses_count': len(synapses),
             'platforms_count': len(self.manifest.get('platforms', []))
         }
+
+    # ─── Pipeline Execution Methods (v2.0) ───────────────────────────
+
+    def execute_pipeline(
+        self,
+        name: str,
+        project_dir: str = ".",
+        config: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """
+        Execute a pipeline by name.
+
+        Args:
+            name: Pipeline name (e.g., 'sdd-pipeline')
+            project_dir: Project directory for artifacts
+            config: Additional configuration
+
+        Returns:
+            Pipeline execution state dict
+        """
+        sys.path.insert(0, str(self.root / 'src'))
+        from omniskill.core.pipeline_engine import PipelineExecutor
+        
+        executor = PipelineExecutor(
+            hooks_dir=self.root / 'hooks',
+            state_dir=Path.home() / '.copilot' / '.omniskill' / 'pipeline-states',
+        )
+        pipeline = executor.load_pipeline(name)
+        return executor.execute(pipeline, project_dir=project_dir, config=config)
+
+    def resume_pipeline(self, state_id: str) -> Dict[str, Any]:
+        """
+        Resume a paused or failed pipeline.
+
+        Args:
+            state_id: Pipeline state ID
+
+        Returns:
+            Updated pipeline state dict
+        """
+        sys.path.insert(0, str(self.root / 'src'))
+        from omniskill.core.pipeline_engine import PipelineExecutor
+        
+        executor = PipelineExecutor(hooks_dir=self.root / 'hooks')
+        return executor.resume(state_id)
+
+    def get_pipeline_status(self, state_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Get the current status of a pipeline execution.
+
+        Args:
+            state_id: Pipeline state ID
+
+        Returns:
+            Pipeline state dict or None if not found
+        """
+        sys.path.insert(0, str(self.root / 'src'))
+        from omniskill.core.pipeline_state import PipelineState
+        
+        state = PipelineState.load(state_id)
+        return state.to_dict() if state else None
+
+    def list_active_pipelines(self) -> List[Dict[str, Any]]:
+        """
+        List all active (running/paused) pipeline executions.
+
+        Returns:
+            List of pipeline state summaries
+        """
+        state_dir = Path.home() / '.copilot' / '.omniskill' / 'pipeline-states'
+        if not state_dir.exists():
+            return []
+
+        active = []
+        for state_file in state_dir.glob('*.json'):
+            try:
+                with open(state_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                status = data.get('status', '')
+                if status in ('executing', 'paused', 'pending', 'validating'):
+                    active.append({
+                        'state_id': data.get('state_id', ''),
+                        'pipeline': data.get('pipeline_name', ''),
+                        'status': status,
+                        'project_dir': data.get('project_dir', ''),
+                        'health_score': data.get('health_score', 100),
+                    })
+            except (json.JSONDecodeError, KeyError):
+                continue
+
+        return active
+
+    def cancel_pipeline(self, state_id: str) -> bool:
+        """
+        Cancel a running pipeline.
+
+        Args:
+            state_id: Pipeline state ID
+
+        Returns:
+            True if cancelled, False if not found
+        """
+        sys.path.insert(0, str(self.root / 'src'))
+        from omniskill.core.pipeline_state import PipelineState
+        
+        state = PipelineState.load(state_id)
+        if state:
+            state.update_status('cancelled')
+            return True
+        return False
+
+    # ─── Synapse Methods (v2.0) ──────────────────────────────────────
+
+    def list_synapses(self) -> List[Dict[str, Any]]:
+        """List all registered synapses."""
+        synapses_raw = self.manifest.get('synapses', [])
+        synapses = []
+        for s in synapses_raw:
+            # Handle both string and dict formats
+            if isinstance(s, dict):
+                synapse_name = s.get('name', '')
+                synapse_path = s.get('path', f'synapses/{synapse_name}')
+            else:
+                synapse_name = s
+                synapse_path = f'synapses/{s}'
+            synapse_dir = self.root / synapse_path
+            manifest_path = synapse_dir / 'manifest.yaml'
+            if manifest_path.exists():
+                try:
+                    with open(manifest_path, 'r', encoding='utf-8') as f:
+                        manifest = yaml.safe_load(f)
+                    synapses.append({
+                        'name': manifest.get('name', synapse_name),
+                        'version': manifest.get('version', ''),
+                        'type': manifest.get('synapse-type', ''),
+                        'description': manifest.get('description', ''),
+                        'phases': [p['name'] for p in manifest.get('firing-phases', [])],
+                    })
+                except Exception:
+                    synapses.append({'name': synapse_name, 'error': 'Failed to load manifest'})
+            else:
+                synapses.append({'name': synapse_name, 'error': 'No manifest found'})
+        return synapses
+
+    def get_core_synapses(self) -> List[str]:
+        """Get names of all core synapses (always-on)."""
+        return [
+            s['name'] for s in self.list_synapses()
+            if s.get('type') == 'core'
+        ]
 
 
 # Convenience function

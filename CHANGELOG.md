@@ -5,6 +5,41 @@ All notable changes to OMNISKILL will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-03-09
+
+### Added
+
+- **Guardrails Engine**: Anti-rationalization synapse with 10 Iron Laws, forbidden phrases, rationalization tables
+- **Sequential Thinking Protocol**: Chain-of-thought synapse with DECOMPOSE → REASON → VALIDATE → SYNTHESIZE phases
+- **Pipeline Orchestrator Engine**: Real execution engine replacing simulated pipelines (PipelineExecutor, PipelineState, ArtifactValidator)
+- **Hook System**: 5 Python lifecycle hooks (session_start, pre_step, post_step, on_failure, on_deviation)
+- **Enhanced Metacognition**: Stuck-loop detection, complexity scaling, escape hatch protocol, confidence calibration
+- **Deviation Protocol**: STOP → DOCUMENT → ASK → LOG workflow with schema
+- **Pipeline State Persistence**: JSON-based state at `~/.copilot/.omniskill/pipeline-states/`
+- **Accumulated State Pattern**: Decisions, constraints, tech_stack grow across pipeline steps
+- **CLI Pipeline Commands**: `run`, `status`, `resume`, `list`, `cancel`
+- **SDK Pipeline Methods**: `execute_pipeline`, `resume_pipeline`, `get_pipeline_status`, `list_active_pipelines`, `cancel_pipeline`
+- **SDK Synapse Methods**: `list_synapses`, `get_core_synapses`
+- **3 New Schemas**: guardrails, deviation-log, thinking-trace
+- **282 Tests**: 9 test files covering engine, state, validation, guardrails, hooks, thinking, integration, stress, CLI
+- **4 New Documentation Guides**: architecture, guardrails, sequential-thinking, pipeline-orchestration
+- **HTML Documentation Site**: Auto-generated from Markdown with Mermaid diagram rendering via `scripts/build_docs.py`
+- **Enhanced Validation**: `validate.py` now supports `--synapses`, `--hooks`, `--agents`, `--all` flags
+
+### Changed
+
+- Version bump 0.2.0 → 2.0.0
+- Pipeline execution is now real (was simulated)
+- Metacognition synapse upgraded to v2.0.0
+- `omniskill.yaml` now registers 3 synapses (was 1)
+
+### Fixed
+
+- SDK handles both dict and string synapse formats in `omniskill.yaml`
+- SDK gracefully handles malformed YAML in skill manifests
+- Pipeline state persists correctly to disk during execution
+- Engine reloads accumulated state from disk after step handlers modify it
+
 ## [0.2.0] - 2026-03-08
 
 ### Added

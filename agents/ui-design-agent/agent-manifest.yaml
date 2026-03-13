@@ -31,18 +31,38 @@ handoff:
     - "Accessibility verified (WCAG AA)"
     - "Responsive at mobile, tablet, desktop"
 
+guardrail-enforcement: standard
+
 guardrails:
   must-not:
-    - "Create generic template designs"
-    - "Ignore accessibility requirements"
-    - "Hardcode colors or spacing"
-    - "Design only for desktop"
+    - rule: "Create generic template designs"
+      severity: major
+      on-violation: warn
+    - rule: "Ignore accessibility requirements"
+      severity: critical
+      on-violation: halt
+    - rule: "Hardcode colors or spacing"
+      severity: major
+      on-violation: warn
+    - rule: "Design only for desktop"
+      severity: major
+      on-violation: warn
   must-do:
-    - "Establish design tokens first"
-    - "Meet WCAG AA contrast (4.5:1)"
-    - "Design responsive layouts"
-    - "Create reusable components"
-    - "Write production-ready code"
+    - rule: "Establish design tokens first"
+      severity: major
+      on-violation: warn
+    - rule: "Meet WCAG AA contrast (4.5:1)"
+      severity: critical
+      on-violation: halt
+    - rule: "Design responsive layouts"
+      severity: major
+      on-violation: warn
+    - rule: "Create reusable components"
+      severity: major
+      on-violation: warn
+    - rule: "Write production-ready code"
+      severity: minor
+      on-violation: log
 
 input-format: "Wireframes, brand guidelines, or project brief (can be low-fidelity)"
 output-format: "High-fidelity visual design with tokens, components, and documentation"

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Cards — OMNISKILL v2.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-card: #1c2128;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-subtle: #388bfd26;
+            --border: #30363d;
+            --border-muted: #21262d;
+            --green: #3fb950;
+            --red: #f85149;
+            --orange: #d29922;
+            --purple: #bc8cff;
+            --pink: #f778ba;
+            --cyan: #39d2c0;
+            --nav-width: 280px;
+            --header-height: 60px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .header-brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-brand span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
+        .header-nav {
+            margin-left: auto;
+            display: flex;
+            gap: 16px;
+        }
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .header-nav a:hover { color: var(--accent); }
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            width: var(--nav-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 50;
+            transition: transform 0.3s;
+        }
+        .sidebar-section {
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+        .nav-link {
+            display: block;
+            padding: 8px 20px 8px 28px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+        }
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: var(--nav-width);
+            margin-top: var(--header-height);
+            padding: 40px 48px 80px;
+            max-width: 920px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-primary);
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        p {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        a:hover { text-decoration: underline; }
+
+        strong { color: var(--text-primary); font-weight: 600; }
+
+        /* Lists */
+        ul, ol {
+            margin: 0 0 16px 24px;
+            color: var(--text-primary);
+        }
+        li { margin-bottom: 6px; }
+        li > ul, li > ol { margin-top: 6px; margin-bottom: 0; }
+
+        /* Code */
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+            font-size: 85%;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--orange);
+        }
+        pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            line-height: 1.5;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        /* ASCII diagram styling */
+        pre.ascii-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 24px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--cyan);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        thead {
+            background: var(--bg-tertiary);
+        }
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+        }
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--accent-subtle);
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 12px 20px;
+            margin: 16px 0;
+            background: var(--accent-subtle);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-secondary);
+        }
+
+        /* Horizontal rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 32px 0;
+        }
+
+        /* Mermaid diagrams */
+        .mermaid {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        /* ASCII original toggle */
+        details.ascii-original {
+            margin: -16px 0 24px;
+            font-size: 13px;
+        }
+        details.ascii-original summary {
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 0;
+            user-select: none;
+        }
+        details.ascii-original summary:hover {
+            color: var(--text-secondary);
+        }
+        details.ascii-original pre {
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Badge pills */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-green { background: #238636; color: #fff; }
+        .badge-blue { background: #1f6feb; color: #fff; }
+        .badge-purple { background: #8957e5; color: #fff; }
+        .badge-red { background: #da3633; color: #fff; }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 24px 20px 60px; }
+            .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+        <a href="index.html" class="header-brand">
+            ⚡ OMNISKILL <span>v2.0 Documentation</span>
+        </a>
+        <nav class="header-nav">
+            <a href="https://github.com/SufficientDaikon/omniskill" target="_blank">GitHub</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">Getting Started</div>
+        <a href="index.html" class="nav-link">📚 Documentation Home</a>
+        <a href="Getting-Started.html" class="nav-link">🚀 Getting Started</a>
+        <a href="Cli-Guide.html" class="nav-link">💻 CLI Guide</a>
+        <a href="Migration-V2.html" class="nav-link">📦 Migration to v2.0</a>
+        <div class="sidebar-section">Architecture</div>
+        <a href="Architecture.html" class="nav-link">🏗️ 5-Layer Architecture</a>
+        <a href="Pipeline-Orchestration.html" class="nav-link">🔧 Pipeline Orchestration</a>
+        <a href="Guardrails.html" class="nav-link">🛡️ Guardrails Engine</a>
+        <a href="Sequential-Thinking.html" class="nav-link">🧠 Sequential Thinking</a>
+        <div class="sidebar-section">Guides</div>
+        <a href="Creating-Skills.html" class="nav-link">✨ Creating Skills</a>
+        <a href="Creating-Agents.html" class="nav-link">🤖 Creating Agents</a>
+        <a href="Creating-Pipelines.html" class="nav-link">🔄 Creating Pipelines</a>
+        <a href="Creating-Bundles.html" class="nav-link">📦 Creating Bundles</a>
+        <a href="Creating-Synapses.html" class="nav-link">🧬 Creating Synapses</a>
+        <a href="Platform-Guide.html" class="nav-link">🌐 Platform Guide</a>
+        <div class="sidebar-section">Reference</div>
+        <a href="Agent-Cards.html" class="nav-link active">🃏 Agent Cards</a>
+        <a href="Integration-Catalog.html" class="nav-link">🔌 Integration Catalog</a>
+        <a href="Faq.html" class="nav-link">❓ FAQ</a>
+        <a href="Llms-Txt.html" class="nav-link">📄 LLMs.txt</a>
+        <a href="Changelog.html" class="nav-link">📋 Changelog</a>
+        <a href="Contributing.html" class="nav-link">🤝 Contributing</a>
+        <a href="Readme.html" class="nav-link">📖 README</a>
+    </nav>
+
+    <main class="main">
+        <h1 id="agent-cards">Agent Cards</h1>
+<blockquote>
+<p>Machine-readable metadata cards for every OMNISKILL agent — enabling discovery, selection, and programmatic consumption.</p>
+</blockquote>
+<hr>
+<h2 id="what-are-agent-cards">What are Agent Cards?</h2>
+<p>Every OMNISKILL agent carries a structured <strong>Agent Card</strong> in its <code>agent-manifest.yaml</code>. The card describes the agent's capabilities, input/output modalities, cost tier, token estimates, and quality metrics in a machine-readable format.</p>
+<p>Agent Cards enable:</p>
+<ul>
+<li><strong>Discovery</strong> — External systems (web UIs, LLM routers, IDE extensions) can find agents and their capabilities from a single JSON index.</li>
+<li><strong>Selection</strong> — When multiple agents could handle a task, card metadata (capabilities, cost-tier, quality-metrics) enables automated or user-assisted agent selection.</li>
+<li><strong>Observability</strong> — Token usage estimates and quality metrics per agent enable cost optimization and continuous improvement.</li>
+<li><strong>Ecosystem</strong> — A standardized card format makes agents portable across frameworks that adopt the same schema.</li>
+</ul>
+<hr>
+<h2 id="card-schema">Card Schema</h2>
+<p>Each card contains the following fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>capabilities</code></td>
+<td>object</td>
+<td>✅</td>
+<td>Boolean flags for agent capabilities</td>
+</tr>
+<tr>
+<td><code>capabilities.streaming</code></td>
+<td>boolean</td>
+<td>✅</td>
+<td>Supports streaming output</td>
+</tr>
+<tr>
+<td><code>capabilities.multi-turn</code></td>
+<td>boolean</td>
+<td>✅</td>
+<td>Supports multi-turn conversations</td>
+</tr>
+<tr>
+<td><code>capabilities.file-output</code></td>
+<td>boolean</td>
+<td>✅</td>
+<td>Produces file artifacts</td>
+</tr>
+<tr>
+<td><code>capabilities.self-evaluation</code></td>
+<td>boolean</td>
+<td>✅</td>
+<td>Validates own output quality</td>
+</tr>
+<tr>
+<td><code>capabilities.context-aware</code></td>
+<td>boolean</td>
+<td>✅</td>
+<td>Uses prior context from the pipeline</td>
+</tr>
+<tr>
+<td><code>skills-provided</code></td>
+<td>list</td>
+<td>✅</td>
+<td>Skills this agent provides (min 1)</td>
+</tr>
+<tr>
+<td><code>skills-provided[].id</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Unique kebab-case skill identifier</td>
+</tr>
+<tr>
+<td><code>skills-provided[].name</code></td>
+<td>string</td>
+<td>✅</td>
+<td>Human-readable skill name</td>
+</tr>
+<tr>
+<td><code>skills-provided[].description</code></td>
+<td>string</td>
+<td>✅</td>
+<td>What this skill does</td>
+</tr>
+<tr>
+<td><code>skills-provided[].tags</code></td>
+<td>list[string]</td>
+<td>❌</td>
+<td>Categorization tags</td>
+</tr>
+<tr>
+<td><code>input-modes</code></td>
+<td>list[string]</td>
+<td>✅</td>
+<td>MIME types the agent accepts (min 1)</td>
+</tr>
+<tr>
+<td><code>output-modes</code></td>
+<td>list[string]</td>
+<td>✅</td>
+<td>MIME types the agent produces (min 1)</td>
+</tr>
+<tr>
+<td><code>cost-tier</code></td>
+<td>string</td>
+<td>✅</td>
+<td>One of: <code>fast</code>, <code>standard</code>, <code>premium</code></td>
+</tr>
+<tr>
+<td><code>avg-tokens</code></td>
+<td>object</td>
+<td>✅</td>
+<td>Token usage estimates</td>
+</tr>
+<tr>
+<td><code>avg-tokens.input</code></td>
+<td>integer</td>
+<td>✅</td>
+<td>Average input tokens (≥ 0)</td>
+</tr>
+<tr>
+<td><code>avg-tokens.output</code></td>
+<td>integer</td>
+<td>✅</td>
+<td>Average output tokens (≥ 0)</td>
+</tr>
+<tr>
+<td><code>quality-metrics</code></td>
+<td>object | null</td>
+<td>❌</td>
+<td>Evaluation metrics (null = not yet evaluated)</td>
+</tr>
+<tr>
+<td><code>quality-metrics.completeness</code></td>
+<td>float</td>
+<td>❌</td>
+<td>Fraction of requirements addressed (0.0–1.0)</td>
+</tr>
+<tr>
+<td><code>quality-metrics.last-eval-score</code></td>
+<td>float</td>
+<td>❌</td>
+<td>Score from most recent evaluation (0.0–1.0)</td>
+</tr>
+<tr>
+<td><code>quality-metrics.eval-count</code></td>
+<td>integer</td>
+<td>❌</td>
+<td>Number of evaluations completed</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="example-card">Example Card</h2>
+<div class="highlight"><pre><span></span><code><span class="nt">card</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">capabilities</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">streaming</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">multi-turn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">file-output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">self-evaluation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">context-aware</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">skills-provided</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">requirements-engineering</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Requirements Engineering</span>
+<span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Transforms</span><span class="nv"> </span><span class="s">ambiguous</span><span class="nv"> </span><span class="s">ideas</span><span class="nv"> </span><span class="s">into</span><span class="nv"> </span><span class="s">crystal-clear,</span><span class="nv"> </span><span class="s">testable</span><span class="nv"> </span><span class="s">specifications&quot;</span>
+<span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">specification</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">requirements</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">acceptance-criteria</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">input-modes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;text/plain&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;text/markdown&quot;</span>
+<span class="w">  </span><span class="nt">output-modes</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;text/markdown&quot;</span>
+<span class="w">  </span><span class="nt">cost-tier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">standard</span>
+<span class="w">  </span><span class="nt">avg-tokens</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">input</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000</span>
+<span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8000</span>
+<span class="w">  </span><span class="nt">quality-metrics</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+</code></pre></div>
+
+<hr>
+<h2 id="generating-agent-cardsjson">Generating <code>agent-cards.json</code></h2>
+<p>The <code>agent-cards.json</code> file is an auto-generated JSON index of all agent cards. It contains every agent's name, version, role, description, path, and full card data.</p>
+<h3 id="cli-command-recommended">CLI Command (recommended)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate agent-cards.json at the repo root</span>
+omniskill<span class="w"> </span>generate<span class="w"> </span>agent-cards
+
+<span class="c1"># Write to a custom directory</span>
+omniskill<span class="w"> </span>generate<span class="w"> </span>agent-cards<span class="w"> </span>--output<span class="w"> </span>./dist/
+
+<span class="c1"># JSON output (for scripting)</span>
+omniskill<span class="w"> </span>--json<span class="w"> </span>generate<span class="w"> </span>agent-cards
+</code></pre></div>
+
+<h3 id="standalone-script">Standalone Script</h3>
+<p>Works without the <code>omniskill</code> package installed — only requires Python 3.10+ and PyYAML:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/generate-agent-cards.py
+python<span class="w"> </span>scripts/generate-agent-cards.py<span class="w"> </span>--output<span class="w"> </span>./dist/
+</code></pre></div>
+
+<hr>
+<h2 id="cli-reference">CLI Reference</h2>
+<h3 id="view-all-agent-cards">View all agent cards</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>cards
+</code></pre></div>
+
+<p>Displays a Rich table with columns: Name, Role, Capabilities (emoji badges), Cost Tier (colored).</p>
+<h3 id="view-a-single-agent-card">View a single agent card</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>cards<span class="w"> </span>spec-writer-agent
+</code></pre></div>
+
+<p>Displays a detailed Rich panel with all card fields.</p>
+<h3 id="export-as-json">Export as JSON</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>cards<span class="w"> </span>--json
+</code></pre></div>
+
+<p>Outputs a JSON envelope with all card data.</p>
+<h3 id="validate-cards">Validate cards</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>cards<span class="w"> </span>--validate
+</code></pre></div>
+
+<p>Validates every agent's card section against the schema. Exits with code 0 on success, code 2 on failure.</p>
+<h3 id="check-freshness">Check freshness</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>validate<span class="w"> </span>--check-agent-cards
+</code></pre></div>
+
+<p>Checks whether <code>agent-cards.json</code> is up to date with current manifests.</p>
+<hr>
+<h2 id="using-cards-programmatically">Using Cards Programmatically</h2>
+<p>The generated <code>agent-cards.json</code> file can be consumed by any tool that reads JSON:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;$schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;omniskill-agent-cards-v1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;generated&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-01-01T00:00:00+00:00&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;framework_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.2.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;agents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spec-writer-agent&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Specification Architect&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;agents/spec-writer-agent&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;card&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;capabilities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;streaming&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;multi-turn&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;skills-provided&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="err">...</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;input-modes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;text/plain&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;text/markdown&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;output-modes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;text/markdown&quot;</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;cost-tier&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;standard&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;avg-tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;input&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2000</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;output&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8000</span><span class="w"> </span><span class="p">},</span>
+<span class="w">        </span><span class="nt">&quot;quality-metrics&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="python">Python</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;agent-cards.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">agent</span><span class="p">[</span><span class="s2">&quot;card&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">agent</span><span class="p">[</span><span class="s2">&quot;card&quot;</span><span class="p">][</span><span class="s2">&quot;cost-tier&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;fast&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fast agent: </span><span class="si">{</span><span class="n">agent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="javascript">JavaScript</h3>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">cards</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="s2">&quot;agent-cards.json&quot;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">r</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">r</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">premiumAgents</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">cards</span><span class="p">.</span><span class="nx">agents</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span>
+<span class="w">  </span><span class="nx">a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">a</span><span class="p">.</span><span class="nx">card</span><span class="o">?</span><span class="p">.[</span><span class="s2">&quot;cost-tier&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s2">&quot;premium&quot;</span>
+<span class="p">);</span>
+</code></pre></div>
+
+<hr>
+<h2 id="adding-cards-to-your-agent">Adding Cards to Your Agent</h2>
+<ol>
+<li>Open your agent's <code>agent-manifest.yaml</code></li>
+<li>Add a <code>card:</code> section at the end (see the <a href="../agents/_template/agent-manifest.yaml">template</a>)</li>
+<li>Fill in accurate values based on your agent's actual capabilities</li>
+<li>Run <code>omniskill cards --validate</code> to verify</li>
+</ol>
+<p>The card section is <strong>optional</strong> — agents without it continue to work normally. However, cards are recommended for discoverability and programmatic consumption.</p>
+        <div class="footer">
+            OMNISKILL v2.0 — Enforced Intelligence Framework<br>
+            <a href="https://github.com/SufficientDaikon/omniskill">GitHub</a> ·
+            <a href="index.html">Documentation Home</a>
+        </div>
+    </main>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1f6feb',
+                primaryTextColor: '#e6edf3',
+                primaryBorderColor: '#30363d',
+                lineColor: '#8b949e',
+                secondaryColor: '#21262d',
+                tertiaryColor: '#161b22',
+                fontSize: '14px'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            stateDiagram: {
+                useMaxWidth: true
+            }
+        });
+
+        // Highlight active nav link
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -32,17 +32,35 @@ handoff:
     - "Spec is unclear or ambiguous"
     - "Implementation impossible per spec"
 
+guardrail-enforcement: strict
+
 guardrails:
   must-not:
-    - "Add features not in spec"
-    - "Skip writing tests"
-    - "Deviate from spec without approval"
-    - "Implement everything before testing"
+    - rule: "Add features not in spec"
+      severity: critical
+      on-violation: halt
+    - rule: "Skip writing tests"
+      severity: critical
+      on-violation: halt
+    - rule: "Deviate from spec without approval"
+      severity: critical
+      on-violation: halt
+    - rule: "Implement everything before testing"
+      severity: major
+      on-violation: warn
   must-do:
-    - "Follow spec exactly"
-    - "Write tests before implementation (TDD)"
-    - "Build section-by-section"
-    - "Ask for clarification if spec unclear"
+    - rule: "Follow spec exactly"
+      severity: critical
+      on-violation: halt
+    - rule: "Write tests before implementation (TDD)"
+      severity: critical
+      on-violation: halt
+    - rule: "Build section-by-section"
+      severity: major
+      on-violation: warn
+    - rule: "Ask for clarification if spec unclear"
+      severity: critical
+      on-violation: halt
 
 input-format: "Comprehensive specification document with acceptance criteria"
 output-format: "Implemented code + tests + implementation report"

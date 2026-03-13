@@ -30,17 +30,35 @@ handoff:
     - "Test report generated"
     - "Bugs documented with evidence"
 
+guardrail-enforcement: strict
+
 guardrails:
   must-not:
-    - "Skip test planning"
-    - "Write flaky tests"
-    - "Test only happy path"
-    - "Approve releases with critical bugs"
+    - rule: "Skip test planning"
+      severity: critical
+      on-violation: halt
+    - rule: "Write flaky tests"
+      severity: major
+      on-violation: warn
+    - rule: "Test only happy path"
+      severity: critical
+      on-violation: halt
+    - rule: "Approve releases with critical bugs"
+      severity: critical
+      on-violation: halt
   must-do:
-    - "Test happy path AND edge cases"
-    - "Write reliable, maintainable tests"
-    - "Document bugs with evidence"
-    - "Advocate for quality standards"
+    - rule: "Test happy path AND edge cases"
+      severity: critical
+      on-violation: halt
+    - rule: "Write reliable, maintainable tests"
+      severity: major
+      on-violation: warn
+    - rule: "Document bugs with evidence"
+      severity: major
+      on-violation: warn
+    - rule: "Advocate for quality standards"
+      severity: minor
+      on-violation: log
 
 input-format: "Specification, user stories, or implemented feature to test"
 output-format: "QA package with test plan, test cases, E2E tests, and test report"

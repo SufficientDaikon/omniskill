@@ -1,17 +1,32 @@
 # OMNISKILL Documentation
 
-Beautiful, comprehensive documentation for OMNISKILL.
+Comprehensive documentation for OMNISKILL v2.0 — the Universal AI Agent & Skills Framework.
 
 ## 📚 Documentation Pages
 
-- **[Getting Started](getting-started.html)** — Installation, setup, and your first skill
-- **[Creating Skills](creating-skills.html)** — Deep dive into skill authoring
-- **[Creating Bundles](creating-bundles.html)** — Group skills into domain kits
-- **[Creating Agents](creating-agents.html)** — Define formal agent personas
-- **[Creating Pipelines](creating-pipelines.html)** — Build multi-agent workflows
-- **[Platform Guide](platform-guide.html)** — Platform-specific setup details
-- **[Architecture](architecture.html)** — System design and principles
-- **[FAQ](faq.html)** — Frequently asked questions
+### Getting Started
+- **[Getting Started](getting-started.md)** — Installation, setup, and your first skill
+
+### Creating Components
+- **[Creating Skills](creating-skills.md)** — Deep dive into skill authoring
+- **[Creating Bundles](creating-bundles.md)** — Group skills into domain kits
+- **[Creating Agents](creating-agents.md)** — Define formal agent personas with enforced guardrails
+- **[Creating Pipelines](creating-pipelines.md)** — Build multi-agent workflows with real execution
+- **[Creating Synapses](creating-synapses.md)** — Custom cognitive capabilities
+
+### v2.0 Guides
+- **[Architecture](architecture.md)** — 5-Layer architecture, data flow, validation
+- **[Guardrails](guardrails.md)** — Guardrails engine, Iron Laws, deviation protocol
+- **[Sequential Thinking](sequential-thinking.md)** — Chain-of-thought protocol, decomposition patterns
+- **[Pipeline Orchestration](pipeline-orchestration.md)** — Real execution engine, state persistence, context curation
+- **[Migration Guide (v2.0)](migration-v2.md)** — Upgrading from v0.x to v2.0
+
+### Reference
+- **[Platform Guide](platform-guide.md)** — Claude Code, Copilot, Cursor, Windsurf, Antigravity
+- **[CLI Guide](cli-guide.md)** — Full CLI command reference
+- **[Agent Cards](agent-cards.md)** — Machine-readable agent metadata
+- **[MCP Integration Catalog](integration-catalog.md)** — 20 curated MCP servers
+- **[FAQ](faq.md)** — Frequently asked questions
 
 ## 🎨 Design
 
@@ -84,11 +99,28 @@ npx serve
 
 Then visit: `http://localhost:8000/getting-started.html`
 
-## 📦 Building
+## 📦 Building HTML Documentation
 
-These are static HTML files — no build process required! They're ready to deploy to:
+The HTML documentation is auto-generated from the Markdown files in this directory using `scripts/build_docs.py`:
 
-- GitHub Pages
+```bash
+python scripts/build_docs.py
+```
+
+This generates styled HTML files in `docs/html/` with:
+
+- Dark GitHub-inspired theme
+- Mermaid.js diagram rendering (ASCII art is auto-converted to Mermaid)
+- Sidebar navigation across all pages
+- Responsive mobile-friendly layout
+
+Output: `docs/html/` directory with one HTML file per Markdown doc.
+
+### Deploying
+
+The HTML files are static — deploy them to:
+
+- GitHub Pages (recommended: serve from `docs/html/`)
 - Netlify
 - Vercel
 - Any static hosting service

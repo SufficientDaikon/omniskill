@@ -4,8 +4,8 @@ build-backend = "hatchling.backends"
 
 [project]
 name = "omniskill"
-version = "1.0.0"
-description = "Universal AI Agent & Skills Framework — 49 skills, 8 bundles, 7 agents, 5 pipelines"
+version = "2.0.0"
+description = "Universal AI Agent & Skills Framework with Enforced Intelligence — guardrails, sequential thinking, pipeline orchestration"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.9"

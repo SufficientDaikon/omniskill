@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI Guide for OMNISKILL — OMNISKILL v2.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-card: #1c2128;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-subtle: #388bfd26;
+            --border: #30363d;
+            --border-muted: #21262d;
+            --green: #3fb950;
+            --red: #f85149;
+            --orange: #d29922;
+            --purple: #bc8cff;
+            --pink: #f778ba;
+            --cyan: #39d2c0;
+            --nav-width: 280px;
+            --header-height: 60px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .header-brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-brand span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
+        .header-nav {
+            margin-left: auto;
+            display: flex;
+            gap: 16px;
+        }
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .header-nav a:hover { color: var(--accent); }
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            width: var(--nav-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 50;
+            transition: transform 0.3s;
+        }
+        .sidebar-section {
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+        .nav-link {
+            display: block;
+            padding: 8px 20px 8px 28px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+        }
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: var(--nav-width);
+            margin-top: var(--header-height);
+            padding: 40px 48px 80px;
+            max-width: 920px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-primary);
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        p {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        a:hover { text-decoration: underline; }
+
+        strong { color: var(--text-primary); font-weight: 600; }
+
+        /* Lists */
+        ul, ol {
+            margin: 0 0 16px 24px;
+            color: var(--text-primary);
+        }
+        li { margin-bottom: 6px; }
+        li > ul, li > ol { margin-top: 6px; margin-bottom: 0; }
+
+        /* Code */
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+            font-size: 85%;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--orange);
+        }
+        pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            line-height: 1.5;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        /* ASCII diagram styling */
+        pre.ascii-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 24px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--cyan);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        thead {
+            background: var(--bg-tertiary);
+        }
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+        }
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--accent-subtle);
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 12px 20px;
+            margin: 16px 0;
+            background: var(--accent-subtle);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-secondary);
+        }
+
+        /* Horizontal rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 32px 0;
+        }
+
+        /* Mermaid diagrams */
+        .mermaid {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        /* ASCII original toggle */
+        details.ascii-original {
+            margin: -16px 0 24px;
+            font-size: 13px;
+        }
+        details.ascii-original summary {
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 0;
+            user-select: none;
+        }
+        details.ascii-original summary:hover {
+            color: var(--text-secondary);
+        }
+        details.ascii-original pre {
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Badge pills */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-green { background: #238636; color: #fff; }
+        .badge-blue { background: #1f6feb; color: #fff; }
+        .badge-purple { background: #8957e5; color: #fff; }
+        .badge-red { background: #da3633; color: #fff; }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 24px 20px 60px; }
+            .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+        <a href="index.html" class="header-brand">
+            ⚡ OMNISKILL <span>v2.0 Documentation</span>
+        </a>
+        <nav class="header-nav">
+            <a href="https://github.com/SufficientDaikon/omniskill" target="_blank">GitHub</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">Getting Started</div>
+        <a href="index.html" class="nav-link">📚 Documentation Home</a>
+        <a href="Getting-Started.html" class="nav-link">🚀 Getting Started</a>
+        <a href="Cli-Guide.html" class="nav-link active">💻 CLI Guide</a>
+        <a href="Migration-V2.html" class="nav-link">📦 Migration to v2.0</a>
+        <div class="sidebar-section">Architecture</div>
+        <a href="Architecture.html" class="nav-link">🏗️ 5-Layer Architecture</a>
+        <a href="Pipeline-Orchestration.html" class="nav-link">🔧 Pipeline Orchestration</a>
+        <a href="Guardrails.html" class="nav-link">🛡️ Guardrails Engine</a>
+        <a href="Sequential-Thinking.html" class="nav-link">🧠 Sequential Thinking</a>
+        <div class="sidebar-section">Guides</div>
+        <a href="Creating-Skills.html" class="nav-link">✨ Creating Skills</a>
+        <a href="Creating-Agents.html" class="nav-link">🤖 Creating Agents</a>
+        <a href="Creating-Pipelines.html" class="nav-link">🔄 Creating Pipelines</a>
+        <a href="Creating-Bundles.html" class="nav-link">📦 Creating Bundles</a>
+        <a href="Creating-Synapses.html" class="nav-link">🧬 Creating Synapses</a>
+        <a href="Platform-Guide.html" class="nav-link">🌐 Platform Guide</a>
+        <div class="sidebar-section">Reference</div>
+        <a href="Agent-Cards.html" class="nav-link">🃏 Agent Cards</a>
+        <a href="Integration-Catalog.html" class="nav-link">🔌 Integration Catalog</a>
+        <a href="Faq.html" class="nav-link">❓ FAQ</a>
+        <a href="Llms-Txt.html" class="nav-link">📄 LLMs.txt</a>
+        <a href="Changelog.html" class="nav-link">📋 Changelog</a>
+        <a href="Contributing.html" class="nav-link">🤝 Contributing</a>
+        <a href="Readme.html" class="nav-link">📖 README</a>
+    </nav>
+
+    <main class="main">
+        <h1 id="cli-guide-for-omniskill">CLI Guide for OMNISKILL</h1>
+<p>Complete command-line reference for the <code>omniskill</code> CLI — installation, commands, configuration, and workflows.</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#global-flags">Global Flags</a></li>
+<li><a href="#command-reference">Command Reference</a></li>
+<li><a href="#omniskill-init">omniskill init</a></li>
+<li><a href="#omniskill-install">omniskill install</a></li>
+<li><a href="#omniskill-uninstall">omniskill uninstall</a></li>
+<li><a href="#omniskill-doctor">omniskill doctor</a></li>
+<li><a href="#omniskill-validate">omniskill validate</a></li>
+<li><a href="#omniskill-list">omniskill list</a></li>
+<li><a href="#omniskill-search">omniskill search</a></li>
+<li><a href="#omniskill-info">omniskill info</a></li>
+<li><a href="#omniskill-pipeline">omniskill pipeline</a></li>
+<li><a href="#omniskill-update">omniskill update</a></li>
+<li><a href="#omniskill-migrate">omniskill migrate</a></li>
+<li><a href="#omniskill-admin">omniskill admin</a></li>
+<li><a href="#omniskill-config">omniskill config</a></li>
+<li><a href="#exit-codes">Exit Codes</a></li>
+<li><a href="#configuration">Configuration</a></li>
+<li><a href="#platform-detection">Platform Detection</a></li>
+<li><a href="#json-output">JSON Output</a></li>
+<li><a href="#shell-completions">Shell Completions</a></li>
+<li><a href="#common-workflows">Common Workflows</a></li>
+<li><a href="#next-steps">Next Steps</a></li>
+</ul>
+<hr>
+<h2 id="installation">Installation</h2>
+<h3 id="from-pypi-recommended">From PyPI (Recommended)</h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>omniskill
+</code></pre></div>
+
+<h3 id="from-source">From Source</h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/SufficientDaikon/omniskill.git
+<span class="nb">cd</span><span class="w"> </span>omniskill
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</code></pre></div>
+
+<h3 id="verify-installation">Verify Installation</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>--version
+<span class="c1"># omniskill v1.0.0</span>
+</code></pre></div>
+
+<hr>
+<h2 id="quick-start">Quick Start</h2>
+<p>Get up and running in 60 seconds:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Initialize OMNISKILL in your environment</span>
+omniskill<span class="w"> </span>init
+
+<span class="c1"># 2. Install the default bundle for your detected platforms</span>
+omniskill<span class="w"> </span>install<span class="w"> </span>--all
+
+<span class="c1"># 3. Verify everything is healthy</span>
+omniskill<span class="w"> </span>doctor
+</code></pre></div>
+
+<p>That's it — your AI coding assistants now have access to all OMNISKILL skills, agents, and pipelines.</p>
+<hr>
+<h2 id="global-flags">Global Flags</h2>
+<p>These flags work with every command:</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--json</code></td>
+<td>Output results as structured JSON (see <a href="#json-output">JSON Output</a>)</td>
+</tr>
+<tr>
+<td><code>--quiet</code></td>
+<td>Suppress all non-essential output; only show errors</td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td>Show detailed debug-level output</td>
+</tr>
+<tr>
+<td><code>--version</code></td>
+<td>Print the OMNISKILL version and exit</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Machine-readable output for CI pipelines</span>
+omniskill<span class="w"> </span>doctor<span class="w"> </span>--json
+
+<span class="c1"># Silent operation for scripts</span>
+omniskill<span class="w"> </span>install<span class="w"> </span>--all<span class="w"> </span>--quiet
+
+<span class="c1"># Debug a failing install</span>
+omniskill<span class="w"> </span>install<span class="w"> </span>--skill<span class="w"> </span>react-best-practices<span class="w"> </span>--verbose
+
+<span class="c1"># Check the installed version</span>
+omniskill<span class="w"> </span>--version
+</code></pre></div>
+
+<hr>
+<h2 id="command-reference">Command Reference</h2>
+<h3 id="omniskill-init"><code>omniskill init</code></h3>
+<p>Initialize OMNISKILL in the current environment. Creates the <code>~/.omniskill/</code> config directory, detects installed platforms, and writes a default <code>config.yaml</code>.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>init<span class="w"> </span><span class="o">[</span>--platform<span class="w"> </span>&lt;name&gt;<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--platform &lt;name&gt;</code></td>
+<td>Skip auto-detection and initialize for a specific platform (<code>claude-code</code>, <code>copilot-cli</code>, <code>cursor</code>, <code>windsurf</code>, <code>antigravity</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>omniskill<span class="w"> </span>init
+✓<span class="w"> </span>Detected<span class="w"> </span>platforms:<span class="w"> </span>claude-code,<span class="w"> </span>copilot-cli,<span class="w"> </span>cursor
+✓<span class="w"> </span>Created<span class="w"> </span>~/.omniskill/config.yaml
+✓<span class="w"> </span>OMNISKILL<span class="w"> </span>initialized<span class="w"> </span>successfully
+
+$<span class="w"> </span>omniskill<span class="w"> </span>init<span class="w"> </span>--platform<span class="w"> </span>cursor
+✓<span class="w"> </span>Initialized<span class="w"> </span><span class="k">for</span><span class="w"> </span>platform:<span class="w"> </span>cursor
+✓<span class="w"> </span>Created<span class="w"> </span>~/.omniskill/config.yaml
+</code></pre></div>
+
+<hr>
+<h3 id="omniskill-install"><code>omniskill install</code></h3>
+<p>Install skills, bundles, or everything to one or more platforms.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>install<span class="w"> </span><span class="o">[</span>--skill<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--bundle<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--all<span class="o">]</span><span class="w"> </span><span class="o">[</span>--platform<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--force<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--skill &lt;name&gt;</code></td>
+<td>Install a single skill by name</td>
+</tr>
+<tr>
+<td><code>--bundle &lt;name&gt;</code></td>
+<td>Install a bundle (domain kit) by name</td>
+</tr>
+<tr>
+<td><code>--all</code></td>
+<td>Install all available skills and bundles</td>
+</tr>
+<tr>
+<td><code>--platform &lt;name&gt;</code></td>
+<td>Target a specific platform (default: all detected)</td>
+</tr>
+<tr>
+<td><code>--force</code></td>
+<td>Overwrite existing installations without prompting</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install a single skill</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>install<span class="w"> </span>--skill<span class="w"> </span>react-best-practices
+✓<span class="w"> </span>Installed<span class="w"> </span>react-best-practices<span class="w"> </span>to<span class="w"> </span>claude-code
+✓<span class="w"> </span>Installed<span class="w"> </span>react-best-practices<span class="w"> </span>to<span class="w"> </span>copilot-cli
+✓<span class="w"> </span>Installed<span class="w"> </span>react-best-practices<span class="w"> </span>to<span class="w"> </span>cursor
+Installed<span class="w"> </span><span class="m">1</span><span class="w"> </span>skill<span class="w"> </span>to<span class="w"> </span><span class="m">3</span><span class="w"> </span>platforms
+
+<span class="c1"># Install a bundle</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>install<span class="w"> </span>--bundle<span class="w"> </span>web-dev-kit
+✓<span class="w"> </span>Installing<span class="w"> </span>web-dev-kit<span class="w"> </span><span class="o">(</span><span class="m">5</span><span class="w"> </span>skills<span class="w"> </span>+<span class="w"> </span><span class="m">1</span><span class="w"> </span>meta-skill<span class="o">)</span>...
+<span class="w">  </span>✓<span class="w"> </span>frontend-design
+<span class="w">  </span>✓<span class="w"> </span>react-best-practices
+<span class="w">  </span>✓<span class="w"> </span>vercel-react-best-practices
+<span class="w">  </span>✓<span class="w"> </span>web-design-guidelines
+<span class="w">  </span>✓<span class="w"> </span>backend-development
+<span class="w">  </span>✓<span class="w"> </span>web-fullstack-expert<span class="w"> </span><span class="o">(</span>meta-skill<span class="o">)</span>
+Installed<span class="w"> </span><span class="m">6</span><span class="w"> </span>skills<span class="w"> </span>to<span class="w"> </span><span class="m">3</span><span class="w"> </span>platforms
+
+<span class="c1"># Install everything</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>install<span class="w"> </span>--all
+✓<span class="w"> </span>Installing<span class="w"> </span><span class="m">42</span><span class="w"> </span>skills,<span class="w"> </span><span class="m">6</span><span class="w"> </span>bundles<span class="w"> </span>to<span class="w"> </span><span class="m">3</span><span class="w"> </span>platforms...
+Done<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">4</span>.2s
+
+<span class="c1"># Force reinstall to a specific platform</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>install<span class="w"> </span>--skill<span class="w"> </span>godot-best-practices<span class="w"> </span>--platform<span class="w"> </span>cursor<span class="w"> </span>--force
+✓<span class="w"> </span>Installed<span class="w"> </span>godot-best-practices<span class="w"> </span>to<span class="w"> </span>cursor<span class="w"> </span><span class="o">(</span>overwritten<span class="o">)</span>
+</code></pre></div>
+
+<hr>
+<h3 id="omniskill-uninstall"><code>omniskill uninstall</code></h3>
+<p>Remove an installed skill or bundle from one or more platforms.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>uninstall<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--platform<span class="w"> </span>&lt;name&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--force<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;name&gt;</code></td>
+<td><strong>(Required)</strong> Name of the skill or bundle to uninstall</td>
+</tr>
+<tr>
+<td><code>--platform &lt;name&gt;</code></td>
+<td>Uninstall from a specific platform only (default: all)</td>
+</tr>
+<tr>
+<td><code>--force</code></td>
+<td>Skip confirmation prompt</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>omniskill<span class="w"> </span>uninstall<span class="w"> </span>godot-best-practices
+⚠<span class="w"> </span>This<span class="w"> </span>will<span class="w"> </span>remove<span class="w"> </span>godot-best-practices<span class="w"> </span>from<span class="w"> </span><span class="m">3</span><span class="w"> </span>platforms.<span class="w"> </span>Continue?<span class="w"> </span><span class="o">[</span>y/N<span class="o">]</span><span class="w"> </span>y
+✓<span class="w"> </span>Removed<span class="w"> </span>godot-best-practices<span class="w"> </span>from<span class="w"> </span>claude-code
+✓<span class="w"> </span>Removed<span class="w"> </span>godot-best-practices<span class="w"> </span>from<span class="w"> </span>copilot-cli
+✓<span class="w"> </span>Removed<span class="w"> </span>godot-best-practices<span class="w"> </span>from<span class="w"> </span>cursor
+Uninstalled<span class="w"> </span><span class="m">1</span><span class="w"> </span>skill<span class="w"> </span>from<span class="w"> </span><span class="m">3</span><span class="w"> </span>platforms
+
+$<span class="w"> </span>omniskill<span class="w"> </span>uninstall<span class="w"> </span>web-dev-kit<span class="w"> </span>--platform<span class="w"> </span>cursor<span class="w"> </span>--force
+✓<span class="w"> </span>Removed<span class="w"> </span>web-dev-kit<span class="w"> </span><span class="o">(</span><span class="m">6</span><span class="w"> </span>skills<span class="o">)</span><span class="w"> </span>from<span class="w"> </span>cursor
+</code></pre></div>
+
+<hr>
+<h3 id="omniskill-doctor"><code>omniskill doctor</code></h3>
+<p>Run a comprehensive health check on your OMNISKILL installation. Checks config files, platform connections, skill integrity, and version status.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>doctor<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--json</code></td>
+<td>Output results as structured JSON</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>omniskill<span class="w"> </span>doctor
+OMNISKILL<span class="w"> </span>Doctor<span class="w"> </span>v1.0.0
+──────────────────────────────
+
+Configuration
+<span class="w">  </span>✓<span class="w"> </span>Config<span class="w"> </span>file<span class="w"> </span>exists<span class="w">          </span>~/.omniskill/config.yaml
+<span class="w">  </span>✓<span class="w"> </span>Config<span class="w"> </span>file<span class="w"> </span>valid<span class="w">           </span>YAML<span class="w"> </span>syntax<span class="w"> </span>OK
+
+Platforms
+<span class="w">  </span>✓<span class="w"> </span>claude-code<span class="w">                 </span>~/.claude/AGENTS.md<span class="w"> </span>found
+<span class="w">  </span>✓<span class="w"> </span>copilot-cli<span class="w">                 </span>~/.copilot/<span class="w"> </span>found
+<span class="w">  </span>✓<span class="w"> </span>cursor<span class="w">                      </span>~/.cursor/rules/<span class="w"> </span>found
+<span class="w">  </span>✗<span class="w"> </span>windsurf<span class="w">                    </span>Not<span class="w"> </span>detected
+<span class="w">  </span>✗<span class="w"> </span>antigravity<span class="w">                 </span>Not<span class="w"> </span>detected
+
+Skills
+<span class="w">  </span>✓<span class="w"> </span><span class="m">42</span><span class="w"> </span>skills<span class="w"> </span>installed<span class="w">         </span><span class="m">0</span><span class="w"> </span>conflicts<span class="w"> </span>detected
+<span class="w">  </span>✓<span class="w"> </span><span class="m">6</span><span class="w"> </span>bundles<span class="w"> </span>installed<span class="w">         </span>All<span class="w"> </span>meta-skills<span class="w"> </span>present
+<span class="w">  </span>✓<span class="w"> </span>All<span class="w"> </span>manifests<span class="w"> </span>valid<span class="w">         </span><span class="m">0</span><span class="w"> </span>schema<span class="w"> </span>errors
+
+Version
+<span class="w">  </span>✓<span class="w"> </span>Up<span class="w"> </span>to<span class="w"> </span>date<span class="w">                  </span>v1.0.0<span class="w"> </span><span class="o">(</span>latest<span class="o">)</span>
+
+──────────────────────────────
+Result:<span class="w"> </span><span class="m">11</span><span class="w"> </span>passed,<span class="w"> </span><span class="m">2</span><span class="w"> </span>skipped,<span class="w"> </span><span class="m">0</span><span class="w"> </span>failed
+</code></pre></div>
+
+<hr>
+<h3 id="omniskill-validate"><code>omniskill validate</code></h3>
+<p>Validate a skill, bundle, agent, or pipeline against the OMNISKILL schema. Use this before committing or opening a PR to catch errors early.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>validate<span class="w"> </span><span class="o">[</span>path<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[path]</code></td>
+<td>Path to a skill/bundle/agent/pipeline directory (default: validate all)</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>Output results as structured JSON</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Validate a specific skill</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>validate<span class="w"> </span>skills/my-new-skill
+Validating<span class="w"> </span>skills/my-new-skill...
+<span class="w">  </span>✓<span class="w"> </span>manifest.yaml<span class="w">              </span>Schema<span class="w"> </span>valid
+<span class="w">  </span>✓<span class="w"> </span>SKILL.md<span class="w">                   </span>All<span class="w"> </span>required<span class="w"> </span>sections<span class="w"> </span>present
+<span class="w">  </span>✓<span class="w"> </span>Triggers<span class="w">                   </span>No<span class="w"> </span>conflicts<span class="w"> </span>with<span class="w"> </span>existing<span class="w"> </span>skills
+<span class="w">  </span>✓<span class="w"> </span>Resources<span class="w">                  </span>All<span class="w"> </span>referenced<span class="w"> </span>files<span class="w"> </span>exist
+Result:<span class="w"> </span>PASS<span class="w"> </span><span class="o">(</span><span class="m">4</span>/4<span class="w"> </span>checks<span class="o">)</span>
+
+<span class="c1"># Validate everything</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>validate
+Validating<span class="w"> </span><span class="m">42</span><span class="w"> </span>skills,<span class="w"> </span><span class="m">6</span><span class="w"> </span>bundles,<span class="w"> </span><span class="m">8</span><span class="w"> </span>agents,<span class="w"> </span><span class="m">4</span><span class="w"> </span>pipelines...
+<span class="w">  </span>✓<span class="w"> </span><span class="m">42</span><span class="w"> </span>skills<span class="w"> </span>valid
+<span class="w">  </span>✓<span class="w"> </span><span class="m">6</span><span class="w"> </span>bundles<span class="w"> </span>valid
+<span class="w">  </span>✓<span class="w"> </span><span class="m">8</span><span class="w"> </span>agents<span class="w"> </span>valid
+<span class="w">  </span>✓<span class="w"> </span><span class="m">4</span><span class="w"> </span>pipelines<span class="w"> </span>valid
+Result:<span class="w"> </span>PASS<span class="w"> </span><span class="o">(</span><span class="m">60</span>/60<span class="w"> </span>checks<span class="o">)</span>
+
+<span class="c1"># Validate with JSON output for CI</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>validate<span class="w"> </span>skills/broken-skill<span class="w"> </span>--json
+<span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;status&quot;</span>:<span class="w"> </span><span class="s2">&quot;fail&quot;</span>,
+<span class="w">  </span><span class="s2">&quot;command&quot;</span>:<span class="w"> </span><span class="s2">&quot;validate&quot;</span>,
+<span class="w">  </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>,
+<span class="w">  </span><span class="s2">&quot;data&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;path&quot;</span>:<span class="w"> </span><span class="s2">&quot;skills/broken-skill&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;checks&quot;</span>:<span class="w"> </span><span class="m">4</span>,
+<span class="w">    </span><span class="s2">&quot;passed&quot;</span>:<span class="w"> </span><span class="m">2</span>,
+<span class="w">    </span><span class="s2">&quot;failed&quot;</span>:<span class="w"> </span><span class="m">2</span>,
+<span class="w">    </span><span class="s2">&quot;errors&quot;</span>:<span class="w"> </span><span class="o">[</span>
+<span class="w">      </span><span class="s2">&quot;manifest.yaml: missing required field &#39;description&#39;&quot;</span>,
+<span class="w">      </span><span class="s2">&quot;SKILL.md: missing section &#39;## When to Use&#39;&quot;</span>
+<span class="w">    </span><span class="o">]</span>
+<span class="w">  </span><span class="o">}</span>,
+<span class="w">  </span><span class="s2">&quot;errors&quot;</span>:<span class="w"> </span><span class="o">[]</span>
+<span class="o">}</span>
+</code></pre></div>
+
+<hr>
+<h3 id="omniskill-list"><code>omniskill list</code></h3>
+<p>List installed skills, agents, bundles, or pipelines.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>list<span class="w"> </span><span class="o">[</span>skills<span class="p">|</span>agents<span class="p">|</span>bundles<span class="p">|</span>pipelines<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>skills</code></td>
+<td>List only skills (default if no sub-command given)</td>
+</tr>
+<tr>
+<td><code>agents</code></td>
+<td>List only agents</td>
+</tr>
+<tr>
+<td><code>bundles</code></td>
+<td>List only bundles</td>
+</tr>
+<tr>
+<td><code>pipelines</code></td>
+<td>List only pipelines</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>Output results as structured JSON</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>omniskill<span class="w"> </span>list<span class="w"> </span>skills
+OMNISKILL<span class="w"> </span>Skills<span class="w"> </span><span class="o">(</span><span class="m">42</span><span class="w"> </span>installed<span class="o">)</span>
+───────────────────────────────
+<span class="w">  </span>backend-development<span class="w">          </span>v1.0.0<span class="w">   </span><span class="o">[</span>web,<span class="w"> </span>api,<span class="w"> </span>database<span class="o">]</span>
+<span class="w">  </span>capacitor-best-practices<span class="w">     </span>v1.0.0<span class="w">   </span><span class="o">[</span>mobile,<span class="w"> </span>capacitor<span class="o">]</span>
+<span class="w">  </span>django-expert<span class="w">                </span>v1.0.0<span class="w">   </span><span class="o">[</span>python,<span class="w"> </span>django<span class="o">]</span>
+<span class="w">  </span>frontend-design<span class="w">              </span>v1.0.0<span class="w">   </span><span class="o">[</span>web,<span class="w"> </span>ui,<span class="w"> </span>css<span class="o">]</span>
+<span class="w">  </span>godot-best-practices<span class="w">         </span>v1.0.0<span class="w">   </span><span class="o">[</span>gamedev,<span class="w"> </span>godot<span class="o">]</span>
+<span class="w">  </span>react-best-practices<span class="w">         </span>v1.0.0<span class="w">   </span><span class="o">[</span>web,<span class="w"> </span>react<span class="o">]</span>
+<span class="w">  </span>...
+
+$<span class="w"> </span>omniskill<span class="w"> </span>list<span class="w"> </span>bundles
+OMNISKILL<span class="w"> </span>Bundles<span class="w"> </span><span class="o">(</span><span class="m">6</span><span class="w"> </span>installed<span class="o">)</span>
+───────────────────────────────
+<span class="w">  </span>godot-kit<span class="w">                    </span><span class="m">5</span><span class="w"> </span>skills<span class="w">    </span>Godot<span class="w"> </span>game<span class="w"> </span>development
+<span class="w">  </span>web-dev-kit<span class="w">                  </span><span class="m">5</span><span class="w"> </span>skills<span class="w">    </span>Full-stack<span class="w"> </span>web<span class="w"> </span>development
+<span class="w">  </span>django-kit<span class="w">                   </span><span class="m">4</span><span class="w"> </span>skills<span class="w">    </span>Django<span class="w"> </span>web<span class="w"> </span>framework
+<span class="w">  </span>mobile-kit<span class="w">                   </span><span class="m">3</span><span class="w"> </span>skills<span class="w">    </span>Mobile<span class="w"> </span>app<span class="w"> </span>development
+<span class="w">  </span>ux-design-kit<span class="w">                </span><span class="m">6</span><span class="w"> </span>skills<span class="w">    </span>UX/UI<span class="w"> </span>design<span class="w"> </span>pipeline
+<span class="w">  </span>devops-kit<span class="w">                   </span><span class="m">3</span><span class="w"> </span>skills<span class="w">    </span>DevOps<span class="w"> </span>and<span class="w"> </span>infrastructure
+
+$<span class="w"> </span>omniskill<span class="w"> </span>list<span class="w"> </span>agents<span class="w"> </span>--json
+<span class="o">{</span>
+<span class="w">  </span><span class="s2">&quot;status&quot;</span>:<span class="w"> </span><span class="s2">&quot;ok&quot;</span>,
+<span class="w">  </span><span class="s2">&quot;command&quot;</span>:<span class="w"> </span><span class="s2">&quot;list&quot;</span>,
+<span class="w">  </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>,
+<span class="w">  </span><span class="s2">&quot;data&quot;</span>:<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;type&quot;</span>:<span class="w"> </span><span class="s2">&quot;agents&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;count&quot;</span>:<span class="w"> </span><span class="m">8</span>,
+<span class="w">    </span><span class="s2">&quot;items&quot;</span>:<span class="w"> </span><span class="o">[</span>
+<span class="w">      </span><span class="o">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span>:<span class="w"> </span><span class="s2">&quot;spec-writer&quot;</span>,<span class="w"> </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>,<span class="w"> </span><span class="s2">&quot;description&quot;</span>:<span class="w"> </span><span class="s2">&quot;Transforms plans into specs&quot;</span><span class="w"> </span><span class="o">}</span>,
+<span class="w">      </span><span class="o">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span>:<span class="w"> </span><span class="s2">&quot;implementer&quot;</span>,<span class="w"> </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>,<span class="w"> </span><span class="s2">&quot;description&quot;</span>:<span class="w"> </span><span class="s2">&quot;Implements from specifications&quot;</span><span class="w"> </span><span class="o">}</span>
+<span class="w">    </span><span class="o">]</span>
+<span class="w">  </span><span class="o">}</span>,
+<span class="w">  </span><span class="s2">&quot;errors&quot;</span>:<span class="w"> </span><span class="o">[]</span>
+<span class="o">}</span>
+</code></pre></div>
+
+<hr>
+<h3 id="omniskill-search"><code>omniskill search</code></h3>
+<p>Search the OMNISKILL registry for skills, bundles, agents, or pipelines by keyword.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>search<span class="w"> </span>&lt;query&gt;<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;query&gt;</code></td>
+<td><strong>(Required)</strong> Search term — matches name, description, tags, and triggers</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>Output results as structured JSON</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>omniskill<span class="w"> </span>search<span class="w"> </span>react
+Search<span class="w"> </span>results<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="s2">&quot;react&quot;</span><span class="w"> </span><span class="o">(</span><span class="m">4</span><span class="w"> </span>matches<span class="o">)</span>
+───────────────────────────────────────
+<span class="w">  </span>react-best-practices<span class="w">         </span>skill<span class="w">    </span>React<span class="w"> </span>hooks,<span class="w"> </span>patterns,<span class="w"> </span>and<span class="w"> </span>optimization
+<span class="w">  </span>vercel-react-best-practices<span class="w">  </span>skill<span class="w">    </span>Next.js<span class="w"> </span>and<span class="w"> </span>React<span class="w"> </span>performance<span class="w"> </span>from<span class="w"> </span>Vercel
+<span class="w">  </span>frontend-design<span class="w">              </span>skill<span class="w">    </span>Production-grade<span class="w"> </span>frontend<span class="w"> </span>interfaces
+<span class="w">  </span>web-dev-kit<span class="w">                  </span>bundle<span class="w">   </span>Includes<span class="w"> </span>react-best-practices<span class="w"> </span>+<span class="w"> </span><span class="m">4</span><span class="w"> </span>more
+
+$<span class="w"> </span>omniskill<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;game dev&quot;</span>
+Search<span class="w"> </span>results<span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="s2">&quot;game dev&quot;</span><span class="w"> </span><span class="o">(</span><span class="m">3</span><span class="w"> </span>matches<span class="o">)</span>
+─────────────────────────────────────────
+<span class="w">  </span>godot-best-practices<span class="w">         </span>skill<span class="w">    </span>Godot<span class="w"> </span><span class="m">4</span>.x<span class="w"> </span>GDScript<span class="w"> </span>best<span class="w"> </span>practices
+<span class="w">  </span>godot-gdscript-patterns<span class="w">      </span>skill<span class="w">    </span>Master<span class="w"> </span>Godot<span class="w"> </span><span class="m">4</span><span class="w"> </span>GDScript<span class="w"> </span>patterns
+<span class="w">  </span>godot-kit<span class="w">                    </span>bundle<span class="w">   </span>Complete<span class="w"> </span>Godot<span class="w"> </span>game<span class="w"> </span>development<span class="w"> </span>kit
+</code></pre></div>
+
+<hr>
+<h3 id="omniskill-info"><code>omniskill info</code></h3>
+<p>Show detailed information about a skill, bundle, agent, or pipeline.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>info<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;name&gt;</code></td>
+<td><strong>(Required)</strong> Name of the item to inspect</td>
+</tr>
+<tr>
+<td><code>--json</code></td>
+<td>Output results as structured JSON</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>omniskill<span class="w"> </span>info<span class="w"> </span>react-best-practices
+react-best-practices
+━━━━━━━━━━━━━━━━━━━━
+<span class="w">  </span>Type:<span class="w">         </span>skill
+<span class="w">  </span>Version:<span class="w">      </span><span class="m">1</span>.0.0
+<span class="w">  </span>Author:<span class="w">       </span>omniskill-team
+<span class="w">  </span>License:<span class="w">      </span>MIT
+<span class="w">  </span>Platforms:<span class="w">    </span>claude-code,<span class="w"> </span>copilot-cli,<span class="w"> </span>cursor,<span class="w"> </span>windsurf,<span class="w"> </span>antigravity
+<span class="w">  </span>Tags:<span class="w">         </span>web,<span class="w"> </span>react,<span class="w"> </span>hooks,<span class="w"> </span>performance
+<span class="w">  </span>Priority:<span class="w">     </span>P2
+<span class="w">  </span>Description:<span class="w">  </span>React<span class="w"> </span>development<span class="w"> </span>guidelines<span class="w"> </span>with<span class="w"> </span>hooks,<span class="w"> </span>component<span class="w"> </span>patterns,
+<span class="w">                </span>state<span class="w"> </span>management,<span class="w"> </span>and<span class="w"> </span>performance<span class="w"> </span>optimization.
+
+<span class="w">  </span>Triggers:
+<span class="w">    </span>Keywords:<span class="w">   </span><span class="s2">&quot;react component&quot;</span>,<span class="w"> </span><span class="s2">&quot;react hooks&quot;</span>,<span class="w"> </span><span class="s2">&quot;use state&quot;</span>
+<span class="w">    </span>Patterns:<span class="w">   </span><span class="s2">&quot;create * react *&quot;</span>,<span class="w"> </span><span class="s2">&quot;optimize react *&quot;</span>
+
+<span class="w">  </span>Dependencies:<span class="w"> </span>none
+<span class="w">  </span>Bundle:<span class="w">       </span>web-dev-kit
+
+<span class="w">  </span>Installed:<span class="w">    </span>Yes<span class="w"> </span><span class="o">(</span><span class="m">3</span><span class="w"> </span>platforms<span class="o">)</span>
+</code></pre></div>
+
+<hr>
+<h3 id="omniskill-pipeline"><code>omniskill pipeline</code></h3>
+<p>Run or check the status of multi-agent pipelines.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>pipeline<span class="w"> </span>run<span class="w"> </span>&lt;name&gt;<span class="w"> </span><span class="o">[</span>--project<span class="w"> </span>&lt;name&gt;<span class="o">]</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>status<span class="w"> </span><span class="o">[</span>--project<span class="w"> </span>&lt;name&gt;<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Sub-commands:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Sub-command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>run &lt;name&gt;</code></td>
+<td>Start a pipeline by name</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>Show the status of running/completed pipelines</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--project &lt;name&gt;</code></td>
+<td>Associate the pipeline run with a project name</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run the SDD pipeline</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>pipeline<span class="w"> </span>run<span class="w"> </span>sdd<span class="w"> </span>--project<span class="w"> </span>my-feature
+✓<span class="w"> </span>Starting<span class="w"> </span>SDD<span class="w"> </span>pipeline<span class="w"> </span><span class="k">for</span><span class="w"> </span>project<span class="w"> </span><span class="s2">&quot;my-feature&quot;</span>
+<span class="w">  </span>Phase<span class="w"> </span><span class="m">1</span>/3:<span class="w"> </span>spec-writer<span class="w">        </span>▶<span class="w"> </span>Running...
+<span class="w">  </span>Phase<span class="w"> </span><span class="m">2</span>/3:<span class="w"> </span>implementer<span class="w">        </span>○<span class="w"> </span>Pending
+<span class="w">  </span>Phase<span class="w"> </span><span class="m">3</span>/3:<span class="w"> </span>reviewer<span class="w">           </span>○<span class="w"> </span>Pending
+
+<span class="c1"># Check pipeline status</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>pipeline<span class="w"> </span>status<span class="w"> </span>--project<span class="w"> </span>my-feature
+Pipeline:<span class="w"> </span>sdd<span class="w"> </span><span class="o">(</span>my-feature<span class="o">)</span>
+──────────────────────────
+<span class="w">  </span>Phase<span class="w"> </span><span class="m">1</span>/3:<span class="w"> </span>spec-writer<span class="w">        </span>✓<span class="w"> </span>Complete<span class="w">    </span><span class="o">(</span>2m<span class="w"> </span>14s<span class="o">)</span>
+<span class="w">  </span>Phase<span class="w"> </span><span class="m">2</span>/3:<span class="w"> </span>implementer<span class="w">        </span>▶<span class="w"> </span>Running<span class="w">     </span><span class="o">(</span>1m<span class="w"> </span>03s<span class="o">)</span>
+<span class="w">  </span>Phase<span class="w"> </span><span class="m">3</span>/3:<span class="w"> </span>reviewer<span class="w">           </span>○<span class="w"> </span>Pending
+
+$<span class="w"> </span>omniskill<span class="w"> </span>pipeline<span class="w"> </span>status
+Active<span class="w"> </span>Pipelines
+────────────────
+<span class="w">  </span>sdd<span class="w"> </span><span class="o">(</span>my-feature<span class="o">)</span><span class="w">              </span>Phase<span class="w"> </span><span class="m">2</span>/3<span class="w">    </span>implementer<span class="w">     </span>Running
+<span class="w">  </span>ux-lifecycle<span class="w"> </span><span class="o">(</span>redesign<span class="o">)</span><span class="w">       </span>Phase<span class="w"> </span><span class="m">5</span>/7<span class="w">    </span>ui-design<span class="w">       </span>Running
+</code></pre></div>
+
+<hr>
+<h3 id="omniskill-update"><code>omniskill update</code></h3>
+<p>Check for and apply updates to OMNISKILL.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>update<span class="w"> </span><span class="o">[</span>--check<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--check</code></td>
+<td>Only check for updates without applying them</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check for updates</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>update<span class="w"> </span>--check
+Current<span class="w"> </span>version:<span class="w"> </span>v1.0.0
+Latest<span class="w"> </span>version:<span class="w">  </span>v1.1.0
+Update<span class="w"> </span>available!<span class="w"> </span>Run<span class="w"> </span><span class="sb">`</span>omniskill<span class="w"> </span>update<span class="sb">`</span><span class="w"> </span>to<span class="w"> </span>install.
+
+<span class="c1"># Apply the update</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>update
+Updating<span class="w"> </span>OMNISKILL<span class="w"> </span>v1.0.0<span class="w"> </span>→<span class="w"> </span>v1.1.0...
+<span class="w">  </span>✓<span class="w"> </span>Downloaded<span class="w"> </span>v1.1.0
+<span class="w">  </span>✓<span class="w"> </span>Updated<span class="w"> </span>CLI
+<span class="w">  </span>✓<span class="w"> </span>Migrated<span class="w"> </span>config<span class="w"> </span><span class="o">(</span>no<span class="w"> </span>changes<span class="w"> </span>needed<span class="o">)</span>
+<span class="w">  </span>✓<span class="w"> </span>Re-validated<span class="w"> </span>installed<span class="w"> </span>skills
+Update<span class="w"> </span>complete!<span class="w"> </span>Run<span class="w"> </span><span class="sb">`</span>omniskill<span class="w"> </span>doctor<span class="sb">`</span><span class="w"> </span>to<span class="w"> </span>verify.
+</code></pre></div>
+
+<hr>
+<h3 id="omniskill-migrate"><code>omniskill migrate</code></h3>
+<p>Migrate legacy OMNISKILL skill files (pre-v1.0) to the current format.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>migrate<span class="w"> </span>&lt;path&gt;<span class="w"> </span><span class="o">[</span>--in-place<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;path&gt;</code></td>
+<td><strong>(Required)</strong> Path to the skill or directory to migrate</td>
+</tr>
+<tr>
+<td><code>--in-place</code></td>
+<td>Overwrite original files instead of creating <code>.migrated</code> copies</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Preview migration (creates .migrated copies)</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>migrate<span class="w"> </span>skills/old-skill
+Migrating<span class="w"> </span>skills/old-skill...
+<span class="w">  </span>✓<span class="w"> </span>manifest.yaml<span class="w"> </span>→<span class="w"> </span>manifest.yaml.migrated<span class="w">    </span>Added<span class="w"> </span><span class="s1">&#39;platforms&#39;</span><span class="w"> </span>field
+<span class="w">  </span>✓<span class="w"> </span>SKILL.md<span class="w"> </span>→<span class="w"> </span>SKILL.md.migrated<span class="w">              </span>Added<span class="w"> </span><span class="s1">&#39;When to Use&#39;</span><span class="w"> </span>section
+Migration<span class="w"> </span>preview<span class="w"> </span>complete.<span class="w"> </span>Review<span class="w"> </span>.migrated<span class="w"> </span>files,<span class="w"> </span><span class="k">then</span><span class="w"> </span>run<span class="w"> </span>with<span class="w"> </span>--in-place.
+
+<span class="c1"># Apply migration in place</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>migrate<span class="w"> </span>skills/old-skill<span class="w"> </span>--in-place
+Migrating<span class="w"> </span>skills/old-skill<span class="w"> </span><span class="o">(</span><span class="k">in</span>-place<span class="o">)</span>...
+<span class="w">  </span>✓<span class="w"> </span>manifest.yaml<span class="w">              </span>Added<span class="w"> </span><span class="s1">&#39;platforms&#39;</span><span class="w"> </span>field
+<span class="w">  </span>✓<span class="w"> </span>SKILL.md<span class="w">                   </span>Added<span class="w"> </span><span class="s1">&#39;When to Use&#39;</span><span class="w"> </span>section
+Migration<span class="w"> </span>complete!<span class="w"> </span>Run<span class="w"> </span><span class="sb">`</span>omniskill<span class="w"> </span>validate<span class="w"> </span>skills/old-skill<span class="sb">`</span><span class="w"> </span>to<span class="w"> </span>verify.
+</code></pre></div>
+
+<hr>
+<h3 id="omniskill-admin"><code>omniskill admin</code></h3>
+<p>Administrative utilities — sync knowledge sources, rebuild indexes, and manage the registry.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>admin
+</code></pre></div>
+
+<p>Running <code>omniskill admin</code> opens an interactive admin menu:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>omniskill<span class="w"> </span>admin
+OMNISKILL<span class="w"> </span>Admin
+───────────────
+<span class="w">  </span><span class="m">1</span>.<span class="w"> </span>Sync<span class="w"> </span>knowledge<span class="w"> </span>sources
+<span class="w">  </span><span class="m">2</span>.<span class="w"> </span>Rebuild<span class="w"> </span>skill<span class="w"> </span>index
+<span class="w">  </span><span class="m">3</span>.<span class="w"> </span>Clear<span class="w"> </span>platform<span class="w"> </span>caches
+<span class="w">  </span><span class="m">4</span>.<span class="w"> </span>Export<span class="w"> </span>installation<span class="w"> </span>report
+<span class="w">  </span><span class="m">5</span>.<span class="w"> </span>Reset<span class="w"> </span>configuration
+
+Select<span class="w"> </span>an<span class="w"> </span>option<span class="w"> </span><span class="o">[</span><span class="m">1</span>-5<span class="o">]</span>:
+</code></pre></div>
+
+<blockquote>
+<p><strong>Tip:</strong> For non-interactive use, pipe a selection: <code>echo 1 | omniskill admin</code></p>
+</blockquote>
+<hr>
+<h3 id="omniskill-config"><code>omniskill config</code></h3>
+<p>Read or write OMNISKILL configuration values.</p>
+<p><strong>Usage:</strong></p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>config<span class="w"> </span><span class="o">[</span>key<span class="o">]</span><span class="w"> </span><span class="o">[</span>value<span class="o">]</span><span class="w"> </span><span class="o">[</span>--list<span class="o">]</span>
+</code></pre></div>
+
+<p><strong>Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[key]</code></td>
+<td>Configuration key to read or set (dot-notation supported)</td>
+</tr>
+<tr>
+<td><code>[value]</code></td>
+<td>New value to assign to the key</td>
+</tr>
+<tr>
+<td><code>--list</code></td>
+<td>Show all configuration key-value pairs</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># List all config values</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>config<span class="w"> </span>--list
+<span class="nv">home</span><span class="w">             </span><span class="o">=</span><span class="w"> </span>~/.omniskill
+<span class="nv">platforms</span><span class="w">        </span><span class="o">=</span><span class="w"> </span>claude-code,<span class="w"> </span>copilot-cli,<span class="w"> </span>cursor
+<span class="nv">default_bundle</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>web-dev-kit
+<span class="nv">auto_update</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span>
+<span class="nv">json_output</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
+
+<span class="c1"># Read a single value</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>config<span class="w"> </span>platforms
+claude-code,<span class="w"> </span>copilot-cli,<span class="w"> </span>cursor
+
+<span class="c1"># Set a value</span>
+$<span class="w"> </span>omniskill<span class="w"> </span>config<span class="w"> </span>auto_update<span class="w"> </span><span class="nb">false</span>
+✓<span class="w"> </span>Set<span class="w"> </span><span class="nv">auto_update</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span>
+</code></pre></div>
+
+<hr>
+<h2 id="exit-codes">Exit Codes</h2>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td><strong>Success</strong> — command completed without errors</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td><strong>Error</strong> — command failed (runtime error, missing dependency, etc.)</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td><strong>Validation failure</strong> — one or more checks failed (used by <code>validate</code> and <code>doctor</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Use exit codes in CI/CD scripts:</p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>validate<span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Validation failed!&quot;</span>
+</code></pre></div>
+
+<hr>
+<h2 id="configuration">Configuration</h2>
+<h3 id="config-file">Config File</h3>
+<p>OMNISKILL stores configuration in <code>~/.omniskill/config.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ~/.omniskill/config.yaml</span>
+<span class="nt">home</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/.omniskill</span>
+<span class="nt">platforms</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-code</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">copilot-cli</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cursor</span>
+<span class="nt">default_bundle</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">web-dev-kit</span>
+<span class="nt">auto_update</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">json_output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="nt">log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info</span>
+</code></pre></div>
+
+<h3 id="environment-variables">Environment Variables</h3>
+<p>Environment variables override config file values:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OMNISKILL_HOME</code></td>
+<td>Override the OMNISKILL home directory</td>
+<td><code>~/.omniskill</code></td>
+</tr>
+<tr>
+<td><code>OMNISKILL_PLATFORM</code></td>
+<td>Force a specific platform (skip auto-detection)</td>
+<td><em>(auto-detected)</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Use a custom home directory</span>
+<span class="nv">OMNISKILL_HOME</span><span class="o">=</span>/opt/omniskill<span class="w"> </span>omniskill<span class="w"> </span>doctor
+
+<span class="c1"># Force a specific platform</span>
+<span class="nv">OMNISKILL_PLATFORM</span><span class="o">=</span>cursor<span class="w"> </span>omniskill<span class="w"> </span>install<span class="w"> </span>--all
+</code></pre></div>
+
+<hr>
+<h2 id="platform-detection">Platform Detection</h2>
+<p>OMNISKILL auto-detects installed AI coding assistants by checking for platform-specific files and directories:</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Detection Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Claude Code</strong></td>
+<td>Checks for <code>~/.claude/</code> directory and <code>AGENTS.md</code></td>
+</tr>
+<tr>
+<td><strong>Copilot CLI</strong></td>
+<td>Checks for <code>~/.copilot/</code> directory</td>
+</tr>
+<tr>
+<td><strong>Cursor</strong></td>
+<td>Checks for <code>~/.cursor/rules/</code> directory</td>
+</tr>
+<tr>
+<td><strong>Windsurf</strong></td>
+<td>Checks for <code>~/.windsurf/</code> or <code>~/.codeium/windsurf/</code> directory</td>
+</tr>
+<tr>
+<td><strong>Antigravity</strong></td>
+<td>Checks for <code>~/.antigravity/</code> directory</td>
+</tr>
+</tbody>
+</table>
+<h3 id="how-it-works">How It Works</h3>
+<ol>
+<li>On <code>omniskill init</code>, the CLI scans your system for each platform's indicator files.</li>
+<li>Detected platforms are saved to <code>~/.omniskill/config.yaml</code>.</li>
+<li>On <code>omniskill install</code>, skills are deployed to each detected platform using the appropriate adapter.</li>
+<li>Each adapter knows how to transform a universal OMNISKILL skill into the platform's native format.</li>
+</ol>
+<h3 id="override-detection">Override Detection</h3>
+<p>Use <code>--platform</code> to target a specific platform:</p>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>install<span class="w"> </span>--all<span class="w"> </span>--platform<span class="w"> </span>claude-code
+</code></pre></div>
+
+<p>Or set the <code>OMNISKILL_PLATFORM</code> environment variable:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">OMNISKILL_PLATFORM</span><span class="o">=</span>cursor
+omniskill<span class="w"> </span>install<span class="w"> </span>--all
+</code></pre></div>
+
+<hr>
+<h2 id="json-output">JSON Output</h2>
+<p>When the <code>--json</code> flag is passed, all commands output a structured JSON envelope:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;doctor&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;checks_passed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;checks_failed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;checks_skipped&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;platforms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;claude-code&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;copilot-cli&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;cursor&quot;</span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="envelope-fields">Envelope Fields</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>status</code></td>
+<td><code>"ok"</code> | <code>"fail"</code> | <code>"error"</code></td>
+<td>Overall result</td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td><code>string</code></td>
+<td>The command that was executed</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td><code>string</code></td>
+<td>OMNISKILL CLI version</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td><code>object</code></td>
+<td>Command-specific payload</td>
+</tr>
+<tr>
+<td><code>errors</code></td>
+<td><code>array</code></td>
+<td>List of error messages (empty on success)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="error-envelope">Error Envelope</h3>
+<p>On failure, the envelope looks like:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;install&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Skill &#39;nonexistent-skill&#39; not found in registry&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<hr>
+<h2 id="shell-completions">Shell Completions</h2>
+<p>Enable tab-completion for your shell:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Install completions (auto-detects bash, zsh, fish, PowerShell)</span>
+omniskill<span class="w"> </span>--install-completion
+
+<span class="c1"># Then restart your shell or source the completion file</span>
+<span class="nb">source</span><span class="w"> </span>~/.bashrc<span class="w">   </span><span class="c1"># bash</span>
+<span class="nb">source</span><span class="w"> </span>~/.zshrc<span class="w">    </span><span class="c1"># zsh</span>
+</code></pre></div>
+
+<p>After installation, you can tab-complete commands, options, skill names, and bundle names:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>omniskill<span class="w"> </span>ins&lt;TAB&gt;
+install
+
+$<span class="w"> </span>omniskill<span class="w"> </span>install<span class="w"> </span>--sk&lt;TAB&gt;
+--skill
+
+$<span class="w"> </span>omniskill<span class="w"> </span>install<span class="w"> </span>--skill<span class="w"> </span>react&lt;TAB&gt;
+react-best-practices
+</code></pre></div>
+
+<hr>
+<h2 id="common-workflows">Common Workflows</h2>
+<h3 id="install-a-bundle">Install a Bundle</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>install<span class="w"> </span>--bundle<span class="w"> </span>web-dev-kit
+omniskill<span class="w"> </span>doctor
+</code></pre></div>
+
+<h3 id="validate-before-a-pr">Validate Before a PR</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Validate all skills, bundles, agents, and pipelines</span>
+omniskill<span class="w"> </span>validate
+<span class="c1"># Exit code 0 = all good, 2 = validation failure</span>
+</code></pre></div>
+
+<h3 id="check-installation-health">Check Installation Health</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>doctor<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.data.checks_failed&#39;</span>
+<span class="c1"># 0</span>
+</code></pre></div>
+
+<h3 id="search-for-skills">Search for Skills</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>search<span class="w"> </span><span class="s2">&quot;django&quot;</span>
+omniskill<span class="w"> </span>info<span class="w"> </span>django-expert
+omniskill<span class="w"> </span>install<span class="w"> </span>--skill<span class="w"> </span>django-expert
+</code></pre></div>
+
+<h3 id="run-a-pipeline">Run a Pipeline</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>pipeline<span class="w"> </span>run<span class="w"> </span>sdd<span class="w"> </span>--project<span class="w"> </span>new-feature
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>status<span class="w"> </span>--project<span class="w"> </span>new-feature
+</code></pre></div>
+
+<h3 id="update-omniskill">Update OMNISKILL</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>update<span class="w"> </span>--check
+omniskill<span class="w"> </span>update
+omniskill<span class="w"> </span>doctor
+</code></pre></div>
+
+<hr>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li><strong><a href="getting-started.md">Getting Started</a></strong> — First-time setup and installation guide</li>
+<li><strong><a href="creating-skills.md">Creating Skills</a></strong> — Author your own custom skills</li>
+<li><strong><a href="creating-bundles.md">Creating Bundles</a></strong> — Package skills into installable domain kits</li>
+<li><strong><a href="creating-agents.md">Creating Agents</a></strong> — Define formal agent definitions</li>
+<li><strong><a href="creating-pipelines.md">Creating Pipelines</a></strong> — Build multi-agent workflows</li>
+<li><strong><a href="platform-guide.md">Platform Guide</a></strong> — Platform-specific setup and configuration</li>
+<li><strong><a href="architecture.md">Architecture</a></strong> — How the complexity router and knowledge system work</li>
+<li><strong><a href="faq.md">FAQ</a></strong> — Common questions and troubleshooting</li>
+</ul>
+        <div class="footer">
+            OMNISKILL v2.0 — Enforced Intelligence Framework<br>
+            <a href="https://github.com/SufficientDaikon/omniskill">GitHub</a> ·
+            <a href="index.html">Documentation Home</a>
+        </div>
+    </main>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1f6feb',
+                primaryTextColor: '#e6edf3',
+                primaryBorderColor: '#30363d',
+                lineColor: '#8b949e',
+                secondaryColor: '#21262d',
+                tertiaryColor: '#161b22',
+                fontSize: '14px'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            stateDiagram: {
+                useMaxWidth: true
+            }
+        });
+
+        // Highlight active nav link
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

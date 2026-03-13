@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNISKILL v2.0 — Documentation</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-card: #1c2128;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-subtle: #388bfd26;
+            --border: #30363d;
+            --green: #3fb950;
+            --red: #f85149;
+            --orange: #d29922;
+            --purple: #bc8cff;
+            --cyan: #39d2c0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 24px 48px;
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        .hero-icon { font-size: 64px; margin-bottom: 16px; }
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 24px;
+            line-height: 1.6;
+        }
+        .hero-badges {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .badge-green { background: #238636; color: #fff; }
+        .badge-blue { background: #1f6feb; color: #fff; }
+        .badge-purple { background: #8957e5; color: #fff; }
+        .badge-orange { background: #9e6a03; color: #fff; }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 48px 24px 80px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            display: block;
+        }
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
+        .card-icon { font-size: 28px; margin-bottom: 12px; }
+        .card h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .card p { font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin: 0; }
+        .card .tag {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--accent-subtle);
+            color: var(--accent);
+        }
+        .card .tag.new {
+            background: #23863622;
+            color: var(--green);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 32px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-icon">⚡</div>
+        <h1>OMNISKILL v2.0</h1>
+        <p>Enforced Intelligence Framework — 48 skills, 9 agents, 5 pipelines, all with runtime guardrails</p>
+        <div class="hero-badges">
+            <span class="badge badge-green">v2.0.0</span>
+            <span class="badge badge-blue">48 Skills</span>
+            <span class="badge badge-purple">9 Agents</span>
+            <span class="badge badge-orange">5 Pipelines</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="section-title">🚀 Getting Started</div>
+        <div class="grid">
+            <a href="Getting-Started.html" class="card">
+                <div class="card-icon">🚀</div>
+                <h3>Getting Started</h3>
+                <p>Install OMNISKILL, configure your platform, and start using skills and agents.</p>
+            </a>
+            <a href="Cli-Guide.html" class="card">
+                <div class="card-icon">💻</div>
+                <h3>CLI Guide</h3>
+                <p>Command-line interface reference for managing skills, agents, pipelines, and bundles.</p>
+            </a>
+            <a href="Migration-V2.html" class="card">
+                <div class="card-icon">📦</div>
+                <h3>Migration to v2.0</h3>
+                <p>Upgrade guide from v0.2.0 — fully backward compatible, zero breaking changes.</p>
+                <span class="tag new">NEW</span>
+            </a>
+        </div>
+
+        <div class="section-title">🏗️ Architecture & Core Systems</div>
+        <div class="grid">
+            <a href="Architecture.html" class="card">
+                <div class="card-icon">🏗️</div>
+                <h3>5-Layer Architecture</h3>
+                <p>Bootstrap → Agents → Skills → Pipelines → Artifacts. The full architectural blueprint.</p>
+                <span class="tag new">NEW</span>
+            </a>
+            <a href="Pipeline-Orchestration.html" class="card">
+                <div class="card-icon">🔧</div>
+                <h3>Pipeline Orchestration</h3>
+                <p>Real execution engine with state machines, artifact validation, and failure recovery.</p>
+                <span class="tag new">NEW</span>
+            </a>
+            <a href="Guardrails.html" class="card">
+                <div class="card-icon">🛡️</div>
+                <h3>Guardrails Engine</h3>
+                <p>10 Iron Laws, anti-rationalization, forbidden phrases, and the deviation protocol.</p>
+                <span class="tag new">NEW</span>
+            </a>
+            <a href="Sequential-Thinking.html" class="card">
+                <div class="card-icon">🧠</div>
+                <h3>Sequential Thinking</h3>
+                <p>DECOMPOSE → REASON → VALIDATE → SYNTHESIZE chain-of-thought protocol.</p>
+                <span class="tag new">NEW</span>
+            </a>
+        </div>
+
+        <div class="section-title">📖 Guides</div>
+        <div class="grid">
+            <a href="Creating-Skills.html" class="card">
+                <div class="card-icon">✨</div>
+                <h3>Creating Skills</h3>
+                <p>Write SKILL.md + manifest.yaml to add new capabilities to the framework.</p>
+            </a>
+            <a href="Creating-Agents.html" class="card">
+                <div class="card-icon">🤖</div>
+                <h3>Creating Agents</h3>
+                <p>Define specialized agents with guardrails, triggers, and skill dependencies.</p>
+            </a>
+            <a href="Creating-Pipelines.html" class="card">
+                <div class="card-icon">🔄</div>
+                <h3>Creating Pipelines</h3>
+                <p>Build multi-step workflows that chain agents with validation gates.</p>
+            </a>
+            <a href="Creating-Bundles.html" class="card">
+                <div class="card-icon">📦</div>
+                <h3>Creating Bundles</h3>
+                <p>Package related skills into installable bundles for different workflows.</p>
+            </a>
+            <a href="Creating-Synapses.html" class="card">
+                <div class="card-icon">🧬</div>
+                <h3>Creating Synapses</h3>
+                <p>Build cognitive protocols that shape how agents think and reason.</p>
+            </a>
+            <a href="Platform-Guide.html" class="card">
+                <div class="card-icon">🌐</div>
+                <h3>Platform Guide</h3>
+                <p>Configure OMNISKILL for Claude Code, Copilot CLI, Cursor, Windsurf, and more.</p>
+            </a>
+        </div>
+
+        <div class="section-title">📋 Reference</div>
+        <div class="grid">
+            <a href="Agent-Cards.html" class="card">
+                <div class="card-icon">🃏</div>
+                <h3>Agent Cards</h3>
+                <p>Detailed profiles of all 9 specialized agents and their capabilities.</p>
+            </a>
+            <a href="Integration-Catalog.html" class="card">
+                <div class="card-icon">🔌</div>
+                <h3>Integration Catalog</h3>
+                <p>Full catalog of platform integrations and adapter configurations.</p>
+            </a>
+            <a href="Faq.html" class="card">
+                <div class="card-icon">❓</div>
+                <h3>FAQ</h3>
+                <p>Frequently asked questions about OMNISKILL usage and troubleshooting.</p>
+            </a>
+            <a href="Changelog.html" class="card">
+                <div class="card-icon">📋</div>
+                <h3>Changelog</h3>
+                <p>Version history and release notes for all OMNISKILL releases.</p>
+            </a>
+            <a href="Readme.html" class="card">
+                <div class="card-icon">📖</div>
+                <h3>README</h3>
+                <p>Project overview, quick start, and feature summary.</p>
+            </a>
+            <a href="Contributing.html" class="card">
+                <div class="card-icon">🤝</div>
+                <h3>Contributing</h3>
+                <p>How to contribute skills, agents, bug fixes, and documentation.</p>
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">
+        OMNISKILL v2.0 — Enforced Intelligence Framework<br>
+        <a href="https://github.com/SufficientDaikon/omniskill">GitHub</a> · Built with ⚡
+    </div>
+</body>
+</html>

@@ -75,6 +75,34 @@ Every skill SHOULD:
 | Bundles   | `kebab-case-kit`   | `web-dev-kit`          |
 | Agents    | `kebab-case-agent` | `spec-writer-agent`    |
 | Pipelines | `kebab-case`       | `sdd-pipeline`         |
+| Synapses  | `kebab-case`       | `sequential-thinking`  |
+| Hooks     | `snake_case.py`    | `pre_step.py`          |
+
+### Adding a Synapse (v2.0)
+
+1. Copy `synapses/_template/` to `synapses/your-synapse/`
+2. Write `SYNAPSE.md` defining firing phases, rules, and resources
+3. Create `manifest.yaml` with `type: core` or `type: optional`
+4. Add resource files as needed
+5. Register in `omniskill.yaml` under `synapses:`
+6. Validate: `python scripts/validate.py --synapses`
+
+### Adding a Hook (v2.0)
+
+1. Create `hooks/your_hook.py` with an `execute(context)` function
+2. Register in `hooks/hooks.yaml` with the lifecycle event it handles
+3. Validate: `python scripts/validate.py --hooks`
+
+### Validation Commands
+
+```bash
+python scripts/validate.py --all          # Validate everything
+python scripts/validate.py --skills       # Skills only
+python scripts/validate.py --agents       # Agents + guardrails
+python scripts/validate.py --synapses     # Synapses
+python scripts/validate.py --hooks        # Hook system
+python scripts/validate.py --pipelines    # Pipeline schemas
+```
 
 ## Code of Conduct
 

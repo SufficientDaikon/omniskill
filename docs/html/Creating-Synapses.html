@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creating Synapses — OMNISKILL v2.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-card: #1c2128;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-subtle: #388bfd26;
+            --border: #30363d;
+            --border-muted: #21262d;
+            --green: #3fb950;
+            --red: #f85149;
+            --orange: #d29922;
+            --purple: #bc8cff;
+            --pink: #f778ba;
+            --cyan: #39d2c0;
+            --nav-width: 280px;
+            --header-height: 60px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .header-brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-brand span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
+        .header-nav {
+            margin-left: auto;
+            display: flex;
+            gap: 16px;
+        }
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .header-nav a:hover { color: var(--accent); }
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            width: var(--nav-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 50;
+            transition: transform 0.3s;
+        }
+        .sidebar-section {
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+        .nav-link {
+            display: block;
+            padding: 8px 20px 8px 28px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+        }
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: var(--nav-width);
+            margin-top: var(--header-height);
+            padding: 40px 48px 80px;
+            max-width: 920px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-primary);
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        p {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        a:hover { text-decoration: underline; }
+
+        strong { color: var(--text-primary); font-weight: 600; }
+
+        /* Lists */
+        ul, ol {
+            margin: 0 0 16px 24px;
+            color: var(--text-primary);
+        }
+        li { margin-bottom: 6px; }
+        li > ul, li > ol { margin-top: 6px; margin-bottom: 0; }
+
+        /* Code */
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+            font-size: 85%;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--orange);
+        }
+        pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            line-height: 1.5;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        /* ASCII diagram styling */
+        pre.ascii-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 24px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--cyan);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        thead {
+            background: var(--bg-tertiary);
+        }
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+        }
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--accent-subtle);
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 12px 20px;
+            margin: 16px 0;
+            background: var(--accent-subtle);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-secondary);
+        }
+
+        /* Horizontal rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 32px 0;
+        }
+
+        /* Mermaid diagrams */
+        .mermaid {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        /* ASCII original toggle */
+        details.ascii-original {
+            margin: -16px 0 24px;
+            font-size: 13px;
+        }
+        details.ascii-original summary {
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 0;
+            user-select: none;
+        }
+        details.ascii-original summary:hover {
+            color: var(--text-secondary);
+        }
+        details.ascii-original pre {
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Badge pills */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-green { background: #238636; color: #fff; }
+        .badge-blue { background: #1f6feb; color: #fff; }
+        .badge-purple { background: #8957e5; color: #fff; }
+        .badge-red { background: #da3633; color: #fff; }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 24px 20px 60px; }
+            .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+        <a href="index.html" class="header-brand">
+            ⚡ OMNISKILL <span>v2.0 Documentation</span>
+        </a>
+        <nav class="header-nav">
+            <a href="https://github.com/SufficientDaikon/omniskill" target="_blank">GitHub</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">Getting Started</div>
+        <a href="index.html" class="nav-link">📚 Documentation Home</a>
+        <a href="Getting-Started.html" class="nav-link">🚀 Getting Started</a>
+        <a href="Cli-Guide.html" class="nav-link">💻 CLI Guide</a>
+        <a href="Migration-V2.html" class="nav-link">📦 Migration to v2.0</a>
+        <div class="sidebar-section">Architecture</div>
+        <a href="Architecture.html" class="nav-link">🏗️ 5-Layer Architecture</a>
+        <a href="Pipeline-Orchestration.html" class="nav-link">🔧 Pipeline Orchestration</a>
+        <a href="Guardrails.html" class="nav-link">🛡️ Guardrails Engine</a>
+        <a href="Sequential-Thinking.html" class="nav-link">🧠 Sequential Thinking</a>
+        <div class="sidebar-section">Guides</div>
+        <a href="Creating-Skills.html" class="nav-link">✨ Creating Skills</a>
+        <a href="Creating-Agents.html" class="nav-link">🤖 Creating Agents</a>
+        <a href="Creating-Pipelines.html" class="nav-link">🔄 Creating Pipelines</a>
+        <a href="Creating-Bundles.html" class="nav-link">📦 Creating Bundles</a>
+        <a href="Creating-Synapses.html" class="nav-link active">🧬 Creating Synapses</a>
+        <a href="Platform-Guide.html" class="nav-link">🌐 Platform Guide</a>
+        <div class="sidebar-section">Reference</div>
+        <a href="Agent-Cards.html" class="nav-link">🃏 Agent Cards</a>
+        <a href="Integration-Catalog.html" class="nav-link">🔌 Integration Catalog</a>
+        <a href="Faq.html" class="nav-link">❓ FAQ</a>
+        <a href="Llms-Txt.html" class="nav-link">📄 LLMs.txt</a>
+        <a href="Changelog.html" class="nav-link">📋 Changelog</a>
+        <a href="Contributing.html" class="nav-link">🤝 Contributing</a>
+        <a href="Readme.html" class="nav-link">📖 README</a>
+    </nav>
+
+    <main class="main">
+        <h1 id="creating-synapses">Creating Synapses</h1>
+<blockquote>
+<p>Build cognitive capabilities that enhance agent reasoning. Synapses add structured thinking layers — planning, monitoring, and reflection — that fire automatically during task execution.</p>
+</blockquote>
+<h2 id="synapse-anatomy">🧬 Synapse Anatomy</h2>
+<p>Every OMNISKILL synapse lives in its own directory under <code>synapses/</code> and follows this structure:</p>
+<pre class="ascii-diagram"><code>synapses/my-synapse/
+├── SYNAPSE.md          — Instructions the AI agent follows
+├── manifest.yaml       — Metadata, firing phases, type
+└── resources/          — Rubrics, templates, heuristics</code></pre>
+
+<blockquote>
+<p><strong>Skills vs Synapses:</strong> Skills define <em>what</em> an agent does (task-specific instructions). Synapses define <em>how</em> an agent thinks (cognitive enhancements that layer on top of any task).</p>
+</blockquote>
+<h2 id="core-vs-optional-types">🏷️ Core vs Optional Types</h2>
+<p>Every synapse has a <code>synapse-type</code> that determines how it binds to agents:</p>
+<h3 id="core-synapses">Core Synapses</h3>
+<p>Core synapses are <strong>auto-injected into all agents</strong>. They fire for every task, scaling effort to complexity. Use core for fundamental cognitive capabilities every agent benefits from.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">synapse-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">core</span>
+<span class="c1"># Auto-injected — every agent gets this synapse</span>
+</code></pre></div>
+
+<h3 id="optional-synapses">Optional Synapses</h3>
+<p>Optional synapses are <strong>bound per-agent</strong>. They only fire when explicitly included in an agent's configuration. Use optional for specialized cognitive patterns relevant to specific roles.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">synapse-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="c1"># Only fires when an agent explicitly binds this synapse</span>
+</code></pre></div>
+
+<blockquote>
+<p>⚠️ <strong>Choose Wisely:</strong> Core synapses add overhead to <em>every</em> agent interaction. Only mark a synapse as core if it genuinely benefits all agents. When in doubt, start with optional.</p>
+</blockquote>
+<h2 id="step-1-synapsemd">Step 1: SYNAPSE.md</h2>
+<p>This is the instruction file the AI agent reads. <strong>Required sections:</strong></p>
+<h3 id="identity">🎭 Identity</h3>
+<p>Who is this synapse? What cognitive capability does it provide?</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># My Synapse</span>
+
+<span class="gu">## Identity</span>
+
+<span class="gs">**Name:**</span> My Synapse
+<span class="gs">**Type:**</span> core | optional
+<span class="gs">**Version:**</span> 1.0.0
+<span class="gs">**Author:**</span> your-name
+
+Describe the cognitive capability this synapse provides.
+What aspect of thinking does it enhance? Why does it matter?
+</code></pre></div>
+
+<h3 id="when-active">🎯 When Active</h3>
+<p>When does this synapse fire? Core synapses fire for every agent task. Optional synapses fire only when bound.</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## When Active</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**Activation:**</span> always-on | binding-activated
+<span class="k">-</span><span class="w"> </span><span class="gs">**Phases:**</span> 3 firing phases
+
+Describe the conditions under which this synapse activates
+and how it scales effort to task complexity.
+</code></pre></div>
+
+<h3 id="firing-phases">🔥 Firing Phases</h3>
+<p>The core of a synapse — structured phases that fire at specific points during task execution. Each phase has timing, instructions, and an output format.</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## Firing Phases</span>
+
+<span class="gu">### Phase 1 — PLAN (Pre-Fire)</span>
+
+<span class="gs">**Timing:**</span> Before starting ANY task.
+
+<span class="gs">**Instructions:**</span>
+
+<span class="k">1.</span> Step one of this phase
+<span class="k">2.</span> Step two of this phase
+
+<span class="gs">**Output Format:**</span>
+
+<span class="gu">### 🧠 My Synapse — PLAN</span>
+<span class="k">-</span><span class="w"> </span><span class="gs">**Dimension 1:**</span> [value]
+<span class="k">-</span><span class="w"> </span><span class="gs">**Dimension 2:**</span> [value]
+</code></pre></div>
+
+<h3 id="rules">📏 Rules</h3>
+<p>DO and DON'T lists — guardrails for the synapse behavior.</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## Rules</span>
+
+<span class="gu">### DO:</span>
+<span class="k">-</span><span class="w"> </span>Be honest about uncertainty
+<span class="k">-</span><span class="w"> </span>Scale monitoring effort to task complexity
+<span class="k">-</span><span class="w"> </span>Justify every rating with evidence
+
+<span class="gu">### DON&#39;T:</span>
+<span class="k">-</span><span class="w"> </span>Skip phases when under time pressure
+<span class="k">-</span><span class="w"> </span>Hide uncertainty to appear more capable
+<span class="k">-</span><span class="w"> </span>Produce output longer than the actual task
+</code></pre></div>
+
+<h3 id="output-format">📦 Output Format</h3>
+<p>Describe the internal reasoning artifacts this synapse produces. These are <strong>thinking artifacts</strong>, not work artifacts.</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## Output Format</span>
+
+This synapse produces internal reasoning artifacts:
+
+| Phase | Artifact | Purpose |
+|-------|----------|---------|
+| PLAN  | Planning assessment | Ensures readiness before work |
+| MONITOR | Confidence tags | Communicates certainty |
+| REFLECT | Reflection summary | Self-assessment for quality |
+
+These artifacts are embedded in the agent&#39;s output stream.
+</code></pre></div>
+
+<h3 id="resources">🤝 Resources</h3>
+<p>Reference table of supporting materials the synapse can consult.</p>
+<div class="highlight"><pre><span></span><code><span class="gu">## Resources</span>
+
+| Resource | Type | Description |
+|----------|------|-------------|
+| resources/rubric.md | rubric | Calibrated scale with criteria |
+| resources/template.md | template | Structured output template |
+| resources/heuristic.md | heuristic | Detection heuristics |
+</code></pre></div>
+
+<h2 id="step-2-manifestyaml">Step 2: manifest.yaml</h2>
+<p>The manifest declares everything about your synapse except the instructions themselves:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-synapse</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;What</span><span class="nv"> </span><span class="s">cognitive</span><span class="nv"> </span><span class="s">capability</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">synapse</span><span class="nv"> </span><span class="s">provides&quot;</span>
+<span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-name</span>
+<span class="nt">synapse-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">core</span><span class="w">   </span><span class="c1"># core | optional</span>
+<span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MIT</span>
+
+<span class="nt">firing-phases</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAN</span>
+<span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pre-task</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Assess</span><span class="nv"> </span><span class="s">complexity</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">select</span><span class="nv"> </span><span class="s">strategy&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MONITOR</span>
+<span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">active</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Track</span><span class="nv"> </span><span class="s">confidence</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">detect</span><span class="nv"> </span><span class="s">stuck</span><span class="nv"> </span><span class="s">loops&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REFLECT</span>
+<span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">post-task</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Self-score</span><span class="nv"> </span><span class="s">quality</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">capture</span><span class="nv"> </span><span class="s">lessons&quot;</span>
+
+<span class="nt">tags</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reasoning</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metacognition</span>
+
+<span class="c1"># Optional: Supporting reference materials</span>
+<span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources/rubric.md</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rubric</span>
+<span class="w">    </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Calibrated</span><span class="nv"> </span><span class="s">confidence</span><span class="nv"> </span><span class="s">scale&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources/template.md</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">template</span>
+<span class="w">    </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Structured</span><span class="nv"> </span><span class="s">output</span><span class="nv"> </span><span class="s">template&quot;</span>
+
+<span class="c1"># Optional: Restrict to specific platforms</span>
+<span class="c1"># platforms:</span>
+<span class="c1">#   - claude-code</span>
+<span class="c1">#   - copilot-cli</span>
+<span class="c1">#   - cursor</span>
+<span class="c1">#   - windsurf</span>
+<span class="c1">#   - antigravity</span>
+</code></pre></div>
+
+<h3 id="manifest-field-reference">Manifest Field Reference</h3>
+<h4 id="required-fields">Required Fields</h4>
+<ul>
+<li><strong><code>name</code></strong> — Unique kebab-case identifier (<code>^[a-z][a-z0-9-]*$</code>)</li>
+<li><strong><code>version</code></strong> — Semantic version (<code>MAJOR.MINOR.PATCH</code>)</li>
+<li><strong><code>description</code></strong> — Human-readable purpose (10–200 characters)</li>
+<li><strong><code>author</code></strong> — Creator identifier</li>
+<li><strong><code>synapse-type</code></strong> — <code>core</code> (auto-injected) or <code>optional</code> (per-agent binding)</li>
+<li><strong><code>firing-phases</code></strong> — List of phase objects (at least one required), each with <code>name</code>, <code>timing</code>, and <code>description</code></li>
+<li><strong><code>tags</code></strong> — Categorization tags for discovery (at least one)</li>
+</ul>
+<h4 id="optional-fields">Optional Fields</h4>
+<ul>
+<li><strong><code>license</code></strong> — License identifier (defaults to MIT)</li>
+<li><strong><code>platforms</code></strong> — Supported platforms: <code>claude-code</code>, <code>copilot-cli</code>, <code>cursor</code>, <code>windsurf</code>, <code>antigravity</code> (defaults to all)</li>
+<li><strong><code>resources</code></strong> — List of resource objects with <code>path</code>, <code>type</code> (<code>rubric</code>, <code>template</code>, <code>heuristic</code>, <code>reference</code>, <code>cheat-sheet</code>), <code>load</code> (<code>always</code> or <code>on-demand</code>), and optional <code>description</code></li>
+</ul>
+<h2 id="firing-phase-design">🔥 Firing Phase Design</h2>
+<p>Firing phases are the heart of a synapse. Each phase fires at a specific point relative to task execution:</p>
+<h3 id="pre-task-phases">Pre-Task Phases</h3>
+<p>Fire <strong>before</strong> the agent starts working. Use for planning, readiness assessment, strategy selection, and risk prediction.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAN</span>
+<span class="w">  </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pre-task</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Assess</span><span class="nv"> </span><span class="s">complexity,</span><span class="nv"> </span><span class="s">inventory</span><span class="nv"> </span><span class="s">knowledge,</span><span class="nv"> </span><span class="s">select</span><span class="nv"> </span><span class="s">strategy&quot;</span>
+</code></pre></div>
+
+<h3 id="active-phases">Active Phases</h3>
+<p>Fire <strong>during</strong> task execution at major decision points. Use for confidence tagging, progress checking, stuck detection, and assumption tracking.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MONITOR</span>
+<span class="w">  </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">active</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Tag</span><span class="nv"> </span><span class="s">confidence</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">decisions,</span><span class="nv"> </span><span class="s">detect</span><span class="nv"> </span><span class="s">stuck</span><span class="nv"> </span><span class="s">loops&quot;</span>
+</code></pre></div>
+
+<h3 id="post-task-phases">Post-Task Phases</h3>
+<p>Fire <strong>after</strong> the agent completes work. Use for quality self-scoring, lessons learned, gap disclosure, and reflection.</p>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REFLECT</span>
+<span class="w">  </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">post-task</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Self-score</span><span class="nv"> </span><span class="s">quality,</span><span class="nv"> </span><span class="s">capture</span><span class="nv"> </span><span class="s">lessons,</span><span class="nv"> </span><span class="s">disclose</span><span class="nv"> </span><span class="s">gaps&quot;</span>
+</code></pre></div>
+
+<blockquote>
+<p>💡 <strong>Phase Design Tips:</strong>
+- <strong>Not all three timings are required</strong> — a synapse can have just a pre-task phase, or just active + post-task
+- <strong>Scale to complexity</strong> — phases should be lightweight for routine tasks, detailed for complex ones
+- <strong>Define clear output formats</strong> — each phase should produce a structured, recognizable output block
+- <strong>Keep phases independent</strong> — each phase should work even if a previous phase was skipped</p>
+</blockquote>
+<h2 id="step-3-resources-optional-but-recommended">Step 3: Resources (Optional but Recommended)</h2>
+<p>Add reference materials the synapse can consult during firing phases:</p>
+<pre class="ascii-diagram"><code>resources/
+├── confidence-rubric.md    — Calibrated scale with evidence criteria
+├── reflection-template.md  — Structured template for post-task output
+└── stuck-detection.md      — Heuristics for recognizing stuck loops</code></pre>
+
+<p>Declare resources in your manifest:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources/confidence-rubric.md</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rubric</span>
+<span class="w">    </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Calibrated</span><span class="nv"> </span><span class="s">confidence</span><span class="nv"> </span><span class="s">scale</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">evidence</span><span class="nv"> </span><span class="s">criteria&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources/reflection-template.md</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">template</span>
+<span class="w">    </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources/stuck-detection.md</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">heuristic</span>
+<span class="w">    </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+</code></pre></div>
+
+<h3 id="resource-types">Resource Types</h3>
+<ul>
+<li><strong><code>rubric</code></strong> — Scoring scales with criteria for each level</li>
+<li><strong><code>template</code></strong> — Structured output templates the synapse fills in</li>
+<li><strong><code>heuristic</code></strong> — Decision-making rules and detection patterns</li>
+<li><strong><code>reference</code></strong> — General reference materials for the domain</li>
+<li><strong><code>cheat-sheet</code></strong> — Quick-reference guides for common patterns</li>
+</ul>
+<h2 id="step-4-validate">Step 4: Validate</h2>
+<p>Run the validation script to ensure your synapse is well-formed:</p>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>python<span class="w"> </span>scripts/validate.py<span class="w"> </span>synapses/my-synapse
+</code></pre></div>
+
+<p>The validator checks:</p>
+<ul>
+<li><strong>manifest.yaml completeness</strong> and schema compliance against <code>schemas/synapse-manifest.schema.yaml</code></li>
+<li><strong>SYNAPSE.md required sections</strong> are present: Identity, When Active, Firing Phases, Rules, Output Format</li>
+<li><strong>Firing phase timings</strong> are valid (<code>pre-task</code>, <code>active</code>, <code>post-task</code>)</li>
+<li><strong>Resources exist</strong> and are accessible</li>
+<li><strong>Name uniqueness</strong> across all synapses</li>
+</ul>
+<blockquote>
+<p>⚠️ <strong>Common Validation Errors:</strong>
+- Missing required sections in SYNAPSE.md
+- Invalid <code>synapse-type</code> (must be <code>core</code> or <code>optional</code>)
+- Invalid <code>timing</code> value in firing phases
+- Referenced resources don't exist
+- Invalid YAML syntax in manifest</p>
+</blockquote>
+<h2 id="tutorial-create-a-new-synapse">🛠️ Tutorial: Create a New Synapse</h2>
+<p>Follow these steps to create a synapse from scratch. We'll build a "risk-assessment" synapse that helps agents evaluate and mitigate risks during task execution.</p>
+<h3 id="1-copy-the-template">1. Copy the Template</h3>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cp<span class="w"> </span>-r<span class="w"> </span>synapses/_template<span class="w"> </span>synapses/risk-assessment
+</code></pre></div>
+
+<h3 id="2-edit-manifestyaml">2. Edit manifest.yaml</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># synapses/risk-assessment/manifest.yaml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">risk-assessment</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Structured</span><span class="nv"> </span><span class="s">risk</span><span class="nv"> </span><span class="s">evaluation</span><span class="nv"> </span><span class="s">—</span><span class="nv"> </span><span class="s">identify,</span><span class="nv"> </span><span class="s">score,</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">mitigate</span><span class="nv"> </span><span class="s">risks</span><span class="nv"> </span><span class="s">before</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">during</span><span class="nv"> </span><span class="s">task</span><span class="nv"> </span><span class="s">execution&quot;</span>
+<span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-name</span>
+<span class="nt">synapse-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optional</span>
+<span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MIT</span>
+
+<span class="nt">firing-phases</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IDENTIFY</span>
+<span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pre-task</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Scan</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">task</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">potential</span><span class="nv"> </span><span class="s">risks</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">failure</span><span class="nv"> </span><span class="s">modes&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVALUATE</span>
+<span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">active</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Score</span><span class="nv"> </span><span class="s">risks</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">they</span><span class="nv"> </span><span class="s">materialize</span><span class="nv"> </span><span class="s">during</span><span class="nv"> </span><span class="s">execution&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REVIEW</span>
+<span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">post-task</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Assess</span><span class="nv"> </span><span class="s">which</span><span class="nv"> </span><span class="s">risks</span><span class="nv"> </span><span class="s">materialized</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">document</span><span class="nv"> </span><span class="s">mitigations&quot;</span>
+
+<span class="nt">tags</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">risk</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">safety</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">quality</span>
+
+<span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources/risk-matrix.md</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rubric</span>
+<span class="w">    </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Probability</span><span class="nv"> </span><span class="s">×</span><span class="nv"> </span><span class="s">impact</span><span class="nv"> </span><span class="s">scoring</span><span class="nv"> </span><span class="s">matrix&quot;</span>
+</code></pre></div>
+
+<h3 id="3-write-synapsemd">3. Write SYNAPSE.md</h3>
+<div class="highlight"><pre><span></span><code><span class="gh"># Risk Assessment Synapse</span>
+
+<span class="gu">## Identity</span>
+
+<span class="gs">**Name:**</span> Risk Assessment
+<span class="gs">**Type:**</span> Optional
+<span class="gs">**Version:**</span> 1.0.0
+<span class="gs">**Author:**</span> your-name
+
+Structured risk evaluation for agent tasks. Identifies potential
+failure modes, scores their likelihood and impact, and tracks
+mitigations throughout execution.
+
+<span class="gu">## When Active</span>
+
+<span class="k">-</span><span class="w"> </span><span class="gs">**Activation:**</span> Binding-activated (optional synapse)
+<span class="k">-</span><span class="w"> </span><span class="gs">**Phases:**</span> 3 firing phases — IDENTIFY, EVALUATE, REVIEW
+
+<span class="gu">## Firing Phases</span>
+
+<span class="gu">### Phase 1 — IDENTIFY (Pre-Fire)</span>
+
+<span class="gs">**Timing:**</span> Before starting the task.
+
+<span class="gs">**Instructions:**</span>
+
+<span class="k">1.</span> List all potential failure modes
+<span class="k">2.</span> Score each risk: probability (1-5) × impact (1-5)
+<span class="k">3.</span> Identify the top 3 risks by score
+<span class="k">4.</span> Propose a mitigation for each top risk
+
+<span class="gs">**Output Format:**</span>
+
+<span class="gu">### ⚠️ Risk Assessment — IDENTIFY</span>
+| Risk | Probability | Impact | Score | Mitigation |
+|------|-------------|--------|-------|------------|
+| ...  | ...         | ...    | ...   | ...        |
+
+<span class="gu">### Phase 2 — EVALUATE (Active-Fire)</span>
+
+<span class="gs">**Timing:**</span> At each major decision point.
+
+<span class="gs">**Instructions:**</span>
+
+<span class="k">1.</span> Check if any identified risk is materializing
+<span class="k">2.</span> If yes, activate the planned mitigation
+<span class="k">3.</span> Log any new risks discovered during execution
+
+<span class="gu">### Phase 3 — REVIEW (Post-Fire)</span>
+
+<span class="gs">**Timing:**</span> After completing the task.
+
+<span class="gs">**Instructions:**</span>
+
+<span class="k">1.</span> Which risks materialized? Were mitigations effective?
+<span class="k">2.</span> Any surprise risks not identified in Phase 1?
+<span class="k">3.</span> Lessons learned for future risk identification
+
+<span class="gu">## Rules</span>
+
+<span class="gu">### DO:</span>
+<span class="k">-</span><span class="w"> </span>Be specific about failure modes
+<span class="k">-</span><span class="w"> </span>Use the probability × impact matrix from resources
+<span class="k">-</span><span class="w"> </span>Update risk scores as new information emerges
+
+<span class="gu">### DON&#39;T:</span>
+<span class="k">-</span><span class="w"> </span>List vague, generic risks
+<span class="k">-</span><span class="w"> </span>Ignore low-probability high-impact risks
+<span class="k">-</span><span class="w"> </span>Skip the review phase
+
+<span class="gu">## Output Format</span>
+
+| Phase | Artifact | Purpose |
+|-------|----------|---------|
+| IDENTIFY | Risk register | Catalogues risks before work begins |
+| EVALUATE | Risk alerts | Flags materializing risks mid-task |
+| REVIEW | Risk report | Post-mortem on risk management |
+
+<span class="gu">## Resources</span>
+
+| Resource | Type | Description |
+|----------|------|-------------|
+| resources/risk-matrix.md | rubric | Probability × impact scoring matrix |
+</code></pre></div>
+
+<h3 id="4-add-resources">4. Add Resources</h3>
+<p>Create the supporting resource files referenced in your manifest:</p>
+<div class="highlight"><pre><span></span><code><span class="gh"># resources/risk-matrix.md — Risk Scoring Matrix</span>
+
+<span class="gu">## Probability Scale</span>
+<span class="k">-</span><span class="w"> </span>1 = Very unlikely (&lt; 5%)
+<span class="k">-</span><span class="w"> </span>2 = Unlikely (5–20%)
+<span class="k">-</span><span class="w"> </span>3 = Possible (20–50%)
+<span class="k">-</span><span class="w"> </span>4 = Likely (50–80%)
+<span class="k">-</span><span class="w"> </span>5 = Very likely (&gt; 80%)
+
+<span class="gu">## Impact Scale</span>
+<span class="k">-</span><span class="w"> </span>1 = Negligible — cosmetic issues only
+<span class="k">-</span><span class="w"> </span>2 = Minor — small rework needed
+<span class="k">-</span><span class="w"> </span>3 = Moderate — significant rework
+<span class="k">-</span><span class="w"> </span>4 = Major — blocks progress or causes failures
+<span class="k">-</span><span class="w"> </span>5 = Critical — data loss, security breach, or complete failure
+
+<span class="gu">## Risk Score = Probability × Impact</span>
+<span class="k">-</span><span class="w"> </span>1–5: Low risk (monitor)
+<span class="k">-</span><span class="w"> </span>6–12: Medium risk (mitigate)
+<span class="k">-</span><span class="w"> </span>13–25: High risk (address before proceeding)
+</code></pre></div>
+
+<h3 id="5-validate">5. Validate</h3>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>python<span class="w"> </span>scripts/validate.py<span class="w"> </span>synapses/risk-assessment
+</code></pre></div>
+
+<p>✅ Your synapse is ready. If it's a core synapse, it will auto-inject into all agents. If optional, bind it to specific agents in their configuration.</p>
+<h2 id="best-practices">✨ Best Practices</h2>
+<h3 id="1-start-optional">1. Start Optional</h3>
+<p>Begin with <code>synapse-type: optional</code> and test with specific agents before promoting to core. Core synapses add overhead to every interaction.</p>
+<h3 id="2-design-clear-output-formats">2. Design Clear Output Formats</h3>
+<p>Each firing phase should produce a recognizable, structured output block with an emoji prefix (e.g., <code>🧠</code>, <code>⚠️</code>) so users can identify synapse output at a glance.</p>
+<h3 id="3-scale-to-complexity">3. Scale to Complexity</h3>
+<p>Synapses should be lightweight for routine tasks and detailed for complex ones. Include instructions for how the agent should gauge task complexity and adjust effort.</p>
+<h3 id="4-keep-phases-independent">4. Keep Phases Independent</h3>
+<p>Each phase should function even if a previous phase was skipped or produced minimal output. Don't create hard dependencies between phases.</p>
+<h3 id="5-provide-rich-resources">5. Provide Rich Resources</h3>
+<p>Rubrics, templates, and heuristics give the synapse concrete criteria to work with instead of relying on vague instructions.</p>
+<h3 id="6-study-the-metacognition-synapse">6. Study the Metacognition Synapse</h3>
+<p>The built-in <code>synapses/metacognition/</code> synapse is the reference implementation. Study its SYNAPSE.md, manifest.yaml, and resources for patterns to follow.</p>
+<h2 id="example-metacognition-synapse">📖 Example: Metacognition Synapse</h2>
+<p>The built-in metacognition synapse demonstrates all synapse patterns. It's a core synapse with three phases:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># synapses/metacognition/manifest.yaml</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metacognition</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Structured</span><span class="nv"> </span><span class="s">self-awareness</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">agents</span><span class="nv"> </span><span class="s">—</span><span class="nv"> </span><span class="s">plan</span><span class="nv"> </span><span class="s">before</span><span class="nv"> </span><span class="s">acting,</span><span class="nv"> </span><span class="s">monitor</span><span class="nv"> </span><span class="s">confidence</span><span class="nv"> </span><span class="s">during</span><span class="nv"> </span><span class="s">execution,</span><span class="nv"> </span><span class="s">reflect</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">quality</span><span class="nv"> </span><span class="s">after</span><span class="nv"> </span><span class="s">completion&quot;</span>
+<span class="nt">author</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tahaa</span>
+<span class="nt">synapse-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">core</span>
+<span class="nt">license</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MIT</span>
+
+<span class="nt">firing-phases</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PLAN</span>
+<span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pre-task</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Assess</span><span class="nv"> </span><span class="s">complexity,</span><span class="nv"> </span><span class="s">inventory</span><span class="nv"> </span><span class="s">knowledge,</span><span class="nv"> </span><span class="s">select</span><span class="nv"> </span><span class="s">strategy,</span><span class="nv"> </span><span class="s">define</span><span class="nv"> </span><span class="s">exit</span><span class="nv"> </span><span class="s">criteria&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MONITOR</span>
+<span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">active</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Tag</span><span class="nv"> </span><span class="s">confidence</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">decisions,</span><span class="nv"> </span><span class="s">check</span><span class="nv"> </span><span class="s">progress,</span><span class="nv"> </span><span class="s">detect</span><span class="nv"> </span><span class="s">stuck</span><span class="nv"> </span><span class="s">loops,</span><span class="nv"> </span><span class="s">track</span><span class="nv"> </span><span class="s">assumptions&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">REFLECT</span>
+<span class="w">    </span><span class="nt">timing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">post-task</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Self-score</span><span class="nv"> </span><span class="s">quality,</span><span class="nv"> </span><span class="s">capture</span><span class="nv"> </span><span class="s">lessons</span><span class="nv"> </span><span class="s">learned,</span><span class="nv"> </span><span class="s">disclose</span><span class="nv"> </span><span class="s">known</span><span class="nv"> </span><span class="s">gaps</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">uncertainties&quot;</span>
+
+<span class="nt">tags</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">metacognition</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reasoning</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">self-awareness</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">core</span>
+
+<span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources/confidence-rubric.md</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rubric</span>
+<span class="w">    </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Calibrated</span><span class="nv"> </span><span class="s">confidence</span><span class="nv"> </span><span class="s">scale</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">evidence</span><span class="nv"> </span><span class="s">criteria</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">each</span><span class="nv"> </span><span class="s">level&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources/reflection-template.md</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">template</span>
+<span class="w">    </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Structured</span><span class="nv"> </span><span class="s">template</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">Phase</span><span class="nv"> </span><span class="s">3</span><span class="nv"> </span><span class="s">reflection</span><span class="nv"> </span><span class="s">output&quot;</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resources/stuck-detection.md</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">heuristic</span>
+<span class="w">    </span><span class="nt">load</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">always</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Heuristics</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">recognizing</span><span class="nv"> </span><span class="s">stuck</span><span class="nv"> </span><span class="s">loops</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">when</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">pivot&quot;</span>
+</code></pre></div>
+
+<blockquote>
+<p>✅ <strong>Pattern to Study:</strong> The <strong>metacognition</strong> synapse demonstrates how to build a core synapse with all three firing phase timings, rich resource files, and clear output formats for each phase.</p>
+</blockquote>
+        <div class="footer">
+            OMNISKILL v2.0 — Enforced Intelligence Framework<br>
+            <a href="https://github.com/SufficientDaikon/omniskill">GitHub</a> ·
+            <a href="index.html">Documentation Home</a>
+        </div>
+    </main>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1f6feb',
+                primaryTextColor: '#e6edf3',
+                primaryBorderColor: '#30363d',
+                lineColor: '#8b949e',
+                secondaryColor: '#21262d',
+                tertiaryColor: '#161b22',
+                fontSize: '14px'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            stateDiagram: {
+                useMaxWidth: true
+            }
+        });
+
+        // Highlight active nav link
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

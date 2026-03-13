@@ -111,3 +111,64 @@ A: Run `python scripts/admin.py --errors`.
 
 **Q: How do I contribute a new skill?**
 A: See [CONTRIBUTING.md](../CONTRIBUTING.md). Fork, create your skill, validate, and submit a PR.
+
+## Guardrails Engine (v2.0)
+
+**Q: What are guardrails?**
+A: Guardrails are structured rules attached to every agent that define what an agent must and must-not do. In v2.0, guardrails are enforced at runtime via the hook system, not just documented.
+
+**Q: What's the guardrail format?**
+A: Each guardrail has three fields: `rule` (the constraint), `severity` (critical/major/minor), and `on-violation` (halt/warn/log). See [Guardrails Guide](guardrails.md).
+
+**Q: What is the anti-rationalization synapse?**
+A: A core synapse that prevents agents from making excuses to skip steps. It includes 10 Iron Laws, forbidden phrases, and rationalization detection tables. It fires automatically for every agent.
+
+**Q: Can I disable guardrails for testing?**
+A: Set `OMNISKILL_GUARDRAILS=disabled` in your environment. Not recommended for production use.
+
+## Synapses (v2.0)
+
+**Q: What are synapses?**
+A: Synapses are cognitive capabilities that shape HOW agents think, not WHAT they do. Unlike skills (which are domain methodologies), synapses affect the reasoning process itself.
+
+**Q: What's the difference between core and optional synapses?**
+A: Core synapses fire automatically for every agent. Optional synapses require explicit binding in the agent manifest.
+
+**Q: What core synapses exist?**
+A: Three: **metacognition** (plan → monitor → reflect), **anti-rationalization** (detect → challenge → enforce), and **sequential-thinking** (decompose → reason → validate → synthesize).
+
+**Q: How do I create a custom synapse?**
+A: See [Creating Synapses](creating-synapses.md). Copy `synapses/_template/` and define your SYNAPSE.md and manifest.yaml.
+
+## Hook System (v2.0)
+
+**Q: What are hooks?**
+A: Python lifecycle hooks that execute at specific points during pipeline execution: session start, before/after each step, on failure, and on deviation.
+
+**Q: Where are hooks defined?**
+A: In `hooks/hooks.yaml` (configuration) and individual `.py` files in `hooks/` (handlers). Each hook has an `execute(context)` function.
+
+**Q: Can I add custom hooks?**
+A: Yes. Create a new `.py` file in `hooks/`, register it in `hooks.yaml`, and specify which lifecycle event triggers it.
+
+## Pipeline Engine (v2.0)
+
+**Q: How is the v2.0 pipeline engine different from v0.x?**
+A: In v0.x, pipelines were just YAML specs — documentation of what should happen. In v2.0, `PipelineExecutor` actually runs the pipeline with state management, artifact validation, failure recovery, and context curation between steps.
+
+**Q: How do I run a pipeline?**
+A: Via CLI: `omniskill pipeline run sdd-pipeline --project ./myapp`. Or via SDK: `os.execute_pipeline("sdd-pipeline", project_name="myapp")`.
+
+**Q: What happens to pipeline state if execution stops?**
+A: State is persisted as JSON to `~/.copilot/.omniskill/pipeline-states/`. Use `omniskill pipeline resume <state-id>` to continue from where it stopped.
+
+**Q: What is context curation?**
+A: Between pipeline steps, the context-curator agent creates focused summaries of the previous step's output, filtering to only what the next agent needs. This prevents context pollution across steps.
+
+## HTML Documentation (v2.0)
+
+**Q: How do I build the HTML docs?**
+A: Run `python scripts/build_docs.py`. This converts all Markdown files in `docs/` to styled HTML in `docs/html/` with automatic Mermaid diagram rendering.
+
+**Q: Can I preview the docs locally?**
+A: Yes. Run `python -m http.server 8000` from the `docs/html/` directory and visit `http://localhost:8000`.

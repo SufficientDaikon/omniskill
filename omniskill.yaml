@@ -2,8 +2,8 @@
 # This file registers all skills, bundles, agents, and pipelines in the framework.
 
 name: omniskill
-version: 0.2.0
-description: "Universal AI Agent & Skills Framework — one repo, one format, every platform"
+version: 2.0.0
+description: "Universal AI Agent & Skills Framework with Enforced Intelligence — guardrails, sequential thinking, pipeline orchestration"
 author: tahaa
 license: MIT
 repository: https://github.com/SufficientDaikon/omniskill
@@ -263,6 +263,14 @@ agents:
 synapses:
   - name: metacognition
     path: synapses/metacognition
+    version: 1.0.0
+    type: core
+  - name: anti-rationalization
+    path: synapses/anti-rationalization
+    version: 1.0.0
+    type: core
+  - name: sequential-thinking
+    path: synapses/sequential-thinking
     version: 1.0.0
     type: core
 

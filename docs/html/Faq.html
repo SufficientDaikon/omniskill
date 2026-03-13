@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ — OMNISKILL v2.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-card: #1c2128;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-subtle: #388bfd26;
+            --border: #30363d;
+            --border-muted: #21262d;
+            --green: #3fb950;
+            --red: #f85149;
+            --orange: #d29922;
+            --purple: #bc8cff;
+            --pink: #f778ba;
+            --cyan: #39d2c0;
+            --nav-width: 280px;
+            --header-height: 60px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .header-brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-brand span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
+        .header-nav {
+            margin-left: auto;
+            display: flex;
+            gap: 16px;
+        }
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .header-nav a:hover { color: var(--accent); }
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            width: var(--nav-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 50;
+            transition: transform 0.3s;
+        }
+        .sidebar-section {
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+        .nav-link {
+            display: block;
+            padding: 8px 20px 8px 28px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+        }
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: var(--nav-width);
+            margin-top: var(--header-height);
+            padding: 40px 48px 80px;
+            max-width: 920px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-primary);
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        p {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        a:hover { text-decoration: underline; }
+
+        strong { color: var(--text-primary); font-weight: 600; }
+
+        /* Lists */
+        ul, ol {
+            margin: 0 0 16px 24px;
+            color: var(--text-primary);
+        }
+        li { margin-bottom: 6px; }
+        li > ul, li > ol { margin-top: 6px; margin-bottom: 0; }
+
+        /* Code */
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+            font-size: 85%;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--orange);
+        }
+        pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            line-height: 1.5;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        /* ASCII diagram styling */
+        pre.ascii-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 24px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--cyan);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        thead {
+            background: var(--bg-tertiary);
+        }
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+        }
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--accent-subtle);
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 12px 20px;
+            margin: 16px 0;
+            background: var(--accent-subtle);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-secondary);
+        }
+
+        /* Horizontal rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 32px 0;
+        }
+
+        /* Mermaid diagrams */
+        .mermaid {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        /* ASCII original toggle */
+        details.ascii-original {
+            margin: -16px 0 24px;
+            font-size: 13px;
+        }
+        details.ascii-original summary {
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 0;
+            user-select: none;
+        }
+        details.ascii-original summary:hover {
+            color: var(--text-secondary);
+        }
+        details.ascii-original pre {
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Badge pills */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-green { background: #238636; color: #fff; }
+        .badge-blue { background: #1f6feb; color: #fff; }
+        .badge-purple { background: #8957e5; color: #fff; }
+        .badge-red { background: #da3633; color: #fff; }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 24px 20px 60px; }
+            .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+        <a href="index.html" class="header-brand">
+            ⚡ OMNISKILL <span>v2.0 Documentation</span>
+        </a>
+        <nav class="header-nav">
+            <a href="https://github.com/SufficientDaikon/omniskill" target="_blank">GitHub</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">Getting Started</div>
+        <a href="index.html" class="nav-link">📚 Documentation Home</a>
+        <a href="Getting-Started.html" class="nav-link">🚀 Getting Started</a>
+        <a href="Cli-Guide.html" class="nav-link">💻 CLI Guide</a>
+        <a href="Migration-V2.html" class="nav-link">📦 Migration to v2.0</a>
+        <div class="sidebar-section">Architecture</div>
+        <a href="Architecture.html" class="nav-link">🏗️ 5-Layer Architecture</a>
+        <a href="Pipeline-Orchestration.html" class="nav-link">🔧 Pipeline Orchestration</a>
+        <a href="Guardrails.html" class="nav-link">🛡️ Guardrails Engine</a>
+        <a href="Sequential-Thinking.html" class="nav-link">🧠 Sequential Thinking</a>
+        <div class="sidebar-section">Guides</div>
+        <a href="Creating-Skills.html" class="nav-link">✨ Creating Skills</a>
+        <a href="Creating-Agents.html" class="nav-link">🤖 Creating Agents</a>
+        <a href="Creating-Pipelines.html" class="nav-link">🔄 Creating Pipelines</a>
+        <a href="Creating-Bundles.html" class="nav-link">📦 Creating Bundles</a>
+        <a href="Creating-Synapses.html" class="nav-link">🧬 Creating Synapses</a>
+        <a href="Platform-Guide.html" class="nav-link">🌐 Platform Guide</a>
+        <div class="sidebar-section">Reference</div>
+        <a href="Agent-Cards.html" class="nav-link">🃏 Agent Cards</a>
+        <a href="Integration-Catalog.html" class="nav-link">🔌 Integration Catalog</a>
+        <a href="Faq.html" class="nav-link active">❓ FAQ</a>
+        <a href="Llms-Txt.html" class="nav-link">📄 LLMs.txt</a>
+        <a href="Changelog.html" class="nav-link">📋 Changelog</a>
+        <a href="Contributing.html" class="nav-link">🤝 Contributing</a>
+        <a href="Readme.html" class="nav-link">📖 README</a>
+    </nav>
+
+    <main class="main">
+        <h1 id="faq">FAQ</h1>
+<h2 id="general">General</h2>
+<p><strong>Q: What platforms does OMNISKILL support?</strong>
+A: Claude Code, GitHub Copilot CLI, Cursor, Windsurf, and Antigravity.</p>
+<p><strong>Q: Can I use just one bundle instead of everything?</strong>
+A: Yes. <code>python scripts/install.py --bundle web-dev-kit</code> installs only that bundle.</p>
+<p><strong>Q: Do I need all 5 platforms installed?</strong>
+A: No. You need at least one. The installer auto-detects what you have.</p>
+<h2 id="skills">Skills</h2>
+<p><strong>Q: How do I create a new skill?</strong>
+A: Use the skill factory: tell your AI assistant "create a new skill for [domain]". Or copy <code>skills/_template/</code> manually.</p>
+<p><strong>Q: My skill's triggers conflict with another skill. What do I do?</strong>
+A: Either make your triggers more specific, or put both skills in a bundle with conflict-resolution rules in the bundle.yaml.</p>
+<p><strong>Q: Can a skill inherit from another skill?</strong>
+A: Yes. Set <code>extends: parent-skill-name</code> in your manifest.yaml.</p>
+<h2 id="bundles">Bundles</h2>
+<p><strong>Q: What's the difference between a bundle and just installing multiple skills?</strong>
+A: Bundles include a meta-skill that resolves conflicts and routes between constituent skills. They also support atomic install/update/uninstall.</p>
+<h2 id="pipelines">Pipelines</h2>
+<p><strong>Q: Can I create custom pipelines?</strong>
+A: Yes. Create a YAML file in <code>pipelines/</code> following the pipeline schema.</p>
+<p><strong>Q: What happens if a pipeline step fails?</strong>
+A: Depends on the step's <code>on-failure</code> setting: halt (stop), loop (retry from earlier step), skip, or retry.</p>
+<h2 id="complexity-router">Complexity Router</h2>
+<p><strong>Q: What is the complexity router?</strong>
+A: An automatic pre-step that classifies every request by complexity (trivial → simple → moderate → complex → expert), selects the optimal model tier, and routes to the right skill/agent/pipeline. It has P0 priority and runs before everything else.</p>
+<p><strong>Q: Can I bypass the complexity router?</strong>
+A: Yes. Set <code>OMNISKILL_BYPASS_ROUTER=true</code> in your environment or use direct skill/agent invocation.</p>
+<p><strong>Q: How does the router classify complexity?</strong>
+A: It analyzes task scope, dependencies, required domain expertise, output complexity, and time constraints. See <code>skills/complexity-router/resources/complexity-signals.md</code>.</p>
+<p><strong>Q: What model tiers exist?</strong>
+A: Fast/cheap (for trivial/simple tasks), Standard (for moderate tasks), and Premium (for complex/expert tasks).</p>
+<h2 id="knowledge-sources">Knowledge Sources</h2>
+<p><strong>Q: What are knowledge sources?</strong>
+A: External knowledge repositories (GitHub repos, local directories, URLs, APIs) that skills can reference. They use file-based search — no vector databases or embeddings required.</p>
+<p><strong>Q: How do I add a knowledge source?</strong>
+A: Edit <code>templates/source-config.yaml</code> and run <code>python scripts/admin.py --sync</code>.</p>
+<p><strong>Q: What file types are supported?</strong>
+A: Markdown (.md), YAML (.yaml), JSON (.json), and plain text (.txt). Other file types are ignored during content normalization.</p>
+<p><strong>Q: How often are sources synced?</strong>
+A: By default, sources are synced daily. Run <code>python scripts/admin.py --sync</code> to trigger a manual sync.</p>
+<h2 id="self-customization-skills">Self-Customization Skills</h2>
+<p><strong>Q: What are self-customization skills?</strong>
+A: AI-guided skills that help you extend OMNISKILL: <code>add-skill</code>, <code>add-bundle</code>, <code>add-agent</code>, <code>add-adapter</code>, and <code>rename-project</code>. Tell your AI assistant to "Follow the [skill-name] skill to..." and it will guide you through the process.</p>
+<p><strong>Q: Do I still need to follow the manual creation process?</strong>
+A: No. The self-customization skills automate validation, template generation, and installation. But you can still create things manually if you prefer.</p>
+<p><strong>Q: Can I customize the self-customization skills themselves?</strong>
+A: Yes. They're regular skills in <code>skills/add-*</code> and can be edited or extended.</p>
+<h2 id="prompt-library">Prompt Library</h2>
+<p><strong>Q: What's in the prompt library?</strong>
+A: Reusable prompt components: router prompts, system prompts, shared formatting rules, and persona templates. Located in <code>prompts/</code>.</p>
+<p><strong>Q: Can I customize prompts?</strong>
+A: Yes. Edit files in <code>prompts/</code> to change how OMNISKILL interacts with AI models.</p>
+<p><strong>Q: Are prompts platform-specific?</strong>
+A: No. Prompts are universal. Platform adapters handle any platform-specific formatting.</p>
+<h2 id="sdk">SDK</h2>
+<p><strong>Q: What is the OMNISKILL SDK?</strong>
+A: A Python library (<code>sdk/omniskill.py</code>) providing programmatic access to OMNISKILL functionality: list skills, route requests, install bundles, validate, sync sources, health checks.</p>
+<p><strong>Q: When should I use the SDK vs. CLI scripts?</strong>
+A: Use the SDK when integrating OMNISKILL into other Python tools or automation. Use CLI scripts for manual operations.</p>
+<p><strong>Q: Can I use the SDK from other languages?</strong>
+A: Not directly, but you can call it via subprocess or create language bindings.</p>
+<h2 id="admin-dashboard">Admin Dashboard</h2>
+<p><strong>Q: What is the admin dashboard?</strong>
+A: A CLI tool (<code>scripts/admin.py</code>) for operational tasks: viewing stats, checking errors, managing knowledge sources, generating health reports.</p>
+<p><strong>Q: How do I see what skills are installed?</strong>
+A: Run <code>python scripts/admin.py --stats</code>.</p>
+<p><strong>Q: How do I check for validation errors?</strong>
+A: Run <code>python scripts/admin.py --errors</code>.</p>
+<h2 id="contributing">Contributing</h2>
+<p><strong>Q: How do I contribute a new skill?</strong>
+A: See <a href="../CONTRIBUTING.md">CONTRIBUTING.md</a>. Fork, create your skill, validate, and submit a PR.</p>
+<h2 id="guardrails-engine-v20">Guardrails Engine (v2.0)</h2>
+<p><strong>Q: What are guardrails?</strong>
+A: Guardrails are structured rules attached to every agent that define what an agent must and must-not do. In v2.0, guardrails are enforced at runtime via the hook system, not just documented.</p>
+<p><strong>Q: What's the guardrail format?</strong>
+A: Each guardrail has three fields: <code>rule</code> (the constraint), <code>severity</code> (critical/major/minor), and <code>on-violation</code> (halt/warn/log). See <a href="guardrails.md">Guardrails Guide</a>.</p>
+<p><strong>Q: What is the anti-rationalization synapse?</strong>
+A: A core synapse that prevents agents from making excuses to skip steps. It includes 10 Iron Laws, forbidden phrases, and rationalization detection tables. It fires automatically for every agent.</p>
+<p><strong>Q: Can I disable guardrails for testing?</strong>
+A: Set <code>OMNISKILL_GUARDRAILS=disabled</code> in your environment. Not recommended for production use.</p>
+<h2 id="synapses-v20">Synapses (v2.0)</h2>
+<p><strong>Q: What are synapses?</strong>
+A: Synapses are cognitive capabilities that shape HOW agents think, not WHAT they do. Unlike skills (which are domain methodologies), synapses affect the reasoning process itself.</p>
+<p><strong>Q: What's the difference between core and optional synapses?</strong>
+A: Core synapses fire automatically for every agent. Optional synapses require explicit binding in the agent manifest.</p>
+<p><strong>Q: What core synapses exist?</strong>
+A: Three: <strong>metacognition</strong> (plan → monitor → reflect), <strong>anti-rationalization</strong> (detect → challenge → enforce), and <strong>sequential-thinking</strong> (decompose → reason → validate → synthesize).</p>
+<p><strong>Q: How do I create a custom synapse?</strong>
+A: See <a href="creating-synapses.md">Creating Synapses</a>. Copy <code>synapses/_template/</code> and define your SYNAPSE.md and manifest.yaml.</p>
+<h2 id="hook-system-v20">Hook System (v2.0)</h2>
+<p><strong>Q: What are hooks?</strong>
+A: Python lifecycle hooks that execute at specific points during pipeline execution: session start, before/after each step, on failure, and on deviation.</p>
+<p><strong>Q: Where are hooks defined?</strong>
+A: In <code>hooks/hooks.yaml</code> (configuration) and individual <code>.py</code> files in <code>hooks/</code> (handlers). Each hook has an <code>execute(context)</code> function.</p>
+<p><strong>Q: Can I add custom hooks?</strong>
+A: Yes. Create a new <code>.py</code> file in <code>hooks/</code>, register it in <code>hooks.yaml</code>, and specify which lifecycle event triggers it.</p>
+<h2 id="pipeline-engine-v20">Pipeline Engine (v2.0)</h2>
+<p><strong>Q: How is the v2.0 pipeline engine different from v0.x?</strong>
+A: In v0.x, pipelines were just YAML specs — documentation of what should happen. In v2.0, <code>PipelineExecutor</code> actually runs the pipeline with state management, artifact validation, failure recovery, and context curation between steps.</p>
+<p><strong>Q: How do I run a pipeline?</strong>
+A: Via CLI: <code>omniskill pipeline run sdd-pipeline --project ./myapp</code>. Or via SDK: <code>os.execute_pipeline("sdd-pipeline", project_name="myapp")</code>.</p>
+<p><strong>Q: What happens to pipeline state if execution stops?</strong>
+A: State is persisted as JSON to <code>~/.copilot/.omniskill/pipeline-states/</code>. Use <code>omniskill pipeline resume &lt;state-id&gt;</code> to continue from where it stopped.</p>
+<p><strong>Q: What is context curation?</strong>
+A: Between pipeline steps, the context-curator agent creates focused summaries of the previous step's output, filtering to only what the next agent needs. This prevents context pollution across steps.</p>
+<h2 id="html-documentation-v20">HTML Documentation (v2.0)</h2>
+<p><strong>Q: How do I build the HTML docs?</strong>
+A: Run <code>python scripts/build_docs.py</code>. This converts all Markdown files in <code>docs/</code> to styled HTML in <code>docs/html/</code> with automatic Mermaid diagram rendering.</p>
+<p><strong>Q: Can I preview the docs locally?</strong>
+A: Yes. Run <code>python -m http.server 8000</code> from the <code>docs/html/</code> directory and visit <code>http://localhost:8000</code>.</p>
+        <div class="footer">
+            OMNISKILL v2.0 — Enforced Intelligence Framework<br>
+            <a href="https://github.com/SufficientDaikon/omniskill">GitHub</a> ·
+            <a href="index.html">Documentation Home</a>
+        </div>
+    </main>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1f6feb',
+                primaryTextColor: '#e6edf3',
+                primaryBorderColor: '#30363d',
+                lineColor: '#8b949e',
+                secondaryColor: '#21262d',
+                tertiaryColor: '#161b22',
+                fontSize: '14px'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            stateDiagram: {
+                useMaxWidth: true
+            }
+        });
+
+        // Highlight active nav link
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

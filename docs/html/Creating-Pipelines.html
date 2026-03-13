@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creating Pipelines — OMNISKILL v2.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --bg-card: #1c2128;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-muted: #6e7681;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-subtle: #388bfd26;
+            --border: #30363d;
+            --border-muted: #21262d;
+            --green: #3fb950;
+            --red: #f85149;
+            --orange: #d29922;
+            --purple: #bc8cff;
+            --pink: #f778ba;
+            --cyan: #39d2c0;
+            --nav-width: 280px;
+            --header-height: 60px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        .header-brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-brand span { color: var(--text-secondary); font-weight: 400; font-size: 14px; }
+        .header-nav {
+            margin-left: auto;
+            display: flex;
+            gap: 16px;
+        }
+        .header-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .header-nav a:hover { color: var(--accent); }
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 16px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            bottom: 0;
+            width: var(--nav-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 50;
+            transition: transform 0.3s;
+        }
+        .sidebar-section {
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+        .nav-link {
+            display: block;
+            padding: 8px 20px 8px 28px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+        }
+        .nav-link.active {
+            color: var(--accent);
+            background: var(--accent-subtle);
+            border-left-color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: var(--nav-width);
+            margin-top: var(--header-height);
+            padding: 40px 48px 80px;
+            max-width: 920px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-primary);
+        }
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        p {
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        a:hover { text-decoration: underline; }
+
+        strong { color: var(--text-primary); font-weight: 600; }
+
+        /* Lists */
+        ul, ol {
+            margin: 0 0 16px 24px;
+            color: var(--text-primary);
+        }
+        li { margin-bottom: 6px; }
+        li > ul, li > ol { margin-top: 6px; margin-bottom: 0; }
+
+        /* Code */
+        code {
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+            font-size: 85%;
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--orange);
+        }
+        pre {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin: 16px 0;
+            line-height: 1.5;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        /* ASCII diagram styling */
+        pre.ascii-diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 24px;
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--cyan);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        thead {
+            background: var(--bg-tertiary);
+        }
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-bottom: 2px solid var(--border);
+        }
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-muted);
+            color: var(--text-secondary);
+        }
+        tr:hover td {
+            background: var(--accent-subtle);
+        }
+
+        /* Blockquotes */
+        blockquote {
+            border-left: 4px solid var(--accent);
+            padding: 12px 20px;
+            margin: 16px 0;
+            background: var(--accent-subtle);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-secondary);
+        }
+
+        /* Horizontal rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 32px 0;
+        }
+
+        /* Mermaid diagrams */
+        .mermaid {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        /* ASCII original toggle */
+        details.ascii-original {
+            margin: -16px 0 24px;
+            font-size: 13px;
+        }
+        details.ascii-original summary {
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px 0;
+            user-select: none;
+        }
+        details.ascii-original summary:hover {
+            color: var(--text-secondary);
+        }
+        details.ascii-original pre {
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Badge pills */
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-green { background: #238636; color: #fff; }
+        .badge-blue { background: #1f6feb; color: #fff; }
+        .badge-purple { background: #8957e5; color: #fff; }
+        .badge-red { background: #da3633; color: #fff; }
+
+        /* Footer */
+        .footer {
+            margin-top: 64px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main { margin-left: 0; padding: 24px 20px 60px; }
+            .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+        <a href="index.html" class="header-brand">
+            ⚡ OMNISKILL <span>v2.0 Documentation</span>
+        </a>
+        <nav class="header-nav">
+            <a href="https://github.com/SufficientDaikon/omniskill" target="_blank">GitHub</a>
+            <a href="index.html">Home</a>
+        </nav>
+    </header>
+
+    <nav class="sidebar">
+        <div class="sidebar-section">Getting Started</div>
+        <a href="index.html" class="nav-link">📚 Documentation Home</a>
+        <a href="Getting-Started.html" class="nav-link">🚀 Getting Started</a>
+        <a href="Cli-Guide.html" class="nav-link">💻 CLI Guide</a>
+        <a href="Migration-V2.html" class="nav-link">📦 Migration to v2.0</a>
+        <div class="sidebar-section">Architecture</div>
+        <a href="Architecture.html" class="nav-link">🏗️ 5-Layer Architecture</a>
+        <a href="Pipeline-Orchestration.html" class="nav-link">🔧 Pipeline Orchestration</a>
+        <a href="Guardrails.html" class="nav-link">🛡️ Guardrails Engine</a>
+        <a href="Sequential-Thinking.html" class="nav-link">🧠 Sequential Thinking</a>
+        <div class="sidebar-section">Guides</div>
+        <a href="Creating-Skills.html" class="nav-link">✨ Creating Skills</a>
+        <a href="Creating-Agents.html" class="nav-link">🤖 Creating Agents</a>
+        <a href="Creating-Pipelines.html" class="nav-link active">🔄 Creating Pipelines</a>
+        <a href="Creating-Bundles.html" class="nav-link">📦 Creating Bundles</a>
+        <a href="Creating-Synapses.html" class="nav-link">🧬 Creating Synapses</a>
+        <a href="Platform-Guide.html" class="nav-link">🌐 Platform Guide</a>
+        <div class="sidebar-section">Reference</div>
+        <a href="Agent-Cards.html" class="nav-link">🃏 Agent Cards</a>
+        <a href="Integration-Catalog.html" class="nav-link">🔌 Integration Catalog</a>
+        <a href="Faq.html" class="nav-link">❓ FAQ</a>
+        <a href="Llms-Txt.html" class="nav-link">📄 LLMs.txt</a>
+        <a href="Changelog.html" class="nav-link">📋 Changelog</a>
+        <a href="Contributing.html" class="nav-link">🤝 Contributing</a>
+        <a href="Readme.html" class="nav-link">📖 README</a>
+    </nav>
+
+    <main class="main">
+        <h1 id="creating-pipelines">Creating Pipelines</h1>
+<h2 id="whats-a-pipeline">What's a Pipeline?</h2>
+<p>A pipeline defines a <strong>multi-agent workflow</strong> — an ordered sequence of agent steps where each step's output feeds into the next. Pipelines support branching, loops, and resumability.</p>
+<h2 id="pipeline-format">Pipeline Format</h2>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-pipeline</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0.0</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;What</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">pipeline</span><span class="nv"> </span><span class="s">accomplishes&quot;</span>
+<span class="nt">trigger</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;natural</span><span class="nv"> </span><span class="s">language</span><span class="nv"> </span><span class="s">pattern</span><span class="nv"> </span><span class="s">*&quot;</span>
+
+<span class="nt">steps</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-one</span>
+<span class="w">    </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">first-agent</span>
+<span class="w">    </span><span class="nt">input</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;what</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">step</span><span class="nv"> </span><span class="s">receives&quot;</span>
+<span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;what</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">step</span><span class="nv"> </span><span class="s">produces&quot;</span>
+<span class="w">    </span><span class="nt">on-failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">halt</span>
+
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-two</span>
+<span class="w">    </span><span class="nt">agent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">second-agent</span>
+<span class="w">    </span><span class="nt">input</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;output</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">step:step-one&quot;</span>
+<span class="w">    </span><span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;final</span><span class="nv"> </span><span class="s">result&quot;</span>
+<span class="w">    </span><span class="nt">on-failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">loop</span>
+<span class="w">    </span><span class="nt">loop-target</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step-one</span>
+<span class="w">    </span><span class="nt">max-iterations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+
+<span class="nt">resumable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+
+<h2 id="the-complexity-router-pre-step">The Complexity Router Pre-Step</h2>
+<p>Before any pipeline executes, the <strong>complexity-router</strong> automatically runs as a pre-step:</p>
+<ol>
+<li><strong>Classification</strong> — Analyzes the request complexity</li>
+<li><strong>Model Selection</strong> — Chooses the optimal model tier</li>
+<li><strong>Pipeline Selection</strong> — Determines if this is the right pipeline or if a simpler/more complex one should be used</li>
+</ol>
+<p>This routing happens transparently. The router uses signals from:
+- Task scope and dependencies
+- Required domain expertise
+- Expected output complexity
+- Time constraints</p>
+<p>See <code>skills/complexity-router/resources/complexity-signals.md</code> for the full classification criteria.</p>
+<h2 id="step-configuration">Step Configuration</h2>
+<h3 id="on-failure-options">on-failure options</h3>
+<ul>
+<li><code>halt</code> — Stop the pipeline; report failure</li>
+<li><code>loop</code> — Go back to <code>loop-target</code> step (requires <code>max-iterations</code>)</li>
+<li><code>skip</code> — Skip this step; continue to next</li>
+<li><code>retry</code> — Retry this step (uses <code>max-iterations</code>)</li>
+</ul>
+<h3 id="input-references">Input References</h3>
+<p>Use <code>step:name</code> to reference output from a previous step:</p>
+<ul>
+<li><code>"Spec from step:specify"</code> — uses the specify step's output</li>
+<li><code>"Code from step:implement AND spec from step:specify"</code> — multiple inputs</li>
+</ul>
+<h2 id="existing-pipelines">Existing Pipelines</h2>
+<p>See the <a href="../pipelines/">pipelines directory</a> for all available pipelines.</p>
+<h2 id="v20-pipeline-execution-engine">v2.0: Pipeline Execution Engine</h2>
+<p>In v2.0, pipelines are <strong>actually executed</strong> by the <code>PipelineExecutor</code> engine. This replaces the v0.x approach where pipelines were just YAML documentation of intended workflows.</p>
+<h3 id="running-a-pipeline">Running a Pipeline</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Via CLI</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>run<span class="w"> </span>sdd-pipeline<span class="w"> </span>--project<span class="w"> </span>./myapp
+
+<span class="c1"># Via SDK</span>
+from<span class="w"> </span>sdk.omniskill<span class="w"> </span>import<span class="w"> </span>OmniSkill
+<span class="nv">os</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>OmniSkill<span class="o">()</span>
+os.execute_pipeline<span class="o">(</span><span class="s2">&quot;sdd-pipeline&quot;</span>,<span class="w"> </span><span class="nv">project_name</span><span class="o">=</span><span class="s2">&quot;myapp&quot;</span><span class="o">)</span>
+</code></pre></div>
+
+<h3 id="pipeline-state-machine">Pipeline State Machine</h3>
+<p>The engine manages pipeline state through these transitions:</p>
+<pre class="ascii-diagram"><code>pending → validating → executing → completed
+                         ↓
+                    failed / paused / cancelled</code></pre>
+
+<ul>
+<li><strong>pending</strong> — Pipeline loaded, not yet started</li>
+<li><strong>validating</strong> — Checking prerequisites and schema compliance</li>
+<li><strong>executing</strong> — Running steps sequentially</li>
+<li><strong>completed</strong> — All steps finished successfully</li>
+<li><strong>failed</strong> — A step failed with <code>on-failure: halt</code></li>
+<li><strong>paused</strong> — Execution paused (can be resumed)</li>
+<li><strong>cancelled</strong> — Manually cancelled</li>
+</ul>
+<h3 id="state-persistence">State Persistence</h3>
+<p>Pipeline state is saved as JSON to <code>~/.copilot/.omniskill/pipeline-states/</code>. This enables:</p>
+<ul>
+<li><strong>Resumability</strong> — <code>omniskill pipeline resume &lt;state-id&gt;</code></li>
+<li><strong>Audit trail</strong> — Every step, decision, and deviation is recorded</li>
+<li><strong>Accumulated state</strong> — Decisions, constraints, and tech_stack grow across steps (never shrink)</li>
+</ul>
+<h3 id="context-curation-between-steps">Context Curation Between Steps</h3>
+<p>The <strong>context-curator</strong> agent runs between pipeline steps to create focused context briefs:</p>
+<ol>
+<li>Summarizes the previous step's output</li>
+<li>Filters to only what the next agent needs</li>
+<li>Applies token budget constraints</li>
+<li>Generates a structured context brief</li>
+</ol>
+<p>This prevents context pollution — each agent gets a clean, focused input rather than the entire accumulated history.</p>
+<h3 id="artifact-validation">Artifact Validation</h3>
+<p>The <code>ArtifactValidator</code> checks outputs between steps:</p>
+<ul>
+<li><strong><code>validate_exists(path)</code></strong> — File must exist</li>
+<li><strong><code>validate_sections(path, headings)</code></strong> — Required Markdown sections</li>
+<li><strong><code>validate_min_content(path, words)</code></strong> — Minimum content length</li>
+<li><strong><code>validate_schema(path, schema)</code></strong> — JSON/YAML schema compliance</li>
+<li><strong><code>validate_compliance_score(report, threshold)</code></strong> — Score gate</li>
+</ul>
+<h3 id="cli-commands">CLI Commands</h3>
+<div class="highlight"><pre><span></span><code>omniskill<span class="w"> </span>pipeline<span class="w"> </span>run<span class="w"> </span>&lt;name&gt;<span class="w"> </span>--project<span class="w"> </span>&lt;dir&gt;<span class="w">   </span><span class="c1"># Execute a pipeline</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>status<span class="w"> </span><span class="o">[</span>state-id<span class="o">]</span><span class="w">             </span><span class="c1"># Show current status</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>resume<span class="w"> </span>&lt;state-id&gt;<span class="w">             </span><span class="c1"># Resume paused pipeline</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>list<span class="w">                          </span><span class="c1"># List all active pipelines</span>
+omniskill<span class="w"> </span>pipeline<span class="w"> </span>cancel<span class="w"> </span>&lt;state-id&gt;<span class="w">             </span><span class="c1"># Cancel with cleanup</span>
+</code></pre></div>
+        <div class="footer">
+            OMNISKILL v2.0 — Enforced Intelligence Framework<br>
+            <a href="https://github.com/SufficientDaikon/omniskill">GitHub</a> ·
+            <a href="index.html">Documentation Home</a>
+        </div>
+    </main>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1f6feb',
+                primaryTextColor: '#e6edf3',
+                primaryBorderColor: '#30363d',
+                lineColor: '#8b949e',
+                secondaryColor: '#21262d',
+                tertiaryColor: '#161b22',
+                fontSize: '14px'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            },
+            stateDiagram: {
+                useMaxWidth: true
+            }
+        });
+
+        // Highlight active nav link
+        const currentPage = location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

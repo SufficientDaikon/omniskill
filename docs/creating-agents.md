@@ -39,7 +39,15 @@ handoff-targets:
     artifact: "output file path"
 
 guardrails:
-  - "Never skip validation"
+  - rule: "Never skip validation"
+    severity: critical
+    on-violation: halt
+  - rule: "Always document assumptions"
+    severity: major
+    on-violation: warn
+  - rule: "Prefer explicit over implicit"
+    severity: minor
+    on-violation: log
 
 input-contract:
   type: "task description"
@@ -82,3 +90,45 @@ See `skills/complexity-router/resources/routing-table.md` for the full routing l
 ## Existing Agents
 
 See the [agents directory](../agents/) for all available agents.
+
+## v2.0: Guardrails Enforcement
+
+In v2.0, guardrails are **enforced at runtime**, not just documented. Every guardrail has three fields:
+
+| Field | Values | Meaning |
+| --- | --- | --- |
+| `rule` | Free text | The constraint the agent must follow |
+| `severity` | `critical`, `major`, `minor` | How serious a violation is |
+| `on-violation` | `halt`, `warn`, `log` | What happens when the rule is broken |
+
+### Severity Levels
+
+- **critical** — Violation stops execution immediately. The agent must not proceed.
+- **major** — Violation generates a warning. The agent should address it before continuing.
+- **minor** — Violation is logged for audit. The agent can continue.
+
+### The Anti-Rationalization Synapse
+
+All agents automatically load the **anti-rationalization** core synapse, which prevents agents from rationalizing their way around guardrails. It includes:
+
+- **10 Iron Laws** — Absolute rules that cannot be bent
+- **Forbidden phrases** — Language patterns that signal rule-bending
+- **Rationalization tables** — Common excuse patterns and their corrections
+
+### Example: Spec Writer Guardrails
+
+```yaml
+guardrails:
+  - rule: "Never assume requirements — ask or mark as TBD"
+    severity: critical
+    on-violation: halt
+  - rule: "Every section must have acceptance criteria"
+    severity: critical
+    on-violation: halt
+  - rule: "Use precise language — no ambiguous terms"
+    severity: major
+    on-violation: warn
+  - rule: "Include error handling for every user flow"
+    severity: major
+    on-violation: warn
+```

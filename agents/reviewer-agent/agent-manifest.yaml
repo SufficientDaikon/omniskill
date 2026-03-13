@@ -29,17 +29,35 @@ handoff:
     needs-work: "Compliance score 70-89%"
     fail: "Compliance score < 70%"
 
+guardrail-enforcement: strict
+
 guardrails:
   must-not:
-    - "Modify or fix code"
-    - "Skip requirements to save time"
-    - "Provide subjective opinions"
-    - "Approve incomplete work"
+    - rule: "Modify or fix code"
+      severity: critical
+      on-violation: halt
+    - rule: "Skip requirements to save time"
+      severity: critical
+      on-violation: halt
+    - rule: "Provide subjective opinions"
+      severity: major
+      on-violation: warn
+    - rule: "Approve incomplete work"
+      severity: critical
+      on-violation: halt
   must-do:
-    - "Verify every requirement against spec"
-    - "Provide evidence-based findings"
-    - "Generate actionable feedback"
-    - "Treat spec as source of truth"
+    - rule: "Verify every requirement against spec"
+      severity: critical
+      on-violation: halt
+    - rule: "Provide evidence-based findings"
+      severity: major
+      on-violation: warn
+    - rule: "Generate actionable feedback"
+      severity: major
+      on-violation: warn
+    - rule: "Treat spec as source of truth"
+      severity: critical
+      on-violation: halt
 
 input-format: "Specification + Implementation (code + tests)"
 output-format: "HTML compliance report with score and detailed findings"

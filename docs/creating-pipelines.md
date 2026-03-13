@@ -65,3 +65,76 @@ Use `step:name` to reference output from a previous step:
 ## Existing Pipelines
 
 See the [pipelines directory](../pipelines/) for all available pipelines.
+
+## v2.0: Pipeline Execution Engine
+
+In v2.0, pipelines are **actually executed** by the `PipelineExecutor` engine. This replaces the v0.x approach where pipelines were just YAML documentation of intended workflows.
+
+### Running a Pipeline
+
+```bash
+# Via CLI
+omniskill pipeline run sdd-pipeline --project ./myapp
+
+# Via SDK
+from sdk.omniskill import OmniSkill
+os = OmniSkill()
+os.execute_pipeline("sdd-pipeline", project_name="myapp")
+```
+
+### Pipeline State Machine
+
+The engine manages pipeline state through these transitions:
+
+```
+pending → validating → executing → completed
+                         ↓
+                    failed / paused / cancelled
+```
+
+- **pending** — Pipeline loaded, not yet started
+- **validating** — Checking prerequisites and schema compliance
+- **executing** — Running steps sequentially
+- **completed** — All steps finished successfully
+- **failed** — A step failed with `on-failure: halt`
+- **paused** — Execution paused (can be resumed)
+- **cancelled** — Manually cancelled
+
+### State Persistence
+
+Pipeline state is saved as JSON to `~/.copilot/.omniskill/pipeline-states/`. This enables:
+
+- **Resumability** — `omniskill pipeline resume <state-id>`
+- **Audit trail** — Every step, decision, and deviation is recorded
+- **Accumulated state** — Decisions, constraints, and tech_stack grow across steps (never shrink)
+
+### Context Curation Between Steps
+
+The **context-curator** agent runs between pipeline steps to create focused context briefs:
+
+1. Summarizes the previous step's output
+2. Filters to only what the next agent needs
+3. Applies token budget constraints
+4. Generates a structured context brief
+
+This prevents context pollution — each agent gets a clean, focused input rather than the entire accumulated history.
+
+### Artifact Validation
+
+The `ArtifactValidator` checks outputs between steps:
+
+- **`validate_exists(path)`** — File must exist
+- **`validate_sections(path, headings)`** — Required Markdown sections
+- **`validate_min_content(path, words)`** — Minimum content length
+- **`validate_schema(path, schema)`** — JSON/YAML schema compliance
+- **`validate_compliance_score(report, threshold)`** — Score gate
+
+### CLI Commands
+
+```bash
+omniskill pipeline run <name> --project <dir>   # Execute a pipeline
+omniskill pipeline status [state-id]             # Show current status
+omniskill pipeline resume <state-id>             # Resume paused pipeline
+omniskill pipeline list                          # List all active pipelines
+omniskill pipeline cancel <state-id>             # Cancel with cleanup
+```

@@ -33,23 +33,53 @@ handoff:
     - "All 17+ output documents generated"
     - "Metadata file written with completion status"
 
+guardrail-enforcement: strict
+
 guardrails:
   must-not:
-    - "Execute, compile, or run target codebase code"
-    - "Perform security vulnerability scanning (CVEs)"
-    - "Score or grade code quality"
-    - "Reproduce secrets, API keys, or tokens in output"
-    - "Ask interactive questions during analysis"
-    - "Overwrite non-dissection folders without metadata marker"
-    - "Crash on unreadable, binary, or encoding-error files"
+    - rule: "Execute, compile, or run target codebase code"
+      severity: critical
+      on-violation: halt
+    - rule: "Perform security vulnerability scanning (CVEs)"
+      severity: major
+      on-violation: warn
+    - rule: "Score or grade code quality"
+      severity: major
+      on-violation: warn
+    - rule: "Reproduce secrets, API keys, or tokens in output"
+      severity: critical
+      on-violation: halt
+    - rule: "Ask interactive questions during analysis"
+      severity: major
+      on-violation: warn
+    - rule: "Overwrite non-dissection folders without metadata marker"
+      severity: critical
+      on-violation: halt
+    - rule: "Crash on unreadable, binary, or encoding-error files"
+      severity: critical
+      on-violation: halt
   must-do:
-    - "Cite every code excerpt with file path and line numbers"
-    - "Handle all 20 edge cases gracefully"
-    - "Report progress at each phase start"
-    - "Produce output even for partial analysis"
-    - "Redact detected secrets with [REDACTED]"
-    - "Use forward slashes in all output paths"
-    - "Include mandatory content even if minimal"
+    - rule: "Cite every code excerpt with file path and line numbers"
+      severity: critical
+      on-violation: halt
+    - rule: "Handle all 20 edge cases gracefully"
+      severity: major
+      on-violation: warn
+    - rule: "Report progress at each phase start"
+      severity: minor
+      on-violation: log
+    - rule: "Produce output even for partial analysis"
+      severity: major
+      on-violation: warn
+    - rule: "Redact detected secrets with [REDACTED]"
+      severity: critical
+      on-violation: halt
+    - rule: "Use forward slashes in all output paths"
+      severity: minor
+      on-violation: log
+    - rule: "Include mandatory content even if minimal"
+      severity: major
+      on-violation: warn
 
 input-format: "Single filesystem path to a codebase directory"
 output-format: "Folder of interlinked markdown documents with metadata JSON"

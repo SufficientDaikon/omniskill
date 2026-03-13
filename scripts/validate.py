@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 OMNISKILL Validator
-Validates skills, bundles, agents, and pipelines against schemas.
+Validates skills, bundles, agents, pipelines, synapses, and hooks against schemas.
 
 Usage:
     python validate.py --all                      # Validate everything
@@ -9,6 +9,10 @@ Usage:
     python validate.py bundles/godot-kit          # Validate specific bundle
     python validate.py --skills                   # Validate all skills
     python validate.py --bundles                  # Validate all bundles
+    python validate.py --pipelines                # Validate all pipelines
+    python validate.py --agents                   # Validate agent guardrails
+    python validate.py --synapses                 # Validate all synapses
+    python validate.py --hooks                    # Validate hook system
 """
 
 import argparse
@@ -364,10 +368,347 @@ def validate_all_bundles() -> List[ValidationResult]:
     return results
 
 
+def validate_pipelines() -> List[ValidationResult]:
+    """
+    Validates all pipelines in the pipelines/ directory.
+
+    Checks:
+      - Each YAML has required fields: name, steps
+      - Each step has: name, agent
+      - on-failure is one of: halt, skip, loop
+      - If loop, must have loop-target and max-iterations
+
+    Returns:
+        List of ValidationResult objects
+    """
+    results = []
+    pipelines_dir = OMNISKILL_ROOT / "pipelines"
+
+    if not pipelines_dir.exists():
+        return results
+
+    valid_on_failure = {"halt", "skip", "loop"}
+
+    for pipeline_file in sorted(pipelines_dir.glob("*.yaml")):
+        result = ValidationResult(str(pipeline_file))
+
+        try:
+            with open(pipeline_file, 'r', encoding='utf-8') as f:
+                pipeline = yaml.safe_load(f)
+        except Exception as e:
+            result.add_error(f"Failed to parse YAML: {e}")
+            results.append(result)
+            continue
+
+        if not isinstance(pipeline, dict):
+            result.add_error("Pipeline file is not a valid YAML mapping")
+            results.append(result)
+            continue
+
+        # Required top-level fields
+        if 'name' not in pipeline:
+            result.add_error("Required field missing: name")
+        if 'steps' not in pipeline:
+            result.add_error("Required field missing: steps")
+            results.append(result)
+            continue
+
+        steps = pipeline.get('steps', [])
+        if not isinstance(steps, list) or len(steps) == 0:
+            result.add_error("steps must be a non-empty list")
+            results.append(result)
+            continue
+
+        for i, step in enumerate(steps):
+            step_label = f"steps[{i}]"
+            if not isinstance(step, dict):
+                result.add_error(f"{step_label}: step must be a mapping")
+                continue
+
+            if 'name' not in step:
+                result.add_error(f"{step_label}: Required field missing: name")
+            else:
+                step_label = f"steps[{i}] ({step['name']})"
+
+            if 'agent' not in step:
+                result.add_error(f"{step_label}: Required field missing: agent")
+
+            on_failure = step.get('on-failure')
+            if on_failure is not None:
+                if on_failure not in valid_on_failure:
+                    result.add_error(
+                        f"{step_label}: on-failure '{on_failure}' not in {valid_on_failure}"
+                    )
+                elif on_failure == 'loop':
+                    if 'loop-target' not in step:
+                        result.add_error(f"{step_label}: on-failure is 'loop' but missing loop-target")
+                    if 'max-iterations' not in step:
+                        result.add_error(f"{step_label}: on-failure is 'loop' but missing max-iterations")
+            else:
+                result.add_warning(f"{step_label}: No on-failure strategy defined")
+
+        results.append(result)
+
+    return results
+
+
+def validate_agent_guardrails() -> List[ValidationResult]:
+    """
+    Validates agent guardrail structure for all agents.
+
+    Checks:
+      - Each agent (except _template) has guardrail-enforcement key
+      - guardrails has must-not and must-do
+      - Each rule has rule, severity, on-violation
+      - severity is one of: critical, major, minor
+      - on-violation is one of: halt, warn, log
+
+    Returns:
+        List of ValidationResult objects
+    """
+    results = []
+    agents_dir = OMNISKILL_ROOT / "agents"
+
+    if not agents_dir.exists():
+        return results
+
+    valid_severity = {"critical", "major", "minor"}
+    valid_on_violation = {"halt", "warn", "log"}
+
+    for agent_dir in sorted(agents_dir.iterdir()):
+        if not agent_dir.is_dir() or agent_dir.name.startswith('_'):
+            continue
+
+        manifest_path = agent_dir / "agent-manifest.yaml"
+        result = ValidationResult(str(agent_dir))
+
+        if not manifest_path.exists():
+            result.add_error("agent-manifest.yaml not found")
+            results.append(result)
+            continue
+
+        try:
+            with open(manifest_path, 'r', encoding='utf-8') as f:
+                manifest = yaml.safe_load(f)
+        except Exception as e:
+            result.add_error(f"Failed to parse YAML: {e}")
+            results.append(result)
+            continue
+
+        if not isinstance(manifest, dict):
+            result.add_error("Agent manifest is not a valid YAML mapping")
+            results.append(result)
+            continue
+
+        # guardrail-enforcement key
+        if 'guardrail-enforcement' not in manifest:
+            result.add_error("Missing required key: guardrail-enforcement")
+
+        guardrails = manifest.get('guardrails')
+        if guardrails is None:
+            result.add_error("Missing required key: guardrails")
+            results.append(result)
+            continue
+
+        if not isinstance(guardrails, dict):
+            result.add_error("guardrails must be a mapping")
+            results.append(result)
+            continue
+
+        for section_name in ('must-not', 'must-do'):
+            section = guardrails.get(section_name)
+            if section is None:
+                result.add_error(f"guardrails missing required section: {section_name}")
+                continue
+
+            if not isinstance(section, list):
+                result.add_error(f"guardrails.{section_name} must be a list")
+                continue
+
+            for j, rule_entry in enumerate(section):
+                rule_label = f"guardrails.{section_name}[{j}]"
+                if not isinstance(rule_entry, dict):
+                    result.add_error(f"{rule_label}: must be a mapping")
+                    continue
+
+                if 'rule' not in rule_entry:
+                    result.add_error(f"{rule_label}: Missing required field: rule")
+                if 'severity' not in rule_entry:
+                    result.add_error(f"{rule_label}: Missing required field: severity")
+                elif rule_entry['severity'] not in valid_severity:
+                    result.add_error(
+                        f"{rule_label}: severity '{rule_entry['severity']}' not in {valid_severity}"
+                    )
+                if 'on-violation' not in rule_entry:
+                    result.add_error(f"{rule_label}: Missing required field: on-violation")
+                elif rule_entry['on-violation'] not in valid_on_violation:
+                    result.add_error(
+                        f"{rule_label}: on-violation '{rule_entry['on-violation']}' not in {valid_on_violation}"
+                    )
+
+        results.append(result)
+
+    return results
+
+
+def validate_synapses() -> List[ValidationResult]:
+    """
+    Validates synapse structure in the synapses/ directory.
+
+    Checks:
+      - Each synapse dir has SYNAPSE.md and manifest.yaml
+      - manifest.yaml has name, version, synapse-type
+      - Core synapses are registered in omniskill.yaml
+
+    Returns:
+        List of ValidationResult objects
+    """
+    results = []
+    synapses_dir = OMNISKILL_ROOT / "synapses"
+
+    if not synapses_dir.exists():
+        return results
+
+    # Load omniskill.yaml to check registration
+    registered_synapses: Set[str] = set()
+    omniskill_path = OMNISKILL_ROOT / "omniskill.yaml"
+    if omniskill_path.exists():
+        try:
+            with open(omniskill_path, 'r', encoding='utf-8') as f:
+                root_manifest = yaml.safe_load(f)
+            for entry in root_manifest.get('synapses', []):
+                if isinstance(entry, dict) and 'name' in entry:
+                    registered_synapses.add(entry['name'])
+        except Exception:
+            pass
+
+    for synapse_dir in sorted(synapses_dir.iterdir()):
+        if not synapse_dir.is_dir() or synapse_dir.name.startswith('_'):
+            continue
+
+        result = ValidationResult(str(synapse_dir))
+
+        # Check required files
+        synapse_md = synapse_dir / "SYNAPSE.md"
+        manifest_path = synapse_dir / "manifest.yaml"
+
+        if not synapse_md.exists():
+            result.add_error("SYNAPSE.md not found")
+        if not manifest_path.exists():
+            result.add_error("manifest.yaml not found")
+            results.append(result)
+            continue
+
+        try:
+            with open(manifest_path, 'r', encoding='utf-8') as f:
+                manifest = yaml.safe_load(f)
+        except Exception as e:
+            result.add_error(f"Failed to parse manifest.yaml: {e}")
+            results.append(result)
+            continue
+
+        if not isinstance(manifest, dict):
+            result.add_error("manifest.yaml is not a valid YAML mapping")
+            results.append(result)
+            continue
+
+        # Required fields
+        for field in ('name', 'version', 'synapse-type'):
+            if field not in manifest:
+                result.add_error(f"Required field missing: {field}")
+
+        # Core synapses must be registered in omniskill.yaml
+        synapse_name = manifest.get('name')
+        synapse_type = manifest.get('synapse-type')
+        if synapse_type == 'core' and synapse_name and synapse_name not in registered_synapses:
+            result.add_error(
+                f"Core synapse '{synapse_name}' is not registered in omniskill.yaml"
+            )
+
+        results.append(result)
+
+    return results
+
+
+def validate_hooks() -> List[ValidationResult]:
+    """
+    Validates the hook system.
+
+    Checks:
+      - hooks.yaml exists and is valid YAML
+      - Each referenced hook .py file exists
+      - Each hook file has an execute() function
+
+    Returns:
+        List of ValidationResult objects
+    """
+    results = []
+    hooks_yaml_path = OMNISKILL_ROOT / "hooks" / "hooks.yaml"
+    result = ValidationResult(str(hooks_yaml_path))
+
+    if not hooks_yaml_path.exists():
+        result.add_error("hooks/hooks.yaml not found")
+        results.append(result)
+        return results
+
+    try:
+        with open(hooks_yaml_path, 'r', encoding='utf-8') as f:
+            hooks_config = yaml.safe_load(f)
+    except Exception as e:
+        result.add_error(f"Failed to parse hooks.yaml: {e}")
+        results.append(result)
+        return results
+
+    if not isinstance(hooks_config, dict):
+        result.add_error("hooks.yaml is not a valid YAML mapping")
+        results.append(result)
+        return results
+
+    hooks = hooks_config.get('hooks', {})
+    if not isinstance(hooks, dict):
+        result.add_error("hooks.yaml 'hooks' key must be a mapping")
+        results.append(result)
+        return results
+
+    import ast
+
+    for hook_name, hook_def in hooks.items():
+        if not isinstance(hook_def, dict):
+            result.add_error(f"Hook '{hook_name}': definition must be a mapping")
+            continue
+
+        handler_path_str = hook_def.get('handler')
+        if not handler_path_str:
+            result.add_error(f"Hook '{hook_name}': missing 'handler' field")
+            continue
+
+        handler_path = OMNISKILL_ROOT / handler_path_str
+        if not handler_path.exists():
+            result.add_error(f"Hook '{hook_name}': handler file not found: {handler_path_str}")
+            continue
+
+        # Check for execute() function via AST parsing
+        try:
+            source = handler_path.read_text(encoding='utf-8')
+            tree = ast.parse(source)
+            func_names = [
+                node.name for node in ast.walk(tree) if isinstance(node, ast.FunctionDef)
+            ]
+            if 'execute' not in func_names:
+                result.add_error(
+                    f"Hook '{hook_name}': handler {handler_path_str} missing execute() function"
+                )
+        except SyntaxError as e:
+            result.add_error(f"Hook '{hook_name}': syntax error in {handler_path_str}: {e}")
+
+    results.append(result)
+    return results
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Validate OMNISKILL skills and bundles",
+        description="Validate OMNISKILL skills, bundles, pipelines, agents, synapses, and hooks",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -375,6 +716,10 @@ Examples:
   python validate.py skills/godot-gdscript    # Validate specific skill
   python validate.py --skills                 # Validate all skills
   python validate.py --bundles                # Validate all bundles
+  python validate.py --pipelines              # Validate all pipelines
+  python validate.py --agents                 # Validate agent guardrails
+  python validate.py --synapses               # Validate all synapses
+  python validate.py --hooks                  # Validate hook system
         """
     )
     
@@ -382,6 +727,10 @@ Examples:
     parser.add_argument('--all', action='store_true', help='Validate everything')
     parser.add_argument('--skills', action='store_true', help='Validate all skills')
     parser.add_argument('--bundles', action='store_true', help='Validate all bundles')
+    parser.add_argument('--pipelines', action='store_true', help='Validate all pipelines')
+    parser.add_argument('--agents', action='store_true', help='Validate agent guardrails')
+    parser.add_argument('--synapses', action='store_true', help='Validate all synapses')
+    parser.add_argument('--hooks', action='store_true', help='Validate hook system')
     parser.add_argument('--check-triggers', action='store_true', help='Check for duplicate triggers')
     parser.add_argument('--check-llms-txt', action='store_true', help='Check if llms.txt files are up to date')
     
@@ -390,9 +739,13 @@ Examples:
     results = []
     
     if args.all:
-        print("🔍 Validating all skills and bundles...\n")
+        print("🔍 Validating all skills, bundles, pipelines, agents, synapses, and hooks...\n")
         results.extend(validate_all_skills())
         results.extend(validate_all_bundles())
+        results.extend(validate_pipelines())
+        results.extend(validate_agent_guardrails())
+        results.extend(validate_synapses())
+        results.extend(validate_hooks())
         
         # Check trigger uniqueness
         trigger_errors = check_trigger_uniqueness()
@@ -408,6 +761,22 @@ Examples:
     elif args.bundles:
         print("🔍 Validating all bundles...\n")
         results.extend(validate_all_bundles())
+    
+    elif args.pipelines:
+        print("🔍 Validating all pipelines...\n")
+        results.extend(validate_pipelines())
+    
+    elif args.agents:
+        print("🔍 Validating agent guardrails...\n")
+        results.extend(validate_agent_guardrails())
+    
+    elif args.synapses:
+        print("🔍 Validating all synapses...\n")
+        results.extend(validate_synapses())
+    
+    elif args.hooks:
+        print("🔍 Validating hook system...\n")
+        results.extend(validate_hooks())
     
     elif args.check_triggers:
         trigger_errors = check_trigger_uniqueness()
