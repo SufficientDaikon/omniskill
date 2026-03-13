@@ -1,5 +1,11 @@
 <div align="center">
 
+> **🚧 Work in Progress — Open Source & Community Driven**
+>
+> OMNISKILL is built by and for the open-source community. This project is actively evolving — contributions, ideas, and feedback are all welcome. **Fork it, remix it, break it, build on it — it's yours.** If you find it useful, give it a star and share it. If you want to make it better, open a PR. No gatekeeping, no strings attached. MIT licensed, forever free.
+
+---
+
 # 🧠 OMNISKILL
 
 ### Universal AI Agent & Skills Framework
