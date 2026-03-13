@@ -922,10 +922,10 @@ INDEX_CONTENT = """<!DOCTYPE html>
     <div class="hero">
         <div class="hero-icon">⚡</div>
         <h1>OMNISKILL v2.0</h1>
-        <p>Enforced Intelligence Framework — 48 skills, 9 agents, 5 pipelines, all with runtime guardrails</p>
+        <p>Enforced Intelligence Framework — 61 skills, 9 agents, 6 pipelines, all with runtime guardrails</p>
         <div class="hero-badges">
             <span class="badge badge-green">v2.0.0</span>
-            <span class="badge badge-blue">48 Skills</span>
+            <span class="badge badge-blue">61 Skills</span>
             <span class="badge badge-purple">9 Agents</span>
             <span class="badge badge-orange">5 Pipelines</span>
         </div>

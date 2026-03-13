@@ -31,7 +31,7 @@ sprints:
         spec_path: "c:\\Users\\tahaa\\.copilot\\sdd\\specs\\omniskill-03-llms-txt\\spec.md"
         report_path: "c:\\Users\\tahaa\\.copilot\\sdd\\reports\\omniskill-03-llms-txt\\review.md"
         commit_hash: "075296e"
-        notes: "96% compliance, APPROVED. 4 minor cosmetic issues (title casing, blank lines). 49 skills, 9 agents, 1 synapse, 6 pipelines, 8 bundles indexed."
+        notes: "96% compliance, APPROVED. 4 minor cosmetic issues (title casing, blank lines). 61 skills, 9 agents, 1 synapse, 6 pipelines, 8 bundles indexed."
 
       - id: "05"
         name: "Agent Cards"

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "OMNISKILL — Universal AI Agent & Skills Framework",
-    description: "49 skills, 8 agents, 5 pipelines — one universal framework.",
+    description: "61 skills, 8 agents, 5 pipelines — one universal framework.",
   },
   icons: {
     icon: "/favicon.svg",

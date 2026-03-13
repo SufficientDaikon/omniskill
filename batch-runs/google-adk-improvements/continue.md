@@ -117,7 +117,7 @@ If review score >= 80%: Proceed to Step 5.
 - **State file**: `c:\Users\tahaa\omniskill\batch-runs\google-adk-improvements\state.yaml`
 - **SDD specs go to**: `c:\Users\tahaa\.copilot\sdd\specs\omniskill-<plan-id>\`
 - **SDD reports go to**: `c:\Users\tahaa\.copilot\sdd\reports\omniskill-<plan-id>\`
-- **The framework has**: 49 skills, 8 agents, 1 synapse, 6 pipelines, 8 bundles
+- **The framework has**: 61 skills, 8 agents, 1 synapse, 6 pipelines, 8 bundles
 - **Existing components**: Python CLI, VS Code extension, Next.js webapp, GitHub Pages docs
 - **Git branch**: master
 - **Always push** after completing each plan

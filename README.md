@@ -8,7 +8,7 @@
 
 [![Version](https://img.shields.io/badge/version-2.0.0-brightgreen)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Skills](https://img.shields.io/badge/skills-49-blue)]()
+[![Skills](https://img.shields.io/badge/skills-61-blue)]()
 [![Bundles](https://img.shields.io/badge/bundles-8-green)]()
 [![Agents](https://img.shields.io/badge/agents-9-orange)]()
 [![Pipelines](https://img.shields.io/badge/pipelines-6-red)]()
@@ -30,7 +30,7 @@ OMNISKILL v2.0 is a major architecture upgrade — from a skill library to an **
 
 | Layer | What It Does |
 | --- | --- |
-| **Layer 1 — Skills & Knowledge** | 49 skills, 8 bundles, prompt library, knowledge sources |
+| **Layer 1 — Skills & Knowledge** | 61 skills, 8 bundles, prompt library, knowledge sources |
 | **Layer 2 — Agents & Personas** | 9 agents with formal personas, handoff contracts, and quality gates |
 | **Layer 3 — Synapses & Cognition** | 3 cognitive synapses (metacognition, anti-rationalization, sequential thinking) that shape HOW agents reason |
 | **Layer 4 — Pipelines & Orchestration** | 6 pipelines with real execution, context curation between steps, failure recovery |
@@ -81,7 +81,7 @@ omniskill doctor                  # Full health check
 ```bash
 pip install omniskill        # Install from PyPI
 omniskill init               # Auto-detect your AI platforms
-omniskill install --all      # Install all 49 skills
+omniskill install --all      # Install all 61 skills
 omniskill doctor             # Verify everything works
 ```
 

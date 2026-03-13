@@ -16,7 +16,7 @@ OMNISKILL generates **two** files:
 ### Concise Index (`llms.txt`)
 
 - **Header** — framework name, version, repository URL, docs URL, license
-- **Skills** — all 49 skills with one-line descriptions (from `manifest.yaml` or `SKILL.md`)
+- **Skills** — all 61 skills with one-line descriptions (from `manifest.yaml` or `SKILL.md`)
 - **Agents** — all 9 agents with roles and descriptions
 - **Synapses** — cognitive enhancement modules with type and description
 - **Pipelines** — multi-agent workflows with trigger phrases and step chains

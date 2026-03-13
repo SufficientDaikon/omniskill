@@ -29,6 +29,8 @@ skills:
   - name: backend-development
     path: skills/backend-development
     version: 1.0.0
+  - name: brainstorming
+    path: skills/brainstorming
   - name: capacitor-best-practices
     path: skills/capacitor-best-practices
     version: 1.0.0
@@ -60,15 +62,21 @@ skills:
   - name: django-rest-framework
     path: skills/django-rest-framework
     version: 1.0.0
+  - name: dispatching-parallel-agents
+    path: skills/dispatching-parallel-agents
   - name: e2e-testing-patterns
     path: skills/e2e-testing-patterns
     version: 1.0.0
+  - name: executing-plans
+    path: skills/executing-plans
   - name: fastmcp
     path: skills/fastmcp
     version: 1.0.0
   - name: find-skills
     path: skills/find-skills
     version: 1.0.0
+  - name: finishing-a-development-branch
+    path: skills/finishing-a-development-branch
   - name: frontend-design
     path: skills/frontend-design
     version: 1.0.0
@@ -121,6 +129,10 @@ skills:
   - name: react-best-practices
     path: skills/react-best-practices
     version: 1.0.0
+  - name: receiving-code-review
+    path: skills/receiving-code-review
+  - name: requesting-code-review
+    path: skills/requesting-code-review
   - name: rename-project
     path: skills/rename-project
     version: 1.0.0
@@ -134,9 +146,13 @@ skills:
   - name: spec-writer
     path: skills/spec-writer
     version: 1.0.0
+  - name: subagent-driven-development
+    path: skills/subagent-driven-development
   - name: systematic-debugging
     path: skills/systematic-debugging
     version: 1.0.0
+  - name: test-driven-development
+    path: skills/test-driven-development
   - name: ui-ux-designer
     path: skills/ui-ux-designer
     version: 1.0.0
@@ -152,9 +168,15 @@ skills:
   - name: ux-test-suite
     path: skills/ux-test-suite
     version: 1.0.0
+  - name: using-git-worktrees
+    path: skills/using-git-worktrees
+  - name: using-superpowers
+    path: skills/using-superpowers
   - name: vercel-react-best-practices
     path: skills/vercel-react-best-practices
     version: 1.0.0
+  - name: verification-before-completion
+    path: skills/verification-before-completion
   - name: web-design-guidelines
     path: skills/web-design-guidelines
     version: 1.0.0
@@ -164,6 +186,8 @@ skills:
   - name: wireframing
     path: skills/wireframing
     version: 1.0.0
+  - name: writing-plans
+    path: skills/writing-plans
   - name: writing-skills
     path: skills/writing-skills
     version: 1.0.0

@@ -7,7 +7,7 @@ const stats = getStats();
 const features = [
   {
     icon: "🧩",
-    title: "49 Expert Skills",
+    title: "61 Expert Skills",
     description:
       "From Django ORM to Godot particles, UX research to systematic debugging — deep domain expertise ready to install.",
   },
@@ -251,7 +251,7 @@ export default function HomePage() {
               href="/skills/"
               className="px-8 py-3.5 bg-gradient-to-r from-brand-purple to-brand-cyan text-white font-semibold rounded-xl hover:opacity-90 transition-opacity text-sm shadow-lg shadow-brand-purple/20"
             >
-              Explore All 49 Skills →
+              Explore All 61 Skills →
             </Link>
             <Link
               href="/bundles/"

@@ -6,15 +6,15 @@
 ![Static Pages](https://img.shields.io/badge/Pages-58_static-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-The public-facing website for **OMNISKILL** — a universal AI agent & skills framework. Browse, search, and explore 49 skills, 8 agents, 5 pipelines, and 8 bundles across 5 platforms, all from a fast, statically-exported Next.js site.
+The public-facing website for **OMNISKILL** — a universal AI agent & skills framework. Browse, search, and explore 61 skills, 8 agents, 5 pipelines, and 8 bundles across 5 platforms, all from a fast, statically-exported Next.js site.
 
 ---
 
 ## Features
 
-- **Landing Page** — Hero section, animated stats bar (49 skills · 8 agents · 5 pipelines · 8 bundles · 5 platforms), feature grid, platform showcase, and call-to-action
-- **Skill Marketplace** — Browse, search, and filter all 49 skills by category with real-time client-side filtering
-- **Skill Detail Pages** — 49 individual pages with metadata (category, priority, version, tags), install commands for every platform, and related bundles/pipelines
+- **Landing Page** — Hero section, animated stats bar (61 skills · 8 agents · 5 pipelines · 8 bundles · 5 platforms), feature grid, platform showcase, and call-to-action
+- **Skill Marketplace** — Browse, search, and filter all 61 skills by category with real-time client-side filtering
+- **Skill Detail Pages** — 61 individual pages with metadata (category, priority, version, tags), install commands for every platform, and related bundles/pipelines
 - **Agent Directory** — 8 specialized agents displayed with roles, personas, philosophies, and a visual workflow-phase diagram
 - **Pipeline Gallery** — 5 pipelines with step-by-step orchestration flow visualizations
 - **Bundle Showcase** — 8 curated skill bundles with descriptions and expandable skill lists
@@ -165,14 +165,14 @@ The registry schema includes:
 | Route            | Page               | Description                                    |
 | ---------------- | ------------------ | ---------------------------------------------- |
 | `/`              | Landing            | Hero, stats, features grid, platforms, CTA     |
-| `/skills`        | Skill Marketplace  | Search, filter, and browse all 49 skills       |
-| `/skills/[slug]` | Skill Detail (×49) | Metadata, install commands, related resources  |
+| `/skills`        | Skill Marketplace  | Search, filter, and browse all 61 skills       |
+| `/skills/[slug]` | Skill Detail (×61) | Metadata, install commands, related resources  |
 | `/agents`        | Agent Directory    | 8 agents with roles, workflow phases, personas |
 | `/pipelines`     | Pipeline Gallery   | 5 pipelines with step-by-step flow diagrams    |
 | `/bundles`       | Bundle Showcase    | 8 curated bundles with skill lists             |
 | `/docs`          | Documentation Hub  | Quick start, links to all doc topics on GitHub |
 
-**Total: 58 static pages** (7 section pages + 49 skill detail pages + index variants)
+**Total: 70 static pages** (7 section pages + 61 skill detail pages + index variants)
 
 ---
 

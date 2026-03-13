@@ -1,0 +1,5 @@
+name: executing-plans
+description: "Single-session plan execution fallback when subagents unavailable. Use when executing implementation plans without subagent support."
+version: "2.0.0"
+category: development-workflow
+tags: [execution, fallback, implementation, sequential, single-session]

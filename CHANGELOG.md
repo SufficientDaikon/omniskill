@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **12 New Development-Workflow Skills**: Added skills for advanced development workflows, bringing the total from 49 to 61 skills
+
 - **Guardrails Engine**: Anti-rationalization synapse with 10 Iron Laws, forbidden phrases, rationalization tables
 - **Sequential Thinking Protocol**: Chain-of-thought synapse with DECOMPOSE → REASON → VALIDATE → SYNTHESIZE phases
 - **Pipeline Orchestrator Engine**: Real execution engine replacing simulated pipelines (PipelineExecutor, PipelineState, ArtifactValidator)
