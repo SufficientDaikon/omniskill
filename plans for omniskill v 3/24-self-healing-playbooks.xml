@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<selfHealingPlaybooks>
+  <playbook id="SH-1" trigger="connection instability">
+    <step>freeze state and capture diagnostics</step>
+    <step>restart client runtime with safe profile</step>
+    <step>resume session and verify trace continuity</step>
+  </playbook>
+  <playbook id="SH-2" trigger="context drift">
+    <step>pause execution</step>
+    <step>regenerate canonical summary and pinned constraints</step>
+    <step>resume only after handoff acknowledgment</step>
+  </playbook>
+  <playbook id="SH-3" trigger="policy conflict">
+    <step>route to policy lead workflow</step>
+    <step>apply temporary deny and gather evidence</step>
+    <step>issue signed override or remediation</step>
+  </playbook>
+</selfHealingPlaybooks>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<controlLibrary>
+  <control id="C-001" class="Preventive">mandatory permission decision before tool execution</control>
+  <control id="C-002" class="Preventive">schema validation for tool arguments</control>
+  <control id="C-003" class="Detective">prompt contradiction lint and anti-injection checks</control>
+  <control id="C-004" class="Detective">event anomaly detection for loop/stall/flood</control>
+  <control id="C-005" class="Corrective">self-healing restart and replay recovery runbook</control>
+  <control id="C-006" class="Compensating">manual approval workflow for high-risk overrides</control>
+</controlLibrary>

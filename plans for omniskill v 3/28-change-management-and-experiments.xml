@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<changeManagementAndExperiments>
+  <experimentProtocol>
+    <step>define hypothesis and success metrics</step>
+    <step>run controlled A/B prompt or policy experiment</step>
+    <step>capture evidence and statistical confidence</step>
+    <step>adopt, iterate, or roll back based on gates</step>
+  </experimentProtocol>
+  <changeControl>
+    <rule>no critical control changes without red-team rerun</rule>
+    <rule>all adopted changes update traceability matrix and scorecard mappings</rule>
+  </changeControl>
+</changeManagementAndExperiments>

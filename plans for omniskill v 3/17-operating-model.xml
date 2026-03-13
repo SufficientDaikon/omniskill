@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<operatingModel>
+  <governanceCadence>
+    <cadence>daily execution standup</cadence>
+    <cadence>weekly architecture and risk review</cadence>
+    <cadence>release go/no-go council</cadence>
+  </governanceCadence>
+  <raci>
+    <role name="PlatformLead" responsibility="final technical direction and quality gates"/>
+    <role name="PolicyLead" responsibility="guardrails, permission policy, exception decisions"/>
+    <role name="ReliabilityLead" responsibility="SLOs, incident response, replay stability"/>
+    <role name="SecurityLead" responsibility="threat model, controls, red-team outcomes"/>
+    <role name="ReleaseLead" responsibility="migration readiness and rollout approvals"/>
+  </raci>
+  <decisionRule>no critical gate override without written risk acceptance and rollback owner</decisionRule>
+</operatingModel>

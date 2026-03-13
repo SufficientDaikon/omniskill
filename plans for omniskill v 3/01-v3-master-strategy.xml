@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<omniskillV3MasterStrategy>
+  <executiveIntent>
+    <problem>OMNISKILL v2 is strong in guardrails and orchestration but under-leverages full Copilot SDK runtime surfaces.</problem>
+    <goal>Deliver OMNISKILL v3 as a Copilot-native, policy-enforced, context-stable, and replay-verifiable operating framework.</goal>
+  </executiveIntent>
+  <transformationPillars>
+    <pillar id="P1">SDK-Complete Runtime Integration</pillar>
+    <pillar id="P2">Policy-by-Construction Execution</pillar>
+    <pillar id="P3">Context-Disciplined Multi-Agent Operation</pillar>
+    <pillar id="P4">Deterministic Validation and Replay</pillar>
+    <pillar id="P5">Operational Migration and Release Excellence</pillar>
+  </transformationPillars>
+  <sotaPromptEngineeringFramework>
+    <framework name="Hybrid-CO-STAR-RISEN-TIDD-EC">
+      <why>Combines strategic clarity, procedural rigor, and strict do/dont boundaries for high-reliability agent execution.</why>
+      <requiredSections>
+        <section>CONTEXT</section>
+        <section>ROLE</section>
+        <section>OBJECTIVE</section>
+        <section>INSTRUCTIONS</section>
+        <section>STEPS</section>
+        <section>DO</section>
+        <section>DONT</section>
+        <section>EVIDENCE</section>
+        <section>RESPONSE_FORMAT</section>
+      </requiredSections>
+    </framework>
+    <framework name="Chain-of-Density-Refinement">
+      <why>Improves signal quality while reducing prompt bloat across iterative planning and implementation cycles.</why>
+      <policy>Each iteration must add missing specificity while keeping constraints explicit and stable.</policy>
+    </framework>
+  </sotaPromptEngineeringFramework>
+  <contextManagementStrategy>
+    <principle>Context is a controlled resource, not an unbounded transcript.</principle>
+    <controls>
+      <control>Use phase handoff packets containing decisions, constraints, open risks, and next actions.</control>
+      <control>Use rolling summaries with evidence links to files, tests, and artifacts.</control>
+      <control>Pin non-negotiables in every prompt: safety rules, acceptance gates, and output schema.</control>
+      <control>Enforce budget-aware context windows by dropping stale narrative and retaining executable facts.</control>
+    </controls>
+  </contextManagementStrategy>
+  <successMetrics>
+    <metric name="CapabilityCoverage">100 percent of applicable SDK capability categories integrated.</metric>
+    <metric name="ExecutionReliability">No critical silent-failure path in controlled stress runs.</metric>
+    <metric name="ContextStability">No unresolved context-loss defects in phase handoffs.</metric>
+    <metric name="PromptQuality">All execution prompts pass framework lint checks for completeness and contradiction-free constraints.</metric>
+  </successMetrics>
+</omniskillV3MasterStrategy>

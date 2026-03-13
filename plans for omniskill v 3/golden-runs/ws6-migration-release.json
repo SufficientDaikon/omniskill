@@ -1,0 +1,1 @@
+{"workstream":"WS6","prompt_id":"P-WS6-MigrationRelease","expected_artifacts":["migration-report","go-no-go"],"pass_signals":["all hard gates pass","rollback plan validated"]}

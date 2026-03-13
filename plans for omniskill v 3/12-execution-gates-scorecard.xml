@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<executionGatesScorecard>
+  <gate name="SchemaAndContracts" type="hard">
+    <passCondition>All schema and contract tests green with negative fixtures.</passCondition>
+  </gate>
+  <gate name="PolicyAndSecurity" type="hard">
+    <passCondition>No critical unresolved policy or security violations.</passCondition>
+  </gate>
+  <gate name="ReplayDeterminism" type="hard">
+    <passCondition>Replay baseline deterministic across environments.</passCondition>
+  </gate>
+  <gate name="ContextIntegrity" type="hard">
+    <passCondition>Context compression and handoff checks green.</passCondition>
+  </gate>
+  <gate name="PromptQuality" type="hard">
+    <passCondition>All execution prompts satisfy required framework fields with zero contradictions.</passCondition>
+  </gate>
+  <gate name="MigrationReadiness" type="hard">
+    <passCondition>Migration dry-run approved and rollback plan validated.</passCondition>
+  </gate>
+  <scoringModel>
+    <metric name="Coverage" weight="25">Capability and test coverage across all planned domains.</metric>
+    <metric name="Reliability" weight="20">Failure recovery and lifecycle stability under stress.</metric>
+    <metric name="Safety" weight="20">Policy compliance and security posture.</metric>
+    <metric name="Determinism" weight="20">Replay stability and predictable execution behavior.</metric>
+    <metric name="OperationalReadiness" weight="15">Migration quality, docs readiness, and release controls.</metric>
+  </scoringModel>
+  <goNoGoPolicy>
+    <rule>Any failed hard gate equals no-go.</rule>
+    <rule>Minimum weighted score for go recommendation is 90.</rule>
+  </goNoGoPolicy>
+</executionGatesScorecard>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<omniskillV3ValidationAndStressPlan>
+  <validationPillars>
+    <pillar>Correctness</pillar>
+    <pillar>Safety</pillar>
+    <pillar>Reliability</pillar>
+    <pillar>Determinism</pillar>
+    <pillar>ContextIntegrity</pillar>
+    <pillar>PromptQuality</pillar>
+  </validationPillars>
+  <testSuites>
+    <suite name="ContractAndSchemaTests">
+      <case>session tool permission hook telemetry and context handoff schema conformance</case>
+      <case>negative tests for malformed contracts and contradictory constraints</case>
+    </suite>
+    <suite name="PromptFrameworkLintTests">
+      <case>verify every execution prompt includes required hybrid framework fields</case>
+      <case>detect contradictions between do and dont constraints</case>
+    </suite>
+    <suite name="ContextManagementTests">
+      <case>handoff packet completeness and checksum validation</case>
+      <case>context compression preserves pinned non-negotiables</case>
+      <case>resume after compaction preserves active objective and acceptance gates</case>
+    </suite>
+    <suite name="LifecycleAndRecoveryTests">
+      <case>client restart and session resume integrity under induced failures</case>
+      <case>abort timeout and pending request cleanup behavior</case>
+    </suite>
+    <suite name="ReplayAndStressTests">
+      <case>deterministic replay snapshots across environments</case>
+      <case>concurrent multi-session stress with tool and permission contention</case>
+      <case>failure injection for MCP outage, malformed tool results, and transport interruptions</case>
+    </suite>
+  </testSuites>
+  <releaseQualityGates>
+    <gate>No critical policy violations unresolved.</gate>
+    <gate>Replay baseline is deterministic and green.</gate>
+    <gate>Context integrity tests are green.</gate>
+    <gate>Prompt lint and contradiction tests are green.</gate>
+  </releaseQualityGates>
+</omniskillV3ValidationAndStressPlan>

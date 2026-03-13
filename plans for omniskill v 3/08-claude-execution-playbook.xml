@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<claudeExecutionPlaybook>
+  <purpose>Provide a direct execution protocol so Claude-family agents can implement OMNISKILL v3 with high reliability and context discipline.</purpose>
+  <runtimeBaselineDirective>
+    <rule>For this program, Claude must use OMNISKILL v2 as the execution substrate.</rule>
+    <rule>Default behavior is upgrade-in-place: preserve v2 working paths and add v3 capability incrementally.</rule>
+    <rule>Any replacement of v2 behavior requires explicit justification, compatibility impact, and migration evidence.</rule>
+  </runtimeBaselineDirective>
+  <toolUsageEnforcement>
+    <rule>Use tools for discovery, reading, edits, validation, and verification; avoid speculative reasoning without evidence.</rule>
+    <rule>Batch independent reads/searches in parallel and avoid sequential thrashing.</rule>
+    <rule>Read targeted ranges for large files and summarize outputs into structured evidence blocks.</rule>
+    <rule>Do not paste large raw logs into context; keep only high-signal excerpts plus file references.</rule>
+    <rule>Each completion claim must cite tool-produced evidence.</rule>
+  </toolUsageEnforcement>
+  <primaryPromptTemplate>
+    <context>[System state, repo state, relevant plans, constraints, prior decisions]</context>
+    <role>[Senior engineer role aligned to current workstream]</role>
+    <objective>[Single measurable objective for this run]</objective>
+    <instructions>[Methodology and ordered steps to follow]</instructions>
+    <do>[Required behaviors and quality bars]</do>
+    <dont>[Forbidden actions and anti-patterns]</dont>
+    <evidence>[Tests, logs, artifacts required before completion claim]</evidence>
+    <response_format>[Output structure for handoff and status]</response_format>
+  </primaryPromptTemplate>
+  <executionLoop>
+    <step>decompose task into bounded subtasks with explicit acceptance checks</step>
+    <step>execute one bounded unit and generate evidence</step>
+    <step>validate against acceptance criteria and policy constraints</step>
+    <step>compress context into handoff packet and continue</step>
+  </executionLoop>
+  <handoffPacketSchema>
+    <field>objective</field>
+    <field>completed_changes</field>
+    <field>open_risks</field>
+    <field>pinned_constraints</field>
+    <field>evidence_links</field>
+    <field>next_actions</field>
+  </handoffPacketSchema>
+  <contextBudgetPolicy>
+    <rule>retain only high-signal facts, constraints, and evidence references</rule>
+    <rule>discard redundant narrative and already-resolved alternatives</rule>
+    <rule>never drop non-negotiables, safety rules, or acceptance gates</rule>
+    <rule>cap transcript expansion by replacing long intermediate output with compact structured summaries</rule>
+  </contextBudgetPolicy>
+  <contextFloodPrevention>
+    <rule>Prefer concise progress updates and artifact pointers over verbose narration.</rule>
+    <rule>Store detailed diagnostics in files/artifacts; keep chat context focused on decisions and blockers.</rule>
+    <rule>When output exceeds practical review size, switch to summarized deltas with explicit references.</rule>
+  </contextFloodPrevention>
+  <qualityBar>
+    <criterion>no completion claim without runnable evidence</criterion>
+    <criterion>no silent fallback for failed critical path</criterion>
+    <criterion>no contradictory instructions in prompts</criterion>
+    <criterion>no context-flooding behavior that obscures execution decisions</criterion>
+  </qualityBar>
+</claudeExecutionPlaybook>

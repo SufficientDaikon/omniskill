@@ -1,0 +1,6 @@
+{
+  "workstream": "WS1",
+  "prompt_id": "P-WS1-Contracts",
+  "expected_artifacts": ["schemas", "fixtures", "lint-report", "compatibility-report"],
+  "pass_signals": ["no schema contradictions", "all contract fixtures pass"]
+}

@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Migration v3 — OMNISKILL Documentation</title>
+    <meta
+      name="description"
+      content="Upgrade guide from OMNISKILL v2.0.0 to v3.0.0 — runtime contracts, policy engine, and telemetry"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="doc-nav">
+      <a href="../index.html" class="nav-logo">OMNISKILL</a>
+      <a
+        href="https://github.com/SufficientDaikon/omniskill"
+        class="nav-github"
+        target="_blank"
+        >GitHub ↗</a
+      >
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">DOCUMENTATION</div>
+        <a href="getting-started.html" class="sidebar-link">Getting Started</a>
+        <a href="creating-skills.html" class="sidebar-link">Creating Skills</a>
+        <a href="creating-agents.html" class="sidebar-link">Creating Agents</a>
+        <a href="creating-synapses.html" class="sidebar-link">Creating Synapses</a>
+        <a href="creating-bundles.html" class="sidebar-link">Creating Bundles</a>
+        <a href="creating-pipelines.html" class="sidebar-link">Creating Pipelines</a>
+        <a href="cli-guide.html" class="sidebar-link">CLI Guide</a>
+        <a href="platform-guide.html" class="sidebar-link">Platform Guide</a>
+        <a href="architecture.html" class="sidebar-link">Architecture</a>
+        <a href="migration-v3.html" class="sidebar-link active">Migration v3</a>
+        <a href="faq.html" class="sidebar-link">FAQ</a>
+        <a href="llms-txt.html" class="sidebar-link">llms.txt</a>
+        <a href="agent-cards.html" class="sidebar-link">Agent Cards</a>
+        <a href="integration-catalog.html" class="sidebar-link">Integration Catalog</a>
+      </div>
+      <div class="sidebar-section">
+        <a href="../index.html" class="sidebar-link back-link">← Back to Home</a>
+      </div>
+    </aside>
+
+    <button
+      class="sidebar-toggle"
+      onclick="document.getElementById('sidebar').classList.toggle('open')"
+    >
+      ☰
+    </button>
+
+    <!-- Main Content -->
+    <main class="doc-content">
+      <!-- Breadcrumbs -->
+      <div class="breadcrumbs">
+        <a href="../index.html">Home</a>
+        <span class="separator">›</span>
+        <a href="getting-started.html">Documentation</a>
+        <span class="separator">›</span>
+        <span>Migration v3</span>
+      </div>
+
+      <!-- Header -->
+      <div class="doc-header">
+        <span class="section-label">DOCUMENTATION</span>
+        <h1 class="doc-title">
+          Migration Guide: <span class="gradient-text">v2 → v3</span>
+        </h1>
+        <p class="doc-subtitle">
+          Upgrade from OMNISKILL v2.0.0 to v3.0.0 — fully backward compatible,
+          purely additive.
+        </p>
+      </div>
+
+      <!-- What Changed -->
+      <div class="content-section">
+        <h2>🔄 What Changed</h2>
+        <p>
+          OMNISKILL v3.0.0 adds <strong>Layer 6: Runtime Contracts</strong> — a
+          new layer that wraps the entire runtime with enforced session lifecycle,
+          policy-gated tool execution, versioned telemetry, replay determinism,
+          and MCP trust routing.
+        </p>
+
+        <div class="alert alert-success">
+          <div class="alert-icon">✓</div>
+          <div class="alert-content">
+            <div class="alert-title">Fully Backward Compatible</div>
+            <p>
+              All existing v2 skills, agents, bundles, pipelines, schemas, hooks,
+              and synapses continue to work without modification. v3 is purely additive.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Breaking Changes -->
+      <div class="content-section">
+        <h2>⚠️ Breaking Changes</h2>
+        <p><strong>None.</strong> All existing content is forward-compatible:</p>
+        <ul>
+          <li>Existing <code>SKILL.md</code> + <code>manifest.yaml</code> files work unchanged</li>
+          <li>Existing <code>AGENT.md</code> + <code>agent-manifest.yaml</code> files work unchanged</li>
+          <li>Pipeline YAML definitions consumed by the engine as-is</li>
+          <li>All 9 v2 schemas preserved alongside 6 new v3 schemas</li>
+          <li>v2 core modules untouched</li>
+          <li>All 282 v2 tests continue to pass</li>
+        </ul>
+      </div>
+
+      <!-- New Capabilities -->
+      <div class="content-section">
+        <h2>🚀 New Capabilities</h2>
+
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Module</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Session Lifecycle</strong></td>
+              <td><code>session_manager.py</code></td>
+              <td>8-state machine with strict transitions, correlation IDs, persistence</td>
+            </tr>
+            <tr>
+              <td><strong>Central Policy Engine</strong></td>
+              <td><code>policy_engine.py</code></td>
+              <td>Default-deny tool gating with trust tiers, schema validation, audit log</td>
+            </tr>
+            <tr>
+              <td><strong>Telemetry &amp; Replay</strong></td>
+              <td><code>telemetry.py</code></td>
+              <td>Versioned envelopes (3.0.0), replay snapshots, structure-only checksums</td>
+            </tr>
+            <tr>
+              <td><strong>MCP Trust Routing</strong></td>
+              <td><code>agent_mcp.py</code></td>
+              <td>Capability-based routing with health policies and trust tier precedence</td>
+            </tr>
+            <tr>
+              <td><strong>Schema Validation</strong></td>
+              <td><code>schema_validator.py</code></td>
+              <td>Schema lint, contradiction detection, v2/v3 compatibility checking</td>
+            </tr>
+            <tr>
+              <td><strong>Migration Runner</strong></td>
+              <td><code>migration.py</code></td>
+              <td>Dry-run analysis, release gate scorecard, 6 hard gates</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- New Schemas -->
+      <div class="content-section">
+        <h2>📋 New Schemas (6)</h2>
+
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Schema</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>session.schema.yaml</code></td>
+              <td>Session lifecycle states and transitions</td>
+            </tr>
+            <tr>
+              <td><code>tool-invocation.schema.yaml</code></td>
+              <td>Tool call with required policy decision</td>
+            </tr>
+            <tr>
+              <td><code>permission.schema.yaml</code></td>
+              <td>Permission rules with trust tiers</td>
+            </tr>
+            <tr>
+              <td><code>hook-event.schema.yaml</code></td>
+              <td>Normalized hook bus events</td>
+            </tr>
+            <tr>
+              <td><code>telemetry-envelope.schema.yaml</code></td>
+              <td>Versioned telemetry format</td>
+            </tr>
+            <tr>
+              <td><code>context-handoff.schema.yaml</code></td>
+              <td>Phase handoff with pinned constraints and evidence</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Session Lifecycle -->
+      <div class="content-section">
+        <h2>🔁 Session Lifecycle</h2>
+        <p>
+          The <code>SessionManager</code> enforces an 8-state lifecycle with strict
+          transition rules:
+        </p>
+
+        <div class="code-block">
+          <pre><code>created → active → waiting_tool → active
+                 → waiting_permission → active
+                 → idle → active
+                 → error → recovering → active
+                 → archived (terminal)</code></pre>
+        </div>
+
+        <p>
+          Invalid transitions raise <code>InvalidTransitionError</code>. Every event
+          is logged with a correlation ID that links sessions to pipeline traces.
+        </p>
+      </div>
+
+      <!-- Policy Engine -->
+      <div class="content-section">
+        <h2>🛡️ Policy Engine</h2>
+        <p>The <code>PolicyEngine</code> gates every tool invocation through 4 checks:</p>
+
+        <ol class="step-list">
+          <li class="step-item">
+            <div class="step-title">Schema Validation</div>
+            <div class="step-description">Tool arguments checked against registered schemas.</div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">Permission Rules</div>
+            <div class="step-description">Evaluated in order; first match wins.</div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">Trust Tier Precedence</div>
+            <div class="step-description">builtin &gt; verified &gt; community &gt; untrusted</div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">Decision Artifact</div>
+            <div class="step-description">Machine-readable <code>PolicyDecision</code> with rationale.</div>
+          </li>
+        </ol>
+
+        <p>
+          Default action is <strong>deny</strong> — tools must have an explicit allow rule.
+        </p>
+      </div>
+
+      <!-- Using v3 SDK -->
+      <div class="content-section">
+        <h2>💻 Using v3 SDK</h2>
+
+        <div class="code-block">
+          <div class="code-label">Python</div>
+          <pre><code>from src.omniskill.core.session_manager import Session
+from src.omniskill.core.policy_engine import PolicyEngine, PermissionRule
+from src.omniskill.core.telemetry import TelemetryCollector, ReplayHarness
+
+# Session lifecycle
+session = Session.create("my-pipeline", {"input": "Build auth"})
+session.activate()
+session.wait_for_tool("file_write")
+session.resume()
+
+# Policy engine
+engine = PolicyEngine()
+engine.add_rule(PermissionRule(
+    id="r1", scope="file_*",
+    trust_tier="verified", action="allow"
+))
+decision = engine.evaluate(
+    "file_write", {"path": "/src/main.py"},
+    trust_tier="verified"
+)
+
+# Telemetry
+collector = TelemetryCollector()
+collector.emit_from_session_event(session, "session_start")
+collector.emit_from_policy_decision(decision)
+
+# Replay determinism
+harness = ReplayHarness(collector)
+baseline = harness.capture(session)
+current = harness.capture(session)
+result = harness.compare(baseline, current)
+assert result["deterministic"] is True</code></pre>
+        </div>
+      </div>
+
+      <!-- Release Gates -->
+      <div class="content-section">
+        <h2>✅ Release Gates</h2>
+        <p>The <code>ReleaseGateValidator</code> validates 6 hard gates:</p>
+
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Gate</th>
+              <th>What It Checks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>SchemaAndContracts</strong></td>
+              <td>All v3 schemas present and version 3.x</td>
+            </tr>
+            <tr>
+              <td><strong>PolicyAndSecurity</strong></td>
+              <td>Policy engine and permission schema present</td>
+            </tr>
+            <tr>
+              <td><strong>ReplayDeterminism</strong></td>
+              <td>Telemetry module and replay tests present</td>
+            </tr>
+            <tr>
+              <td><strong>ContextIntegrity</strong></td>
+              <td>Handoff schema enforces pinned_constraints and evidence_links</td>
+            </tr>
+            <tr>
+              <td><strong>PromptQuality</strong></td>
+              <td>Prompt files present, schema validator functional</td>
+            </tr>
+            <tr>
+              <td><strong>MigrationReadiness</strong></td>
+              <td>Migration dry-run passes with zero blockers</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>
+          All 6 must pass and the weighted score must reach 90+ for a GO recommendation.
+        </p>
+      </div>
+
+      <!-- Upgrade Steps -->
+      <div class="content-section">
+        <h2>⚡ Upgrade Steps</h2>
+
+        <ol class="step-list">
+          <li class="step-item">
+            <div class="step-title">Pull the latest version</div>
+            <div class="step-description">
+              <code>git pull</code> or update your copy to v3.0.0
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">No migration required</div>
+            <div class="step-description">
+              Existing v2 content works as-is — zero breaking changes.
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">Run tests</div>
+            <div class="step-description">
+              <div class="terminal-block">
+                <pre><span class="prompt">$</span> python -m pytest tests/</pre>
+              </div>
+              <p>All 500 tests should pass (282 v2 + 218 v3).</p>
+            </div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">Optional: Use v3 features</div>
+            <div class="step-description">
+              Adopt <code>SessionManager</code>, <code>PolicyEngine</code>, and
+              <code>TelemetryCollector</code> for runtime contracts.
+            </div>
+          </li>
+        </ol>
+
+        <div class="alert alert-success">
+          <div class="alert-icon">✓</div>
+          <div class="alert-content">
+            <div class="alert-title">That's it!</div>
+            <p>
+              All 282 v2 tests + 218 v3 tests = <strong>500/500 PASS</strong>.
+              Your existing OMNISKILL content is fully compatible with v3.0.0.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Footer -->
+      <div class="doc-nav-footer">
+        <a href="architecture.html" class="nav-link prev">
+          <span class="nav-label">← Previous</span>
+          <span class="nav-title">Architecture</span>
+        </a>
+        <a href="faq.html" class="nav-link next">
+          <span class="nav-label">Next →</span>
+          <span class="nav-title">FAQ</span>
+        </a>
+      </div>
+    </main>
+
+    <script>
+      // Scroll reveal animations
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1 },
+      );
+
+      document.querySelectorAll(".reveal, .content-section").forEach((el) => {
+        observer.observe(el);
+      });
+
+      // Sidebar active state based on current page
+      const currentPage = window.location.pathname.split("/").pop();
+      document.querySelectorAll(".sidebar-link").forEach((link) => {
+        if (link.getAttribute("href") === currentPage) {
+          link.classList.add("active");
+        }
+      });
+    </script>
+  </body>
+</html>

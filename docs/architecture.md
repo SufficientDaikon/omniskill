@@ -1,11 +1,14 @@
-# OMNISKILL v2.0 — 5-Layer Architecture
+# OMNISKILL v3.0 — 6-Layer Architecture
 
 ## Overview
 
-OMNISKILL is built as a 5-layer stack where each layer has a single responsibility and strict boundaries. Control flows top-down (bootstrap → agents → skills), data flows bottom-up (artifacts → pipelines → users).
+OMNISKILL is built as a 6-layer stack where each layer has a single responsibility and strict boundaries. Control flows top-down (bootstrap → agents → skills), data flows bottom-up (artifacts → pipelines → users). v3.0 adds Layer 6 for runtime contracts, policy enforcement, and replay determinism.
 
 ```
 ┌─────────────────────────────────────────────────┐
+│  Layer 6: RUNTIME CONTRACTS (v3)                │
+│  Sessions, policy engine, telemetry, replay     │
+├─────────────────────────────────────────────────┤
 │  Layer 4: ARTIFACT LAYER                        │
 │  Pipeline outputs, validated JSON, audit trails  │
 ├─────────────────────────────────────────────────┤
@@ -297,3 +300,88 @@ Layer 3: Pipeline engine selects sdd-pipeline
 ```
 
 Every transition between agents passes through the context-curator to ensure only relevant context propagates forward — preventing context bloat and token waste.
+
+---
+
+## Layer 6: Runtime Contracts (v3.0)
+
+**Directory:** `src/omniskill/core/` (new v3 modules)
+
+Layer 6 wraps the entire runtime with enforced contracts — no tool executes without a policy decision, no session transitions without state machine validation, and no completion claim without evidence.
+
+### Session Lifecycle
+
+The `SessionManager` (`session_manager.py`) enforces an 8-state lifecycle:
+
+```
+created → active → waiting_tool → active
+                 → waiting_permission → active
+                 → idle → active
+                 → error → recovering → active
+                 → archived (terminal)
+```
+
+Invalid transitions raise `InvalidTransitionError`. Every event is logged with a correlation ID that links sessions to pipeline traces.
+
+### Central Policy Engine
+
+The `PolicyEngine` (`policy_engine.py`) gates every tool invocation:
+
+1. **Schema validation** — tool arguments checked against registered schemas
+2. **Permission rules** — evaluated in order, first match wins
+3. **Trust tier precedence** — builtin > verified > community > untrusted
+4. **Decision artifact** — machine-readable `PolicyDecision` with rationale
+
+Default action is **deny** — tools must have an explicit allow rule. Denied decisions are queryable and replayable from the audit log.
+
+### Telemetry & Replay
+
+The `TelemetryCollector` (`telemetry.py`) normalizes all events to versioned envelopes:
+
+```
+TelemetryEnvelope:
+  envelope_id: tel-xxxxxxxxxxxx
+  schema_version: 3.0.0
+  event_type: policy_decision | session_start | ...
+  correlation_id: corr-xxxxxxxxxxxx
+  source: {component, session_id, pipeline_name, step_name}
+  payload: {...}
+  retention_class: standard | audit
+```
+
+The `ReplayHarness` captures session snapshots and compares checksums for determinism — timestamps are excluded from the checksum so structure-only comparison works across environments.
+
+### MCP Trust Routing
+
+The `MCPConnectorManager` (`agent_mcp.py`) routes to MCP servers by capability and trust:
+
+- Connectors register with trust tier and capabilities
+- Routing selects the highest-trust healthy connector for a capability
+- Unhealthy connectors are excluded automatically
+- Routing is deterministic (same inputs → same output)
+
+### v3 Schemas
+
+Six new contract schemas (`schemas/`) define the wire format:
+
+| Schema | Purpose |
+|--------|---------|
+| `session.schema.yaml` | Session lifecycle states and transitions |
+| `tool-invocation.schema.yaml` | Tool call with required policy decision |
+| `permission.schema.yaml` | Permission rules with trust tiers |
+| `hook-event.schema.yaml` | Normalized hook bus events |
+| `telemetry-envelope.schema.yaml` | Versioned telemetry format |
+| `context-handoff.schema.yaml` | Phase handoff with pinned constraints and evidence |
+
+### Release Gates
+
+The `ReleaseGateValidator` (`migration.py`) validates 6 hard gates before any release:
+
+1. **SchemaAndContracts** — all v3 schemas present and version 3.x
+2. **PolicyAndSecurity** — policy engine and permission schema present
+3. **ReplayDeterminism** — telemetry module and replay tests present
+4. **ContextIntegrity** — handoff schema enforces pinned_constraints and evidence_links
+5. **PromptQuality** — prompt files present, schema validator functional
+6. **MigrationReadiness** — migration dry-run passes with zero blockers
+
+All 6 must pass, and the weighted score must reach 90+ for a GO recommendation.

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<automationAndIssueOps>
+  <goal>Convert structured plan artifacts into executable issue queues and operational dashboards.</goal>
+  <automation>
+    <item>scripts\plan_to_issues.py generates markdown issues and issues.json from 09 backlog</item>
+    <item>scripts\build_risk_dashboard.py generates dashboards\risk-burndown.html from data snapshots</item>
+  </automation>
+  <executionRule>Generated issue files are source-of-truth derivatives; regenerate after backlog changes.</executionRule>
+</automationAndIssueOps>

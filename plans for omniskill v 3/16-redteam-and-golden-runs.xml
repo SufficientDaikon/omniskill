@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<adversarialAndGoldenRuns>
+  <goldenRuns>
+    <objective>Provide stable, expected execution traces for each workstream prompt.</objective>
+    <pack>golden-runs\ws1-contracts.json</pack>
+    <pack>golden-runs\ws2-runtime.json</pack>
+    <pack>golden-runs\ws3-policy.json</pack>
+    <pack>golden-runs\ws4-agents-mcp.json</pack>
+    <pack>golden-runs\ws5-replay-stress.json</pack>
+    <pack>golden-runs\ws6-migration-release.json</pack>
+  </goldenRuns>
+  <redTeamSuite>
+    <objective>Attack prompt safety, context discipline, and policy compliance before release.</objective>
+    <caseFile>red-team\prompt-injection.xml</caseFile>
+    <caseFile>red-team\context-flooding.xml</caseFile>
+    <caseFile>red-team\evidence-hallucination.xml</caseFile>
+    <caseFile>red-team\policy-bypass.xml</caseFile>
+  </redTeamSuite>
+</adversarialAndGoldenRuns>

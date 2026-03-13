@@ -1,0 +1,26 @@
+<!doctype html>
+<html><head><meta charset='utf-8'><title>Risk Burndown</title>
+<style>body{font-family:Segoe UI,Arial;padding:24px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;padding:8px}</style>
+</head><body>
+<h1>OMNISKILL v3 Risk Burndown</h1>
+<canvas id='c' width='900' height='320'></canvas>
+<p>Lower is better. Source: execution gate snapshots.</p>
+<table><thead><tr><th>Iteration</th><th>Risk Score</th><th>Notes</th></tr></thead><tbody><tr><td>S0</td><td>92</td><td>Initial planning baseline</td></tr>
+<tr><td>S1</td><td>76</td><td>Prompt framework and context governance added</td></tr>
+<tr><td>S2</td><td>61</td><td>Schema/lint/CI/automation artifacts added</td></tr>
+<tr><td>S3</td><td>47</td><td>Red-team and golden-run packs integrated</td></tr></tbody></table>
+<script>
+const labels = ["S0", "S1", "S2", "S3"];
+const vals = [92, 76, 61, 47];
+const cv = document.getElementById('c'); const ctx = cv.getContext('2d');
+ctx.clearRect(0,0,cv.width,cv.height); ctx.beginPath(); ctx.strokeStyle='#2563eb'; ctx.lineWidth=2;
+const max = Math.max(...vals, 100), min = 0; const left=50,right=20,top=20,bottom=40;
+for(let i=0;i<vals.length;i++){
+  const x = left + (i*(cv.width-left-right)/(Math.max(vals.length-1,1)));
+  const y = top + ((max-vals[i])*(cv.height-top-bottom)/(max-min));
+  if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  ctx.fillStyle='#111'; ctx.fillText(labels[i], x-12, cv.height-10);
+}
+ctx.stroke();
+</script>
+</body></html>

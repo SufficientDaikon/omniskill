@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<planSchemaAndCI>
+  <goal>Enforce machine-verifiable structure and quality checks for the planning package.</goal>
+  <assets>
+    <item>schema\omniskill-v3-plan-package.xsd</item>
+    <item>scripts\validate_plan_package.py</item>
+    <item>scripts\lint_plans.py</item>
+    <item>.github\workflows\plan-quality.yml</item>
+  </assets>
+  <ciChecks>
+    <check>XML well-formedness for all plan files</check>
+    <check>XSD validation for index schema contract</check>
+    <check>Prompt-field completeness and contradiction heuristics</check>
+    <check>Mandatory OMNISKILL v2 baseline directive present</check>
+  </ciChecks>
+</planSchemaAndCI>

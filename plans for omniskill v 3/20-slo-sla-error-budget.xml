@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sloSlaErrorBudget>
+  <slo name="ReplayDeterminism">99.5 percent deterministic replay pass rate</slo>
+  <slo name="PolicyDecisionCoverage">100 percent tool actions have explicit decision artifact</slo>
+  <slo name="ContextIntegrity">99 percent handoffs pass integrity checks</slo>
+  <slo name="CriticalGateCompliance">100 percent critical gates green before release</slo>
+  <errorBudgets>
+    <budget metric="ReplayDeterminism">0.5 percent monthly failure allowance</budget>
+    <budget metric="ContextIntegrity">1 percent monthly failure allowance</budget>
+  </errorBudgets>
+</sloSlaErrorBudget>

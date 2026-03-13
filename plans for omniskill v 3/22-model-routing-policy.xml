@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modelRoutingPolicy>
+  <policy>route low risk deterministic tasks to efficient models</policy>
+  <policy>route high risk architecture and policy tasks to strongest reasoning model</policy>
+  <policy>enforce reasoning effort based on complexity and risk class</policy>
+  <policy>require human-in-loop escalation for policy override scenarios</policy>
+  <constraints>
+    <constraint>no model may bypass policy engine outcome</constraint>
+    <constraint>routing decisions must be logged with rationale</constraint>
+  </constraints>
+</modelRoutingPolicy>

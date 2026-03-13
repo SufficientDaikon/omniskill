@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<omniskillV3ReleaseAndMigrationPlan>
+  <migrationFlow>
+    <step>Inventory v2 assets and classify by migration complexity.</step>
+    <step>Run compatibility scanner and produce per-asset remediation tasks.</step>
+    <step>Apply migration transformers with dry-run and diff evidence.</step>
+    <step>Execute validation, replay, context-integrity, and security suites.</step>
+    <step>Promote by environment profile with rollback checkpoints.</step>
+  </migrationFlow>
+  <compatibilityPolicy>
+    <policy>Maintain v2 adapter layer for one major cycle.</policy>
+    <policy>Emit deterministic deprecation warnings with migration hints.</policy>
+    <policy>Block release when critical compatibility regressions exist.</policy>
+  </compatibilityPolicy>
+  <releaseGates>
+    <gate>schema and contract tests green</gate>
+    <gate>policy and security tests green</gate>
+    <gate>replay and stress tests green</gate>
+    <gate>prompt lint and context integrity tests green</gate>
+    <gate>migration dry-run approved</gate>
+  </releaseGates>
+  <postRelease>
+    <task>Monitor anomaly streams and policy violation trends.</task>
+    <task>Track migration friction and publish targeted patch plan.</task>
+    <task>Continuously refine prompt templates and handoff contracts from incident learnings.</task>
+  </postRelease>
+</omniskillV3ReleaseAndMigrationPlan>

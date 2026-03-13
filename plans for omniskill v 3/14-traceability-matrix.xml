@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<traceabilityMatrix>
+  <mapping backlogEpic="E1" sdkCapability="contracts-and-schema" testSuite="ContractAndSchemaTests" releaseGate="SchemaAndContracts"/>
+  <mapping backlogEpic="E2" sdkCapability="client-session-lifecycle" testSuite="LifecycleAndRecoveryTests" releaseGate="SchemaAndContracts"/>
+  <mapping backlogEpic="E3" sdkCapability="tools-hooks-permissions" testSuite="PolicyAndSecurity" releaseGate="PolicyAndSecurity"/>
+  <mapping backlogEpic="E4" sdkCapability="agents-skills-mcp" testSuite="ToolAndMCPTests" releaseGate="PolicyAndSecurity"/>
+  <mapping backlogEpic="E5" sdkCapability="events-replay-stress" testSuite="ReplayAndStressTests" releaseGate="ReplayDeterminism"/>
+  <mapping backlogEpic="E6" sdkCapability="migration-release" testSuite="MigrationReadiness" releaseGate="MigrationReadiness"/>
+  <qualityRule>Every epic must map to at least one gate and one test suite.</qualityRule>
+</traceabilityMatrix>

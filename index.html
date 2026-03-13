@@ -1155,16 +1155,28 @@
       .arch-layer:nth-child(1) .arch-layer-inner {
         background: linear-gradient(
           135deg,
+          rgba(239, 68, 68, 0.15),
+          rgba(239, 68, 68, 0.05)
+        );
+        border-color: rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
+        max-width: 220px;
+        margin: 0 auto;
+      }
+
+      .arch-layer:nth-child(3) .arch-layer-inner {
+        background: linear-gradient(
+          135deg,
           rgba(168, 85, 247, 0.15),
           rgba(168, 85, 247, 0.05)
         );
         border-color: rgba(168, 85, 247, 0.3);
         color: #c084fc;
-        max-width: 280px;
+        max-width: 300px;
         margin: 0 auto;
       }
 
-      .arch-layer:nth-child(3) .arch-layer-inner {
+      .arch-layer:nth-child(5) .arch-layer-inner {
         background: linear-gradient(
           135deg,
           rgba(236, 72, 153, 0.12),
@@ -1172,11 +1184,11 @@
         );
         border-color: rgba(236, 72, 153, 0.25);
         color: #f472b6;
-        max-width: 360px;
+        max-width: 370px;
         margin: 0 auto;
       }
 
-      .arch-layer:nth-child(5) .arch-layer-inner {
+      .arch-layer:nth-child(7) .arch-layer-inner {
         background: linear-gradient(
           135deg,
           rgba(77, 124, 255, 0.12),
@@ -1188,7 +1200,7 @@
         margin: 0 auto;
       }
 
-      .arch-layer:nth-child(7) .arch-layer-inner {
+      .arch-layer:nth-child(9) .arch-layer-inner {
         background: linear-gradient(
           135deg,
           rgba(0, 212, 255, 0.12),
@@ -1196,11 +1208,11 @@
         );
         border-color: rgba(0, 212, 255, 0.25);
         color: #67e8f9;
-        max-width: 520px;
+        max-width: 510px;
         margin: 0 auto;
       }
 
-      .arch-layer:nth-child(9) .arch-layer-inner {
+      .arch-layer:nth-child(11) .arch-layer-inner {
         background: linear-gradient(
           135deg,
           rgba(16, 185, 129, 0.12),
@@ -1208,11 +1220,11 @@
         );
         border-color: rgba(16, 185, 129, 0.25);
         color: #6ee7b7;
-        max-width: 600px;
+        max-width: 580px;
         margin: 0 auto;
       }
 
-      .arch-layer:nth-child(11) .arch-layer-inner {
+      .arch-layer:nth-child(13) .arch-layer-inner {
         background: linear-gradient(
           135deg,
           rgba(245, 158, 11, 0.12),
@@ -1220,6 +1232,18 @@
         );
         border-color: rgba(245, 158, 11, 0.25);
         color: #fcd34d;
+        max-width: 650px;
+        margin: 0 auto;
+      }
+
+      .arch-layer:nth-child(15) .arch-layer-inner {
+        background: linear-gradient(
+          135deg,
+          rgba(107, 114, 128, 0.12),
+          rgba(107, 114, 128, 0.04)
+        );
+        border-color: rgba(107, 114, 128, 0.25);
+        color: #d1d5db;
         max-width: 700px;
         margin: 0 auto;
       }
@@ -1561,7 +1585,7 @@
       <div class="hero-content">
         <div class="hero-badge">
           <span class="pulse"></span>
-          Open Source · MIT License · v2.0
+          Open Source · MIT License · v3.0
         </div>
 
         <h1 class="hero-title" id="heroTitle">OMNISKILL</h1>
@@ -1569,7 +1593,8 @@
         <p class="hero-tagline">One repo. One format. Every platform.</p>
 
         <p class="hero-description">
-          The universal AI agent &amp; skills framework. Smart complexity routing,
+          The universal AI agent &amp; skills framework. Runtime contracts,
+          policy-gated tool execution, smart complexity routing,
           pluggable knowledge sources, self-customization, and a Python SDK.
           Deploy to
           <strong>Claude Code</strong>, <strong>Copilot CLI</strong>,
@@ -1806,6 +1831,30 @@
             <p>
               Cognitive enhancements that shape how agents think — metacognition,
               confidence calibration, stuck detection, and self-reflection.
+            </p>
+          </div>
+          <div class="feature-card reveal reveal-delay-8">
+            <span class="feature-icon">🛡️</span>
+            <h3>Runtime Contracts</h3>
+            <p>
+              v3 enforced session lifecycle, policy-gated tool execution, and
+              replay determinism — no tool runs without a policy decision.
+            </p>
+          </div>
+          <div class="feature-card reveal reveal-delay-1">
+            <span class="feature-icon">🔐</span>
+            <h3>Policy Engine</h3>
+            <p>
+              Default-deny tool gating with trust tiers (builtin → verified →
+              community → untrusted) and full audit trail.
+            </p>
+          </div>
+          <div class="feature-card reveal reveal-delay-2">
+            <span class="feature-icon">📡</span>
+            <h3>Telemetry &amp; Replay</h3>
+            <p>
+              Versioned telemetry envelopes, correlation IDs, and structure-only
+              checksums for deterministic replay across environments.
             </p>
           </div>
         </div>
@@ -2095,15 +2144,19 @@
             >System Design</span
           >
           <h2 class="section-title">
-            Layered <span class="gradient-text">architecture</span>
+            6-Layer <span class="gradient-text">architecture</span>
           </h2>
           <p class="section-subtitle" style="margin: 0 auto">
             Each layer builds on the one below it — from raw platform adapters
-            up to full multi-agent pipelines.
+            up to runtime contracts that enforce policy and determinism.
           </p>
         </div>
 
         <div class="arch-layers">
+          <div class="arch-layer reveal reveal-delay-1">
+            <div class="arch-layer-inner">🛡️ Runtime Contracts</div>
+          </div>
+          <div class="arch-connector reveal reveal-delay-1"></div>
           <div class="arch-layer reveal reveal-delay-1">
             <div class="arch-layer-inner">🔄 Pipelines</div>
           </div>

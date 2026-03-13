@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataRetentionAndProvenance>
+  <retention>
+    <item>keep decision ledgers and release evidence for audit lifecycle</item>
+    <item>retain replay snapshots with versioned schema tags</item>
+    <item>expire transient diagnostic dumps per policy</item>
+  </retention>
+  <provenance>
+    <rule>every artifact includes source, generation script, and timestamp metadata</rule>
+    <rule>derived artifacts must reference upstream plan file versions</rule>
+  </provenance>
+</dataRetentionAndProvenance>

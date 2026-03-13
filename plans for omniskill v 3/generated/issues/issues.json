@@ -1,0 +1,38 @@
+[
+  {
+    "epic": "E1",
+    "title": "Contract and Schema Foundation",
+    "file": "E1-contract-and-schema-foundation.md",
+    "priority": "P0"
+  },
+  {
+    "epic": "E2",
+    "title": "Runtime and Session Orchestration",
+    "file": "E2-runtime-and-session-orchestration.md",
+    "priority": "P0"
+  },
+  {
+    "epic": "E3",
+    "title": "Policy-Routed Tool Hook Permission Flow",
+    "file": "E3-policy-routed-tool-hook-permission-flow.md",
+    "priority": "P0"
+  },
+  {
+    "epic": "E4",
+    "title": "Agent Skill MCP Expansion",
+    "file": "E4-agent-skill-mcp-expansion.md",
+    "priority": "P1"
+  },
+  {
+    "epic": "E5",
+    "title": "Observability Replay Stress",
+    "file": "E5-observability-replay-stress.md",
+    "priority": "P0"
+  },
+  {
+    "epic": "E6",
+    "title": "Migration and Release",
+    "file": "E6-migration-and-release.md",
+    "priority": "P0"
+  }
+]

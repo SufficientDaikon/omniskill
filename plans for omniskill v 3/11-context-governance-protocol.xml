@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<contextGovernanceProtocol>
+  <baselinePolicy>
+    <rule>Context and decisions must remain anchored to OMNISKILL v2 baseline behavior unless an approved migration delta exists.</rule>
+  </baselinePolicy>
+  <contextLifecycle>
+    <state>raw</state>
+    <state>curated</state>
+    <state>compressed</state>
+    <state>handoff_ready</state>
+    <state>acknowledged</state>
+  </contextLifecycle>
+  <handoffPacket>
+    <requiredField>objective</requiredField>
+    <requiredField>completed_changes</requiredField>
+    <requiredField>open_risks</requiredField>
+    <requiredField>decisions_and_rationale</requiredField>
+    <requiredField>pinned_constraints</requiredField>
+    <requiredField>evidence_links</requiredField>
+    <requiredField>next_actions</requiredField>
+  </handoffPacket>
+  <compressionPolicy>
+    <rule>Retain decisions, constraints, acceptance criteria, and evidence references.</rule>
+    <rule>Drop resolved exploration paths and duplicated narrative.</rule>
+    <rule>Never remove safety requirements, policy rules, or release gates.</rule>
+    <rule>Prefer structured lists over prose to preserve signal density.</rule>
+    <rule>Replace large command output with checksum plus key findings plus artifact path.</rule>
+  </compressionPolicy>
+  <toolUsagePolicy>
+    <rule>Use targeted tool queries (search, ranged reads, scoped validation) over full-dump operations.</rule>
+    <rule>Batch independent tool calls and avoid repetitive single-call loops.</rule>
+    <rule>Every major decision must reference at least one tool-backed evidence artifact.</rule>
+  </toolUsagePolicy>
+  <contextQualityChecks>
+    <check>All non-negotiables present after compression.</check>
+    <check>No contradiction between objective and pinned constraints.</check>
+    <check>Every open risk has owner and next action.</check>
+    <check>No handoff packet contains oversized raw output that can be represented as structured summary plus reference.</check>
+  </contextQualityChecks>
+  <failureProtocol>
+    <condition>Repeated context drift detected in two consecutive handoffs.</condition>
+    <action>Pause execution, regenerate canonical summary, re-anchor prompts, resume only after acknowledgment.</action>
+  </failureProtocol>
+</contextGovernanceProtocol>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<threatModelSTRIDE>
+  <category name="Spoofing">
+    <threat>untrusted MCP endpoint impersonation</threat>
+    <control>trust tier validation and signed endpoint allowlist</control>
+  </category>
+  <category name="Tampering">
+    <threat>plan artifact modification without audit</threat>
+    <control>hash manifest and CI integrity checks</control>
+  </category>
+  <category name="Repudiation">
+    <threat>missing evidence for policy decision</threat>
+    <control>immutable decision ledger with correlation IDs</control>
+  </category>
+  <category name="InformationDisclosure">
+    <threat>sensitive data leakage in logs</threat>
+    <control>redaction middleware and secret scanners</control>
+  </category>
+  <category name="DenialOfService">
+    <threat>context flooding and event storms</threat>
+    <control>budget caps, compression, throttling</control>
+  </category>
+  <category name="ElevationOfPrivilege">
+    <threat>implicit tool approvals through prompt injection</threat>
+    <control>policy engine precedence over model instructions</control>
+  </category>
+</threatModelSTRIDE>

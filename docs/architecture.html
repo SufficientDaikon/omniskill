@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Architecture — OMNISKILL Documentation</title>
+    <title>Architecture — OMNISKILL v3.0 Documentation</title>
     <meta
       name="description"
-      content="Understand OMNISKILL's layered architecture and design principles"
+      content="Understand OMNISKILL v3.0's 6-layer architecture, runtime contracts, and design principles"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -47,6 +47,7 @@
         <a href="cli-guide.html" class="sidebar-link">CLI Guide</a>
         <a href="platform-guide.html" class="sidebar-link">Platform Guide</a>
         <a href="architecture.html" class="sidebar-link active">Architecture</a>
+        <a href="migration-v3.html" class="sidebar-link">Migration v3</a>
         <a href="faq.html" class="sidebar-link">FAQ</a>
         <a href="llms-txt.html" class="sidebar-link">llms.txt</a>
         <a href="agent-cards.html" class="sidebar-link">Agent Cards</a>
@@ -81,11 +82,11 @@
       <div class="doc-header">
         <span class="section-label">DOCUMENTATION</span>
         <h1 class="doc-title">
-          OMNISKILL <span class="gradient-text">Architecture</span>
+          OMNISKILL v3.0 <span class="gradient-text">Architecture</span>
         </h1>
         <p class="doc-subtitle">
-          Understand the layered architecture, design principles, and data flow
-          that power OMNISKILL's universal approach.
+          Understand the 6-layer architecture, runtime contracts, and data flow
+          that power OMNISKILL v3.0's universal approach.
         </p>
       </div>
 
@@ -174,6 +175,10 @@
          └───────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────┐
+│          RUNTIME CONTRACTS (v3)              │
+│  (Sessions, policy engine, telemetry,       │
+│   replay determinism, MCP trust routing)    │
+├─────────────────────────────────────────────┤
 │                PIPELINES                     │
 │  (Multi-agent workflows with branching)      │
 ├─────────────────────────────────────────────┤
@@ -332,6 +337,175 @@
           <li><code>--sync</code> — Trigger source sync</li>
           <li><code>--report</code> — Full health report</li>
         </ul>
+      </div>
+
+      <!-- Layer 6: Runtime Contracts (v3) Section -->
+      <div class="content-section">
+        <h2>🛡️ Layer 6: Runtime Contracts (v3.0)</h2>
+        <p>
+          New in v3.0 — Layer 6 wraps the entire runtime with enforced contracts.
+          No tool executes without a policy decision, no session transitions without
+          state machine validation, and no completion claim without evidence.
+        </p>
+
+        <h3>Session Lifecycle</h3>
+        <p>
+          The <code>SessionManager</code> enforces an 8-state lifecycle with strict
+          transition rules. Invalid transitions raise <code>InvalidTransitionError</code>.
+        </p>
+        <div class="code-block">
+          <pre><code>created → active → waiting_tool → active
+                 → waiting_permission → active
+                 → idle → active
+                 → error → recovering → active
+                 → archived (terminal)</code></pre>
+        </div>
+        <p>
+          Every event is logged with a correlation ID that links sessions to
+          pipeline traces.
+        </p>
+
+        <h3>Central Policy Engine</h3>
+        <p>
+          The <code>PolicyEngine</code> gates every tool invocation through 4 checks:
+        </p>
+        <ol class="step-list">
+          <li class="step-item">
+            <div class="step-title">Schema Validation</div>
+            <div class="step-description">Tool arguments checked against registered schemas.</div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">Permission Rules</div>
+            <div class="step-description">Evaluated in order; first match wins.</div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">Trust Tier Precedence</div>
+            <div class="step-description">builtin &gt; verified &gt; community &gt; untrusted</div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">Decision Artifact</div>
+            <div class="step-description">Machine-readable <code>PolicyDecision</code> with rationale.</div>
+          </li>
+        </ol>
+        <p>
+          Default action is <strong>deny</strong> — tools must have an explicit allow rule.
+          Denied decisions are queryable and replayable from the audit log.
+        </p>
+
+        <h3>Telemetry &amp; Replay</h3>
+        <p>
+          The <code>TelemetryCollector</code> normalizes all events to versioned envelopes:
+        </p>
+        <div class="code-block">
+          <pre><code>TelemetryEnvelope:
+  envelope_id: tel-xxxxxxxxxxxx
+  schema_version: 3.0.0
+  event_type: policy_decision | session_start | ...
+  correlation_id: corr-xxxxxxxxxxxx
+  source: {component, session_id, pipeline_name, step_name}
+  payload: {...}
+  retention_class: standard | audit</code></pre>
+        </div>
+        <p>
+          The <code>ReplayHarness</code> captures session snapshots and compares
+          checksums for determinism — timestamps are excluded so structure-only
+          comparison works across environments.
+        </p>
+
+        <h3>MCP Trust Routing</h3>
+        <p>
+          The <code>MCPConnectorManager</code> routes to MCP servers by capability
+          and trust tier:
+        </p>
+        <ul>
+          <li>Connectors register with trust tier and capabilities</li>
+          <li>Routing selects the highest-trust healthy connector for a capability</li>
+          <li>Unhealthy connectors are excluded automatically</li>
+          <li>Routing is deterministic (same inputs → same output)</li>
+        </ul>
+
+        <h3>v3 Contract Schemas</h3>
+        <p>Six new schemas define the wire format for all v3 contracts:</p>
+        <table class="doc-table">
+          <thead>
+            <tr>
+              <th>Schema</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>session.schema.yaml</code></td>
+              <td>Session lifecycle states and transitions</td>
+            </tr>
+            <tr>
+              <td><code>tool-invocation.schema.yaml</code></td>
+              <td>Tool call with required policy decision</td>
+            </tr>
+            <tr>
+              <td><code>permission.schema.yaml</code></td>
+              <td>Permission rules with trust tiers</td>
+            </tr>
+            <tr>
+              <td><code>hook-event.schema.yaml</code></td>
+              <td>Normalized hook bus events</td>
+            </tr>
+            <tr>
+              <td><code>telemetry-envelope.schema.yaml</code></td>
+              <td>Versioned telemetry format</td>
+            </tr>
+            <tr>
+              <td><code>context-handoff.schema.yaml</code></td>
+              <td>Phase handoff with pinned constraints and evidence</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Release Gates</h3>
+        <p>
+          The <code>ReleaseGateValidator</code> validates 6 hard gates before any release:
+        </p>
+        <ol class="step-list">
+          <li class="step-item">
+            <div class="step-title">SchemaAndContracts</div>
+            <div class="step-description">All v3 schemas present and version 3.x</div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">PolicyAndSecurity</div>
+            <div class="step-description">Policy engine and permission schema present</div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">ReplayDeterminism</div>
+            <div class="step-description">Telemetry module and replay tests present</div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">ContextIntegrity</div>
+            <div class="step-description">Handoff schema enforces pinned_constraints and evidence_links</div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">PromptQuality</div>
+            <div class="step-description">Prompt files present, schema validator functional</div>
+          </li>
+          <li class="step-item">
+            <div class="step-title">MigrationReadiness</div>
+            <div class="step-description">Migration dry-run passes with zero blockers</div>
+          </li>
+        </ol>
+        <p>
+          All 6 must pass and the weighted score must reach 90+ for a GO recommendation.
+        </p>
+
+        <div class="alert alert-info">
+          <div class="alert-icon">💡</div>
+          <div class="alert-content">
+            <div class="alert-title">v3 Migration</div>
+            <p>
+              v3 is purely additive — all v2 skills, agents, pipelines, and schemas
+              continue to work without modification. See the
+              <a href="migration-v3.html">Migration v3 Guide</a> for upgrade details.
+            </p>
+          </div>
+        </div>
       </div>
 
       <!-- Validation Chain Section -->

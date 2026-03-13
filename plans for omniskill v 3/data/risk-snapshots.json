@@ -1,0 +1,6 @@
+[
+  {"iteration": "S0", "risk_score": 92, "notes": "Initial planning baseline"},
+  {"iteration": "S1", "risk_score": 76, "notes": "Prompt framework and context governance added"},
+  {"iteration": "S2", "risk_score": 61, "notes": "Schema/lint/CI/automation artifacts added"},
+  {"iteration": "S3", "risk_score": 47, "notes": "Red-team and golden-run packs integrated"}
+]

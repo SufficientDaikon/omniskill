@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<omniskillV3ImplementationBacklog>
+  <epic id="E1" name="Contract and Schema Foundation" priority="P0">
+    <stories>
+      <story id="E1-S1">Define v3 schemas for session, tool, permission, hook, telemetry, and context handoff.</story>
+      <story id="E1-S2">Build schema lint and contradiction checker for prompt constraints.</story>
+      <story id="E1-S3">Implement v2-to-v3 compatibility diagnostics and migration hints.</story>
+    </stories>
+    <definitionOfDone>
+      <item>Schemas pass positive and negative fixtures.</item>
+      <item>Lint catches missing required prompt fields and contradictory constraints.</item>
+      <item>Compatibility scan produces deterministic report.</item>
+    </definitionOfDone>
+  </epic>
+  <epic id="E2" name="Runtime and Session Orchestration" priority="P0">
+    <dependsOn>E1</dependsOn>
+    <stories>
+      <story id="E2-S1">Implement client lifecycle state machine with restart and recovery policies.</story>
+      <story id="E2-S2">Implement session lifecycle service with create, resume, send, abort, archive semantics.</story>
+      <story id="E2-S3">Link session and pipeline traces with correlation IDs.</story>
+    </stories>
+    <definitionOfDone>
+      <item>Recovery from controlled crash with trace continuity.</item>
+      <item>No invalid state transition accepted.</item>
+      <item>Session resume preserves active constraints and objective.</item>
+    </definitionOfDone>
+  </epic>
+  <epic id="E3" name="Policy-Routed Tool Hook Permission Flow" priority="P0">
+    <dependsOn>E1 E2</dependsOn>
+    <stories>
+      <story id="E3-S1">Unify tool hook permission path through central policy engine.</story>
+      <story id="E3-S2">Require schema validation before every tool invocation.</story>
+      <story id="E3-S3">Record policy decision rationale and artifact links.</story>
+    </stories>
+    <definitionOfDone>
+      <item>No tool execution without explicit policy decision artifact.</item>
+      <item>Denied decisions are machine-readable and replayable.</item>
+    </definitionOfDone>
+  </epic>
+  <epic id="E4" name="Agent Skill MCP Expansion" priority="P1">
+    <dependsOn>E2 E3</dependsOn>
+    <stories>
+      <story id="E4-S1">Implement agent capability profiles and mode-aware execution templates.</story>
+      <story id="E4-S2">Add signed skill manifest checks and deterministic precedence rules.</story>
+      <story id="E4-S3">Build MCP connector manager with trust tiers and health policy.</story>
+    </stories>
+    <definitionOfDone>
+      <item>Agent and MCP routing is deterministic and traceable.</item>
+      <item>Skill conflict resolution outputs reproducible decisions.</item>
+    </definitionOfDone>
+  </epic>
+  <epic id="E5" name="Observability Replay Stress" priority="P0">
+    <dependsOn>E2 E3</dependsOn>
+    <stories>
+      <story id="E5-S1">Normalize all runtime events to a versioned telemetry envelope.</story>
+      <story id="E5-S2">Adopt replay-first E2E harness and snapshot lifecycle.</story>
+      <story id="E5-S3">Create stress suites for concurrency and failure injection.</story>
+    </stories>
+    <definitionOfDone>
+      <item>Replay baselines deterministic across environments.</item>
+      <item>Stress suite catches and blocks silent failure paths.</item>
+    </definitionOfDone>
+  </epic>
+  <epic id="E6" name="Migration and Release" priority="P0">
+    <dependsOn>E1 E2 E3 E5</dependsOn>
+    <stories>
+      <story id="E6-S1">Build migration runner with dry-run diff and remediation output.</story>
+      <story id="E6-S2">Implement release gates for validation, security, context-integrity, and prompt-quality.</story>
+      <story id="E6-S3">Publish docs and execution runbooks with validated examples.</story>
+    </stories>
+    <definitionOfDone>
+      <item>Migration dry-run approved with zero unresolved critical blockers.</item>
+      <item>All release gates green before promotion.</item>
+    </definitionOfDone>
+  </epic>
+</omniskillV3ImplementationBacklog>

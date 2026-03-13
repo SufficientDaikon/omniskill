@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<omniskillV3ArchitectureBlueprint>
+  <layers>
+    <layer name="ControlPlane">
+      <component>Policy Engine</component>
+      <component>Pipeline Orchestrator</component>
+      <component>Session Lifecycle Manager</component>
+      <component>Capability Registry</component>
+    </layer>
+    <layer name="ExecutionPlane">
+      <component>Tool Runtime Adapter</component>
+      <component>Hook Bus</component>
+      <component>Permission Decision Service</component>
+      <component>MCP Connector Manager</component>
+    </layer>
+    <layer name="IntelligencePlane">
+      <component>Sequential Thinking Engine</component>
+      <component>Complexity Router</component>
+      <component>Agent Selection and Handoff Service</component>
+      <component>Prompt Compiler</component>
+    </layer>
+    <layer name="EvidencePlane">
+      <component>Event Normalizer</component>
+      <component>Trace Store</component>
+      <component>Replay Snapshot Store</component>
+      <component>Audit Artifact Generator</component>
+    </layer>
+  </layers>
+  <contextControlSubsystem>
+    <component>Context Budget Manager</component>
+    <component>Handoff Packet Generator</component>
+    <component>Long-Context Summarizer</component>
+    <component>Pinned Constraints Store</component>
+    <contracts>
+      <contract>handoff packet includes objective, non-negotiables, decisions, open risks, next actions, evidence links</contract>
+      <contract>context truncation cannot remove pinned constraints or acceptance gates</contract>
+      <contract>all phase transitions require context checksum and handoff acknowledgment</contract>
+    </contracts>
+  </contextControlSubsystem>
+  <stateMachines>
+    <machine name="ClientConnection">disconnected to connecting to connected to recovering to connected or error</machine>
+    <machine name="SessionExecution">created to active to waiting_tool_or_permission to active to idle to archived</machine>
+    <machine name="PipelineExecution">pending to validating to executing to review to completed or failed or cancelled</machine>
+    <machine name="ContextLifecycle">raw to curated to compressed to handed_off to acknowledged</machine>
+  </stateMachines>
+</omniskillV3ArchitectureBlueprint>

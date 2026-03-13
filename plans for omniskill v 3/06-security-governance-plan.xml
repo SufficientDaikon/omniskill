@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<omniskillV3SecurityAndGovernancePlan>
+  <securityPrinciples>
+    <principle>Least privilege by default for tools filesystem network MCP and custom actions.</principle>
+    <principle>Policy decisions are explicit, auditable, and immutable once recorded.</principle>
+    <principle>Secrets never stored in plan or manifest payloads; only references and vault keys.</principle>
+    <principle>No unauthenticated remote runtime profile in production policy.</principle>
+  </securityPrinciples>
+  <promptInjectionDefense>
+    <control>Pin system-level non-negotiables in every execution prompt.</control>
+    <control>Reject instruction overrides that conflict with policy constraints.</control>
+    <control>Require source attribution for externally introduced instructions and data.</control>
+    <control>Run pre-execution prompt safety lint for forbidden patterns.</control>
+  </promptInjectionDefense>
+  <governance>
+    <policyTiers>
+      <tier name="critical">halt on violation</tier>
+      <tier name="major">require explicit override with rationale</tier>
+      <tier name="minor">warn and log</tier>
+    </policyTiers>
+    <auditArtifacts>
+      <artifact>permission decision ledger</artifact>
+      <artifact>hook invocation trace</artifact>
+      <artifact>tool provenance log</artifact>
+      <artifact>context handoff packets</artifact>
+      <artifact>release compliance report</artifact>
+    </auditArtifacts>
+  </governance>
+  <riskRegister>
+    <risk severity="high">model-generated unsafe tool arguments</risk>
+    <mitigation>mandatory argument validation against tool schema and policy constraints</mitigation>
+    <risk severity="high">prompt-level policy bypass attempts</risk>
+    <mitigation>prompt lint plus non-negotiable pinning plus contradiction checks</mitigation>
+    <risk severity="medium">transport misuse in remote mode</risk>
+    <mitigation>profile-gated transport policy and trusted network boundary controls</mitigation>
+  </riskRegister>
+</omniskillV3SecurityAndGovernancePlan>

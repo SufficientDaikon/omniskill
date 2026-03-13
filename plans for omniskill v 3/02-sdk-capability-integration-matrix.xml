@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<copilotSdkIntegrationMatrix>
+  <integrationPolicy>
+    <rule>Every mapped capability must define implementation owner, acceptance signal, and telemetry proof.</rule>
+    <rule>No capability marked complete without deterministic test evidence.</rule>
+  </integrationPolicy>
+  <category name="ClientLifecycle">
+    <sdkCapabilities>
+      <capability>start stop forceStop autoStart autoRestart connection state transitions</capability>
+      <capability>stdio and tcp transport modes with cliPath and cliUrl</capability>
+    </sdkCapabilities>
+    <implementationPlan>
+      <item>Create runtime client manager with explicit transition graph and restart policy profiles.</item>
+      <item>Expose transport policy per environment profile and pipeline override.</item>
+    </implementationPlan>
+    <evidence>State transition logs, reconnection tests, protocol compatibility checks.</evidence>
+  </category>
+  <category name="SessionLifecycle">
+    <sdkCapabilities>
+      <capability>create resume list delete send sendAndWait abort model switch message retrieval</capability>
+    </sdkCapabilities>
+    <implementationPlan>
+      <item>Build session orchestration service with lifecycle contracts and idempotent resume semantics.</item>
+      <item>Link session identifiers to pipeline and artifact traces.</item>
+    </implementationPlan>
+    <evidence>Lifecycle conformance suite and session replay verification.</evidence>
+  </category>
+  <category name="ToolsHooksPermissions">
+    <sdkCapabilities>
+      <capability>defineTool callbacks, hook lifecycle callbacks, permission request handling</capability>
+      <capability>pending tool call response flow and explicit deny kinds</capability>
+    </sdkCapabilities>
+    <implementationPlan>
+      <item>Unify tool hook permission routing behind policy engine with deterministic ordering.</item>
+      <item>Require schema validation before handler execution.</item>
+      <item>Capture decision rationale for every allow deny action.</item>
+    </implementationPlan>
+    <evidence>Policy gate tests, audit trail snapshots, error path assertions.</evidence>
+  </category>
+  <category name="AgentsSkillsModes">
+    <sdkCapabilities>
+      <capability>custom agents, agent selection, skillDirectories, disabledSkills, mode controls</capability>
+    </sdkCapabilities>
+    <implementationPlan>
+      <item>Introduce capability profiles per agent and mode-aware pipeline templates.</item>
+      <item>Implement signed skill manifest checks and loader precedence policy.</item>
+    </implementationPlan>
+    <evidence>Agent switch traces, skill conflict tests, mode behavior snapshots.</evidence>
+  </category>
+  <category name="MCPIntegration">
+    <sdkCapabilities>
+      <capability>local and remote MCP server configuration and tool routing</capability>
+    </sdkCapabilities>
+    <implementationPlan>
+      <item>Create MCP connector manager with trust levels, health checks, timeout policy, and fallback routing.</item>
+      <item>Add MCP capability discovery cache with invalidation strategy.</item>
+    </implementationPlan>
+    <evidence>MCP outage simulation tests and routing correctness metrics.</evidence>
+  </category>
+  <category name="ModelsProvidersBYOK">
+    <sdkCapabilities>
+      <capability>models list provider config BYOK reasoning effort controls</capability>
+    </sdkCapabilities>
+    <implementationPlan>
+      <item>Create provider abstraction with secret references and environment-based resolution.</item>
+      <item>Apply model and reasoning policies per task complexity and risk class.</item>
+    </implementationPlan>
+    <evidence>Provider policy tests and model selection telemetry.</evidence>
+  </category>
+  <category name="EventsObservabilityReplay">
+    <sdkCapabilities>
+      <capability>rich session events, usage signals, compaction lifecycle, replay harness patterns</capability>
+    </sdkCapabilities>
+    <implementationPlan>
+      <item>Implement normalized event envelope with correlation IDs and parent links.</item>
+      <item>Adopt replay-first E2E architecture with deterministic snapshots.</item>
+    </implementationPlan>
+    <evidence>Replay pass rate, event ordering checks, anomaly detector reports.</evidence>
+  </category>
+</copilotSdkIntegrationMatrix>

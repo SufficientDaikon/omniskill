@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluationRubric>
+  <criterion name="strategic_alignment" max="20">alignment to v3 goals and v2 baseline directives</criterion>
+  <criterion name="technical_quality" max="20">contract quality, architecture coherence, and safety constraints</criterion>
+  <criterion name="execution_readiness" max="20">prompt completeness, context governance, backlog clarity</criterion>
+  <criterion name="verification_strength" max="20">tests, replay, stress, and gate rigor</criterion>
+  <criterion name="operational_resilience" max="20">migration, self-healing, incident and rollback preparedness</criterion>
+  <passingScore>90</passingScore>
+</evaluationRubric>

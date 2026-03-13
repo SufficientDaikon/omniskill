@@ -49,6 +49,7 @@
         <a href="cli-guide.html" class="sidebar-link">CLI Guide</a>
         <a href="platform-guide.html" class="sidebar-link">Platform Guide</a>
         <a href="architecture.html" class="sidebar-link">Architecture</a>
+        <a href="migration-v3.html" class="sidebar-link">Migration v3</a>
         <a href="faq.html" class="sidebar-link">FAQ</a>
         <a href="llms-txt.html" class="sidebar-link">llms.txt</a>
         <a href="agent-cards.html" class="sidebar-link">Agent Cards</a>
@@ -405,6 +406,30 @@ os.sync_sources()
 # Health check
 report = os.health_check()</code></pre>
         </div>
+
+        <h3>v3 Runtime Contracts</h3>
+        <div class="code-block">
+          <div class="code-label">Python</div>
+          <pre><code>from src.omniskill.core.session_manager import Session
+from src.omniskill.core.policy_engine import PolicyEngine, PermissionRule
+from src.omniskill.core.telemetry import TelemetryCollector
+
+# Session lifecycle
+session = Session.create("my-pipeline", {"input": "Build auth"})
+session.activate()
+
+# Policy-gated tool execution
+engine = PolicyEngine()
+engine.add_rule(PermissionRule(
+    id="r1", scope="file_*",
+    trust_tier="verified", action="allow"
+))
+decision = engine.evaluate("file_write", {"path": "/src/main.py"}, trust_tier="verified")
+
+# Structured telemetry
+collector = TelemetryCollector()
+collector.emit_from_session_event(session, "session_start")</code></pre>
+        </div>
       </div>
 
       <!-- Next Steps Section -->
@@ -443,7 +468,13 @@ report = os.health_check()</code></pre>
           <a href="architecture.html" class="platform-item">
             <span class="platform-emoji">🏗️</span>
             <h3>Architecture</h3>
-            <p>Understand the complexity router and knowledge sources</p>
+            <p>Understand the 6-layer architecture and runtime contracts</p>
+          </a>
+
+          <a href="migration-v3.html" class="platform-item">
+            <span class="platform-emoji">🔄</span>
+            <h3>Migration v3</h3>
+            <p>Upgrade guide for v3.0 runtime contracts</p>
           </a>
 
           <a href="platform-guide.html" class="platform-item">

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<omniskillV3PlanningIndex>
+  <metadata>
+    <project>OMNISKILL</project>
+    <targetVersion>3.0.0</targetVersion>
+    <planningMode>FullPlatformTransformation</planningMode>
+    <status>Execution-Ready-Draft</status>
+    <primaryExecutor>Claude-family agent with tool access</primaryExecutor>
+  </metadata>
+  <documents>
+    <document id="01" file="01-v3-master-strategy.xml" purpose="Vision, outcomes, and transformation strategy"/>
+    <document id="02" file="02-sdk-capability-integration-matrix.xml" purpose="SDK to OMNISKILL capability mapping with implementation intent"/>
+    <document id="03" file="03-architecture-blueprint.xml" purpose="Target architecture, contracts, and state machines"/>
+    <document id="04" file="04-workstreams-and-milestones.xml" purpose="Workstreams, dependencies, acceptance gates, and prompts"/>
+    <document id="05" file="05-validation-stress-plan.xml" purpose="Quality validation and stress verification strategy"/>
+    <document id="06" file="06-security-governance-plan.xml" purpose="Security, policy, and governance controls"/>
+    <document id="07" file="07-release-migration-plan.xml" purpose="Migration, rollout, and release operations"/>
+    <document id="08" file="08-claude-execution-playbook.xml" purpose="Claude-optimized prompting, context control, and execution protocol"/>
+    <document id="09" file="09-implementation-backlog.xml" purpose="Epic-level executable backlog with dependencies and definition-of-done"/>
+    <document id="10" file="10-claude-prompt-library.xml" purpose="Ready-to-run prompt templates per workstream and phase"/>
+    <document id="11" file="11-context-governance-protocol.xml" purpose="Formal context lifecycle, handoff packet schema, and compression policy"/>
+    <document id="12" file="12-execution-gates-scorecard.xml" purpose="Release-readiness scorecard and hard stop/go criteria"/>
+    <document id="13" file="13-plan-schema-and-ci.xml" purpose="Schema and CI quality enforcement model"/>
+    <document id="14" file="14-traceability-matrix.xml" purpose="Capability-to-epic-to-test-to-gate traceability"/>
+    <document id="15" file="15-automation-and-issues.xml" purpose="Automation model for issue generation and dashboard ops"/>
+    <document id="16" file="16-redteam-and-golden-runs.xml" purpose="Golden-run baselines and adversarial red-team validation pack"/>
+    <document id="17" file="17-operating-model.xml" purpose="Governance operating model and accountability cadence"/>
+    <document id="18" file="18-threat-model-stride.xml" purpose="STRIDE threat model and mapped defenses"/>
+    <document id="19" file="19-control-library.xml" purpose="Preventive, detective, corrective control catalog"/>
+    <document id="20" file="20-slo-sla-error-budget.xml" purpose="SLO/SLA commitments and error budget policy"/>
+    <document id="21" file="21-benchmark-harness.xml" purpose="Performance and reliability benchmark framework"/>
+    <document id="22" file="22-model-routing-policy.xml" purpose="Model routing and reasoning-effort governance"/>
+    <document id="23" file="23-decision-records-framework.xml" purpose="Architectural decision record framework"/>
+    <document id="24" file="24-self-healing-playbooks.xml" purpose="Operational self-healing and incident playbooks"/>
+    <document id="25" file="25-evaluation-rubric.xml" purpose="Quantitative evaluation rubric for plan quality"/>
+    <document id="26" file="26-cost-and-capacity-planning.xml" purpose="Capacity and cost optimization planning"/>
+    <document id="27" file="27-data-retention-and-provenance.xml" purpose="Retention and provenance governance"/>
+    <document id="28" file="28-change-management-and-experiments.xml" purpose="Controlled experimentation and change policy"/>
+  </documents>
+  <recommendedReadOrder>
+    <step>Read 01 and 08 first to align strategy and execution behavior.</step>
+    <step>Read 02 and 03 to align capability mapping and architecture contracts.</step>
+    <step>Read 04 and 09 to execute implementation with dependency awareness.</step>
+    <step>Use 10 and 11 continuously for prompt quality and context stability.</step>
+    <step>Use 05, 06, and 12 as non-negotiable quality and release gates.</step>
+    <step>Use 07 for migration and rollout finalization.</step>
+  </recommendedReadOrder>
+  <executionDirectives>
+    <directive>Use OMNISKILL v2 as the mandatory implementation baseline for all v3 execution tasks.</directive>
+    <directive>Extend v2 primitives before introducing net-new abstractions unless a blocker is documented.</directive>
+    <directive>Enforce tool-first workflows and context-budget rules to prevent transcript flooding.</directive>
+  </executionDirectives>
+</omniskillV3PlanningIndex>
+

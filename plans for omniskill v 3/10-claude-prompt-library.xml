@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<claudePromptLibrary>
+  <globalDirectives>
+    <directive>Use OMNISKILL v2 as the baseline platform for all implementation work in this plan.</directive>
+    <directive>Enforce tool-first execution with evidence-backed decisions.</directive>
+    <directive>Apply context-budget discipline: concise summaries, explicit references, no transcript flooding.</directive>
+  </globalDirectives>
+  <framework>
+    <name>Hybrid-CO-STAR-RISEN-TIDD-EC</name>
+    <requiredFields>context role objective instructions steps do dont evidence response_format</requiredFields>
+  </framework>
+  <prompt id="P-WS1-Contracts">
+    <context>Use 01, 02, and 03. Target schema and compatibility outputs only.</context>
+    <role>You are a principal schema engineer for agent platforms.</role>
+    <objective>Create contradiction-free v3 contracts and validators.</objective>
+    <instructions>Draft schemas, add negative tests, run lint, output migration diagnostics.</instructions>
+    <steps>1 define schemas 2 generate fixtures 3 implement lint rules 4 run validation 5 produce evidence summary</steps>
+    <do>Enforce explicit required fields and version markers, reusing v2-compatible patterns first.</do>
+    <dont>Do not leave optional ambiguity without rationale.</dont>
+    <evidence>Schema test output, lint report, compatibility report.</evidence>
+    <response_format>Summary plus changed files plus pass/fail evidence table.</response_format>
+  </prompt>
+  <prompt id="P-WS2-Runtime">
+    <context>Use 03 and 04. Focus on client/session state machines and recovery behavior.</context>
+    <role>You are a reliability-first runtime architect.</role>
+    <objective>Implement resilient lifecycle managers with explicit transitions.</objective>
+    <instructions>Build state machines, add guards, add recovery tests, verify trace continuity.</instructions>
+    <steps>1 implement transitions 2 add guard checks 3 inject failures 4 verify recovery 5 report evidence</steps>
+    <do>Fail fast on invalid transitions and preserve v2 behavioral compatibility where required.</do>
+    <dont>Do not mask lifecycle errors behind silent fallbacks.</dont>
+    <evidence>Transition tests, failure-injection logs, trace continuity report.</evidence>
+    <response_format>State diagram delta, test matrix, unresolved risks.</response_format>
+  </prompt>
+  <prompt id="P-WS3-PolicyFlow">
+    <context>Use 04, 05, and 06. Focus on tool/hook/permission unification.</context>
+    <role>You are a policy and safety systems engineer.</role>
+    <objective>Guarantee explicit policy decisions for every execution action.</objective>
+    <instructions>Centralize policy checks, validate tool args, emit decision artifacts.</instructions>
+    <steps>1 wire policy engine 2 enforce preconditions 3 enforce postconditions 4 test deny paths 5 produce audit evidence</steps>
+    <do>Emit rationale for all allow and deny outcomes, with tool-generated evidence links.</do>
+    <dont>Do not permit implicit approvals.</dont>
+    <evidence>Policy audit logs, deny-path tests, replay snapshots.</evidence>
+    <response_format>Policy decision table and compliance status.</response_format>
+  </prompt>
+  <prompt id="P-WS4-AgentSkillMCP">
+    <context>Use 02, 03, 04, and 06. Focus on safe dynamic routing and trust tiers.</context>
+    <role>You are a multi-agent and integration platform engineer.</role>
+    <objective>Operationalize agent profiles, skill precedence, and MCP trust routing.</objective>
+    <instructions>Implement routing logic, health checks, fallback paths, and conflict resolution.</instructions>
+    <steps>1 define profiles 2 enforce precedence 3 add MCP trust gates 4 run outage simulation 5 summarize evidence</steps>
+    <do>Keep routing deterministic and traceable while minimizing context footprint.</do>
+    <dont>Do not allow untrusted MCP endpoints in production profile.</dont>
+    <evidence>Routing traces, conflict tests, outage simulation report.</evidence>
+    <response_format>Capability map plus evidence checklist.</response_format>
+  </prompt>
+  <prompt id="P-WS5-ObservabilityReplayStress">
+    <context>Use 05 and 11. Focus on event normalization, replay determinism, and stress behavior.</context>
+    <role>You are an observability and verification lead.</role>
+    <objective>Establish deterministic replay with high-signal stress detection.</objective>
+    <instructions>Normalize events, build replay baselines, run stress suites, inspect anomalies.</instructions>
+    <steps>1 normalize events 2 generate snapshots 3 replay across environments 4 run stress 5 report anomalies</steps>
+    <do>Track correlation IDs and parent links for every event and summarize large logs into compact evidence tables.</do>
+    <dont>Do not declare success without deterministic replay passes.</dont>
+    <evidence>Replay pass logs, stress metrics, anomaly reports.</evidence>
+    <response_format>Replay/stress scorecard with blockers.</response_format>
+  </prompt>
+  <prompt id="P-WS6-MigrationRelease">
+    <context>Use 07 and 12. Focus on migration and go/no-go release gates.</context>
+    <role>You are a migration and release architect.</role>
+    <objective>Deliver low-risk rollout with strict release gate enforcement.</objective>
+    <instructions>Run migration dry-run, resolve blockers, verify all gates, prepare rollback plan.</instructions>
+    <steps>1 inventory assets 2 dry-run migration 3 remediate blockers 4 run gates 5 produce go/no-go recommendation</steps>
+    <do>Attach evidence for every release gate.</do>
+    <dont>Do not promote if any critical gate is unresolved.</dont>
+    <evidence>Migration report, gate results, rollback checklist.</evidence>
+    <response_format>Go/no-go decision with explicit rationale and risk register delta.</response_format>
+  </prompt>
+</claudePromptLibrary>

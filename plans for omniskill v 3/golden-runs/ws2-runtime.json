@@ -1,0 +1,1 @@
+{"workstream":"WS2","prompt_id":"P-WS2-Runtime","expected_artifacts":["state-machine-tests","recovery-logs"],"pass_signals":["invalid transition blocked","recovery preserves trace"]}

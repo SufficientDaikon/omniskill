@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<costAndCapacityPlanning>
+  <capacityModel>
+    <dimension>parallel workstream throughput</dimension>
+    <dimension>tool execution budget</dimension>
+    <dimension>review and governance overhead</dimension>
+  </capacityModel>
+  <costLevers>
+    <lever>model routing efficiency policy</lever>
+    <lever>context compression and evidence summarization</lever>
+    <lever>replay-first debugging to reduce rerun costs</lever>
+  </costLevers>
+  <rule>major cost-impacting changes require benchmark before approval</rule>
+</costAndCapacityPlanning>

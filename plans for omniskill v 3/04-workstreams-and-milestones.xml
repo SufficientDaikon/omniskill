@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<omniskillV3Workstreams>
+  <promptingStandard>
+    <templateName>Hybrid-CO-STAR-RISEN-TIDD-EC</templateName>
+    <requiredPromptFields>context role objective instructions steps do dont evidence response_format</requiredPromptFields>
+    <rule>Every workstream execution prompt must include acceptance criteria and explicit out-of-scope constraints.</rule>
+  </promptingStandard>
+  <workstream id="WS1" name="Foundation and Contracts">
+    <scope>v3 schemas, capability registry, compatibility checks</scope>
+    <deliverables>
+      <item>contract schemas for session tool permission hook telemetry context handoff</item>
+      <item>schema linter and migration diagnostics</item>
+    </deliverables>
+    <executionPrompt>
+      <role>You are a schema and platform contract engineer.</role>
+      <objective>Design contradiction-free contracts and deterministic validators.</objective>
+      <dont>Do not introduce ambiguous optional fields without rationale.</dont>
+    </executionPrompt>
+    <acceptanceCriteria>
+      <criterion>All schemas validate against fixtures and negative tests.</criterion>
+      <criterion>Compatibility report is deterministic across runs.</criterion>
+    </acceptanceCriteria>
+  </workstream>
+  <workstream id="WS2" name="Runtime and Session Orchestration">
+    <scope>client manager, session manager, recovery logic</scope>
+    <executionPrompt>
+      <role>You are a reliability-focused runtime architect.</role>
+      <objective>Implement lifecycle safety with explicit state transitions and recovery semantics.</objective>
+      <do>Provide failure mode tables and recovery test plans.</do>
+    </executionPrompt>
+    <acceptanceCriteria>
+      <criterion>Controlled crash recovery succeeds without trace discontinuity.</criterion>
+      <criterion>No invalid transition accepted by runtime guards.</criterion>
+    </acceptanceCriteria>
+  </workstream>
+  <workstream id="WS3" name="Tool Hook Permission Unification">
+    <scope>policy-routed execution for tool hook permission flows</scope>
+    <executionPrompt>
+      <role>You are a policy and safety systems engineer.</role>
+      <objective>Ensure no tool action bypasses policy decisions.</objective>
+      <dont>Do not allow implicit approve defaults.</dont>
+    </executionPrompt>
+    <acceptanceCriteria>
+      <criterion>Every tool invocation has pre and post policy evidence.</criterion>
+      <criterion>Permission denials are explicit and machine-readable.</criterion>
+    </acceptanceCriteria>
+  </workstream>
+  <workstream id="WS4" name="Agent Skill MCP Expansion">
+    <scope>agent profiles, skill controls, MCP trust and routing</scope>
+    <executionPrompt>
+      <role>You are a multi-agent platform engineer.</role>
+      <objective>Enable safe dynamic capability routing at runtime.</objective>
+      <do>Document trust tiers and MCP fallback behavior.</do>
+    </executionPrompt>
+    <acceptanceCriteria>
+      <criterion>Agent and MCP routing decisions are traceable and reproducible.</criterion>
+      <criterion>Skill precedence conflicts resolved deterministically.</criterion>
+    </acceptanceCriteria>
+  </workstream>
+  <workstream id="WS5" name="Observability Replay and QA">
+    <scope>event normalization, replay harness, stress suites</scope>
+    <executionPrompt>
+      <role>You are a verification and observability lead.</role>
+      <objective>Deliver deterministic replay and high-signal stress evidence.</objective>
+      <do>Prioritize race condition and failure-injection coverage.</do>
+    </executionPrompt>
+    <acceptanceCriteria>
+      <criterion>Replay baseline passes are deterministic.</criterion>
+      <criterion>Stress suites expose and prevent silent failures.</criterion>
+    </acceptanceCriteria>
+  </workstream>
+  <workstream id="WS6" name="Release Migration and Docs">
+    <scope>migration tooling, docs, release gates, rollout</scope>
+    <executionPrompt>
+      <role>You are a release and migration architect.</role>
+      <objective>Deliver low-friction adoption with hard safety gates.</objective>
+      <dont>Do not ship without migration dry-run evidence.</dont>
+    </executionPrompt>
+    <acceptanceCriteria>
+      <criterion>Migration dry-runs produce actionable remediation reports.</criterion>
+      <criterion>Release gates enforce validation, security, and docs checks.</criterion>
+    </acceptanceCriteria>
+  </workstream>
+  <executionOrder>
+    <phase>P1: WS1 and WS2</phase>
+    <phase>P2: WS3 and WS4</phase>
+    <phase>P3: WS5</phase>
+    <phase>P4: WS6</phase>
+  </executionOrder>
+</omniskillV3Workstreams>

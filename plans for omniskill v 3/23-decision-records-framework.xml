@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decisionRecordsFramework>
+  <recordTemplate>
+    <field>decision_id</field>
+    <field>context</field>
+    <field>options_considered</field>
+    <field>chosen_option</field>
+    <field>tradeoffs</field>
+    <field>evidence</field>
+    <field>rollback_strategy</field>
+  </recordTemplate>
+  <rule>all major architectural and policy decisions require a decision record</rule>
+</decisionRecordsFramework>

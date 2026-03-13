@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<benchmarkHarness>
+  <benchmarks>
+    <benchmark id="B1">single-workstream execution latency and evidence completeness</benchmark>
+    <benchmark id="B2">multi-session concurrency under tool and permission contention</benchmark>
+    <benchmark id="B3">MCP outage recovery and fallback correctness</benchmark>
+    <benchmark id="B4">prompt quality drift across iterative runs</benchmark>
+  </benchmarks>
+  <scoring>
+    <dimension name="correctness" weight="35"/>
+    <dimension name="reliability" weight="25"/>
+    <dimension name="safety" weight="25"/>
+    <dimension name="efficiency" weight="15"/>
+  </scoring>
+</benchmarkHarness>

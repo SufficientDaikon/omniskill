@@ -1,0 +1,45 @@
+name: Plan Quality
+
+on:
+  push:
+    paths:
+      - 'plans for omniskill v 3/**'
+      - '.github/workflows/plan-quality.yml'
+  pull_request:
+    paths:
+      - 'plans for omniskill v 3/**'
+      - '.github/workflows/plan-quality.yml'
+
+jobs:
+  validate-plans:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install xmlschema
+
+      - name: Validate XML package
+        run: |
+          python "plans for omniskill v 3/scripts/validate_plan_package.py" \
+            --dir "plans for omniskill v 3" \
+            --xsd "plans for omniskill v 3/schema/omniskill-v3-plan-package.xsd"
+
+      - name: Lint plan quality
+        run: |
+          python "plans for omniskill v 3/scripts/lint_plans.py" --dir "plans for omniskill v 3"
+
+      - name: Generate derivative artifacts
+        run: |
+          python "plans for omniskill v 3/scripts/plan_to_issues.py" \
+            --backlog "plans for omniskill v 3/09-implementation-backlog.xml" \
+            --out "plans for omniskill v 3/generated/issues"
+          python "plans for omniskill v 3/scripts/build_risk_dashboard.py" \
+            --snapshots "plans for omniskill v 3/data/risk-snapshots.json" \
+            --out "plans for omniskill v 3/dashboards/risk-burndown.html"

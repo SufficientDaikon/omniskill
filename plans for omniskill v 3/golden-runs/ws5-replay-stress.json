@@ -1,0 +1,1 @@
+{"workstream":"WS5","prompt_id":"P-WS5-ObservabilityReplayStress","expected_artifacts":["replay-results","stress-metrics"],"pass_signals":["deterministic replay","no silent failure"]}

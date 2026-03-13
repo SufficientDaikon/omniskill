@@ -1,0 +1,1 @@
+{"workstream":"WS4","prompt_id":"P-WS4-AgentSkillMCP","expected_artifacts":["routing-trace","mcp-health-report"],"pass_signals":["deterministic routing","untrusted endpoints blocked"]}

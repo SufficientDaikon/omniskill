@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMNISKILL v2.0 — 5-Layer Architecture — OMNISKILL v2.0</title>
+    <title>OMNISKILL v3.0 — 6-Layer Architecture</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
     <style>
         :root {
@@ -338,7 +338,7 @@
     <header class="header">
         <button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
         <a href="index.html" class="header-brand">
-            ⚡ OMNISKILL <span>v2.0 Documentation</span>
+            ⚡ OMNISKILL <span>v3.0 Documentation</span>
         </a>
         <nav class="header-nav">
             <a href="https://github.com/SufficientDaikon/omniskill" target="_blank">GitHub</a>
@@ -353,7 +353,7 @@
         <a href="Cli-Guide.html" class="nav-link">💻 CLI Guide</a>
         <a href="Migration-V2.html" class="nav-link">📦 Migration to v2.0</a>
         <div class="sidebar-section">Architecture</div>
-        <a href="Architecture.html" class="nav-link active">🏗️ 5-Layer Architecture</a>
+        <a href="Architecture.html" class="nav-link active">🏗️ 6-Layer Architecture</a>
         <a href="Pipeline-Orchestration.html" class="nav-link">🔧 Pipeline Orchestration</a>
         <a href="Guardrails.html" class="nav-link">🛡️ Guardrails Engine</a>
         <a href="Sequential-Thinking.html" class="nav-link">🧠 Sequential Thinking</a>
@@ -367,6 +367,7 @@
         <div class="sidebar-section">Reference</div>
         <a href="Agent-Cards.html" class="nav-link">🃏 Agent Cards</a>
         <a href="Integration-Catalog.html" class="nav-link">🔌 Integration Catalog</a>
+        <a href="../migration-v3.html" class="nav-link">🔄 Migration to v3.0</a>
         <a href="Faq.html" class="nav-link">❓ FAQ</a>
         <a href="Llms-Txt.html" class="nav-link">📄 LLMs.txt</a>
         <a href="Changelog.html" class="nav-link">📋 Changelog</a>
@@ -375,23 +376,26 @@
     </nav>
 
     <main class="main">
-        <h1 id="omniskill-v20-5-layer-architecture">OMNISKILL v2.0 — 5-Layer Architecture</h1>
+        <h1 id="omniskill-v30-6-layer-architecture">OMNISKILL v3.0 — 6-Layer Architecture</h1>
 <h2 id="overview">Overview</h2>
-<p>OMNISKILL is built as a 5-layer stack where each layer has a single responsibility and strict boundaries. Control flows top-down (bootstrap → agents → skills), data flows bottom-up (artifacts → pipelines → users).</p>
+<p>OMNISKILL is built as a 6-layer stack where each layer has a single responsibility and strict boundaries. Control flows top-down (bootstrap → agents → skills), data flows bottom-up (artifacts → pipelines → users). <strong>Layer 5 (v3.0)</strong> wraps the entire runtime with enforced contracts — sessions, policy engine, telemetry, and MCP trust routing.</p>
 <div class="mermaid">
 block-beta
     columns 1
+    block:L5["Layer 5: RUNTIME CONTRACTS (v3.0)\nSessions, policy engine, telemetry, replay, MCP routing"]:1
+    end
     block:L4["Layer 4: ARTIFACT LAYER\nPipeline outputs, validated JSON, audit trails"]:1
     end
     block:L3["Layer 3: PIPELINE LAYER\nsdd | ux | debug | skill-factory | full-product"]:1
     end
-    block:L2["Layer 2: SKILL LAYER\n48+ skills, each with manifest.yaml"]:1
+    block:L2["Layer 2: SKILL LAYER\n58+ skills, each with manifest.yaml"]:1
     end
     block:L1["Layer 1: AGENT LAYER\n9 agents with guardrails & manifests"]:1
     end
     block:L0["Layer 0: BOOTSTRAP & DISCIPLINE\nHooks, synapses, anti-rationalization"]:1
     end
 
+    style L5 fill:#E91E63,color:#fff,stroke:#AD1457
     style L4 fill:#4CAF50,color:#fff,stroke:#388E3C
     style L3 fill:#2196F3,color:#fff,stroke:#1565C0
     style L2 fill:#FF9800,color:#fff,stroke:#E65100
@@ -400,6 +404,9 @@ block-beta
 </div>
 
 <details class="ascii-original"><summary>View original ASCII</summary><pre><code>┌─────────────────────────────────────────────────┐
+│  Layer 5: RUNTIME CONTRACTS (v3.0)              │
+│  Sessions, policy, telemetry, replay, MCP       │
+├─────────────────────────────────────────────────┤
 │  Layer 4: ARTIFACT LAYER                        │
 │  Pipeline outputs, validated JSON, audit trails  │
 ├─────────────────────────────────────────────────┤
@@ -407,7 +414,7 @@ block-beta
 │  sdd │ ux │ debug │ skill-factory │ full-product │
 ├─────────────────────────────────────────────────┤
 │  Layer 2: SKILL LAYER                           │
-│  48+ skills, each with manifest.yaml            │
+│  58+ skills, each with manifest.yaml            │
 ├─────────────────────────────────────────────────┤
 │  Layer 1: AGENT LAYER                           │
 │  9 agents with guardrails & manifests           │
@@ -812,8 +819,100 @@ Layer 3: Pipeline engine selects sdd-pipeline
                    └─► Layer 4: review report produced</code></pre>
 
 <p>Every transition between agents passes through the context-curator to ensure only relevant context propagates forward — preventing context bloat and token waste.</p>
+<hr>
+<h2 id="layer-5-runtime-contracts">Layer 5: Runtime Contracts (v3.0)</h2>
+<p><strong>Directory:</strong> <code>src/omniskill/core/</code> (v3 modules)</p>
+<p>Layer 5 wraps the entire runtime with enforced contracts. No tool executes without a policy decision, no session transitions without state machine validation, and no completion claim without evidence.</p>
+
+<h3 id="session-lifecycle">Session Lifecycle</h3>
+<p>The <code>SessionManager</code> enforces an 8-state lifecycle with strict transition rules. Invalid transitions raise <code>InvalidTransitionError</code>.</p>
+<div class="mermaid">
+stateDiagram-v2
+    [*] --> created
+    created --> active : activate
+    active --> waiting_tool : wait_for_tool
+    active --> waiting_permission : wait_for_permission
+    active --> idle : idle
+    active --> error : fail
+    active --> archived : complete
+    waiting_tool --> active : resume
+    waiting_permission --> active : resume
+    idle --> active : resume
+    error --> recovering : recover
+    recovering --> active : resume
+</div>
+<p>Every event is logged with a correlation ID that links sessions to pipeline traces.</p>
+
+<h3 id="central-policy-engine">Central Policy Engine</h3>
+<p>The <code>PolicyEngine</code> gates every tool invocation through 4 checks:</p>
+<ol>
+<li><strong>Schema validation</strong> — tool arguments checked against registered schemas</li>
+<li><strong>Permission rules</strong> — evaluated in order, first match wins</li>
+<li><strong>Trust tier precedence</strong> — builtin &gt; verified &gt; community &gt; untrusted</li>
+<li><strong>Decision artifact</strong> — machine-readable <code>PolicyDecision</code> with rationale</li>
+</ol>
+<p>Default action is <strong>deny</strong> — tools must have an explicit allow rule. Denied decisions are queryable from the audit log.</p>
+
+<h3 id="telemetry-replay">Telemetry &amp; Replay</h3>
+<p>The <code>TelemetryCollector</code> normalizes all events to versioned envelopes:</p>
+<pre><code>TelemetryEnvelope:
+  envelope_id: tel-xxxxxxxxxxxx
+  schema_version: 3.0.0
+  event_type: policy_decision | session_start | ...
+  correlation_id: corr-xxxxxxxxxxxx
+  source: {component, session_id, pipeline_name, step_name}
+  payload: {...}
+  retention_class: standard | audit</code></pre>
+<p>The <code>ReplayHarness</code> captures session snapshots and compares checksums for determinism — timestamps are excluded so structure-only comparison works across environments.</p>
+
+<h3 id="mcp-trust-routing">MCP Trust Routing</h3>
+<p>The <code>MCPConnectorManager</code> routes to MCP servers by capability and trust tier:</p>
+<ul>
+<li>Connectors register with trust tier and capabilities</li>
+<li>Routing selects the highest-trust healthy connector for a capability</li>
+<li>Unhealthy connectors are excluded automatically</li>
+<li>Routing is deterministic (same inputs → same output)</li>
+</ul>
+
+<h3 id="v3-schemas">v3 Contract Schemas</h3>
+<p>Six new schemas define the wire format for all v3 contracts:</p>
+<table>
+<thead>
+<tr><th>Schema</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>session.schema.yaml</code></td><td>Session lifecycle states and transitions</td></tr>
+<tr><td><code>tool-invocation.schema.yaml</code></td><td>Tool call with required policy decision</td></tr>
+<tr><td><code>permission.schema.yaml</code></td><td>Permission rules with trust tiers</td></tr>
+<tr><td><code>hook-event.schema.yaml</code></td><td>Normalized hook bus events</td></tr>
+<tr><td><code>telemetry-envelope.schema.yaml</code></td><td>Versioned telemetry format</td></tr>
+<tr><td><code>context-handoff.schema.yaml</code></td><td>Phase handoff with pinned constraints and evidence</td></tr>
+</tbody>
+</table>
+
+<h3 id="release-gates">Release Gates</h3>
+<p>The <code>ReleaseGateValidator</code> validates 6 hard gates before any release:</p>
+<table>
+<thead>
+<tr><th>Gate</th><th>What It Checks</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>SchemaAndContracts</strong></td><td>All v3 schemas present and version 3.x</td></tr>
+<tr><td><strong>PolicyAndSecurity</strong></td><td>Policy engine and permission schema present</td></tr>
+<tr><td><strong>ReplayDeterminism</strong></td><td>Telemetry module and replay tests present</td></tr>
+<tr><td><strong>ContextIntegrity</strong></td><td>Handoff schema enforces pinned_constraints and evidence_links</td></tr>
+<tr><td><strong>PromptQuality</strong></td><td>Prompt files present, schema validator functional</td></tr>
+<tr><td><strong>MigrationReadiness</strong></td><td>Migration dry-run passes with zero blockers</td></tr>
+</tbody>
+</table>
+<p>All 6 must pass and the weighted score must reach 90+ for a GO recommendation.</p>
+
+<blockquote>
+<strong>v3 is fully backward compatible</strong> — all v2 skills, agents, pipelines, and schemas continue to work without modification. See the <a href="../migration-v3.html">Migration v3 Guide</a> for upgrade details.
+</blockquote>
+
         <div class="footer">
-            OMNISKILL v2.0 — Enforced Intelligence Framework<br>
+            OMNISKILL v3.0 — Enforced Intelligence Framework<br>
             <a href="https://github.com/SufficientDaikon/omniskill">GitHub</a> ·
             <a href="index.html">Documentation Home</a>
         </div>

@@ -1,0 +1,1 @@
+{"workstream":"WS3","prompt_id":"P-WS3-PolicyFlow","expected_artifacts":["policy-audit-log","deny-path-tests"],"pass_signals":["no implicit approvals","explicit rationale recorded"]}
