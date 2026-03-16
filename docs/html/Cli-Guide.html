@@ -573,7 +573,7 @@ Installed<span class="w"> </span><span class="m">6</span><span class="w"> </span
 
 <span class="c1"># Install everything</span>
 $<span class="w"> </span>omniskill<span class="w"> </span>install<span class="w"> </span>--all
-✓<span class="w"> </span>Installing<span class="w"> </span><span class="m">42</span><span class="w"> </span>skills,<span class="w"> </span><span class="m">6</span><span class="w"> </span>bundles<span class="w"> </span>to<span class="w"> </span><span class="m">3</span><span class="w"> </span>platforms...
+✓<span class="w"> </span>Installing<span class="w"> </span><span class="m">83</span><span class="w"> </span>skills,<span class="w"> </span><span class="m">12</span><span class="w"> </span>bundles<span class="w"> </span>to<span class="w"> </span><span class="m">5</span><span class="w"> </span>platforms...
 Done<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">4</span>.2s
 
 <span class="c1"># Force reinstall to a specific platform</span>
@@ -662,8 +662,8 @@ Platforms
 <span class="w">  </span>✗<span class="w"> </span>antigravity<span class="w">                 </span>Not<span class="w"> </span>detected
 
 Skills
-<span class="w">  </span>✓<span class="w"> </span><span class="m">42</span><span class="w"> </span>skills<span class="w"> </span>installed<span class="w">         </span><span class="m">0</span><span class="w"> </span>conflicts<span class="w"> </span>detected
-<span class="w">  </span>✓<span class="w"> </span><span class="m">6</span><span class="w"> </span>bundles<span class="w"> </span>installed<span class="w">         </span>All<span class="w"> </span>meta-skills<span class="w"> </span>present
+<span class="w">  </span>✓<span class="w"> </span><span class="m">83</span><span class="w"> </span>skills<span class="w"> </span>installed<span class="w">         </span><span class="m">0</span><span class="w"> </span>conflicts<span class="w"> </span>detected
+<span class="w">  </span>✓<span class="w"> </span><span class="m">12</span><span class="w"> </span>bundles<span class="w"> </span>installed<span class="w">        </span>All<span class="w"> </span>meta-skills<span class="w"> </span>present
 <span class="w">  </span>✓<span class="w"> </span>All<span class="w"> </span>manifests<span class="w"> </span>valid<span class="w">         </span><span class="m">0</span><span class="w"> </span>schema<span class="w"> </span>errors
 
 Version
@@ -711,12 +711,12 @@ Result:<span class="w"> </span>PASS<span class="w"> </span><span class="o">(</sp
 
 <span class="c1"># Validate everything</span>
 $<span class="w"> </span>omniskill<span class="w"> </span>validate
-Validating<span class="w"> </span><span class="m">42</span><span class="w"> </span>skills,<span class="w"> </span><span class="m">6</span><span class="w"> </span>bundles,<span class="w"> </span><span class="m">8</span><span class="w"> </span>agents,<span class="w"> </span><span class="m">4</span><span class="w"> </span>pipelines...
-<span class="w">  </span>✓<span class="w"> </span><span class="m">42</span><span class="w"> </span>skills<span class="w"> </span>valid
-<span class="w">  </span>✓<span class="w"> </span><span class="m">6</span><span class="w"> </span>bundles<span class="w"> </span>valid
-<span class="w">  </span>✓<span class="w"> </span><span class="m">8</span><span class="w"> </span>agents<span class="w"> </span>valid
-<span class="w">  </span>✓<span class="w"> </span><span class="m">4</span><span class="w"> </span>pipelines<span class="w"> </span>valid
-Result:<span class="w"> </span>PASS<span class="w"> </span><span class="o">(</span><span class="m">60</span>/60<span class="w"> </span>checks<span class="o">)</span>
+Validating<span class="w"> </span><span class="m">83</span><span class="w"> </span>skills,<span class="w"> </span><span class="m">12</span><span class="w"> </span>bundles,<span class="w"> </span><span class="m">10</span><span class="w"> </span>agents,<span class="w"> </span><span class="m">8</span><span class="w"> </span>pipelines...
+<span class="w">  </span>✓<span class="w"> </span><span class="m">83</span><span class="w"> </span>skills<span class="w"> </span>valid
+<span class="w">  </span>✓<span class="w"> </span><span class="m">12</span><span class="w"> </span>bundles<span class="w"> </span>valid
+<span class="w">  </span>✓<span class="w"> </span><span class="m">10</span><span class="w"> </span>agents<span class="w"> </span>valid
+<span class="w">  </span>✓<span class="w"> </span><span class="m">8</span><span class="w"> </span>pipelines<span class="w"> </span>valid
+Result:<span class="w"> </span>PASS<span class="w"> </span><span class="o">(</span><span class="m">113</span>/113<span class="w"> </span>checks<span class="o">)</span>
 
 <span class="c1"># Validate with JSON output for CI</span>
 $<span class="w"> </span>omniskill<span class="w"> </span>validate<span class="w"> </span>skills/broken-skill<span class="w"> </span>--json
@@ -778,7 +778,7 @@ $<span class="w"> </span>omniskill<span class="w"> </span>validate<span class="w
 </table>
 <p><strong>Example:</strong></p>
 <div class="highlight"><pre><span></span><code>$<span class="w"> </span>omniskill<span class="w"> </span>list<span class="w"> </span>skills
-OMNISKILL<span class="w"> </span>Skills<span class="w"> </span><span class="o">(</span><span class="m">42</span><span class="w"> </span>installed<span class="o">)</span>
+OMNISKILL<span class="w"> </span>Skills<span class="w"> </span><span class="o">(</span><span class="m">83</span><span class="w"> </span>installed<span class="o">)</span>
 ───────────────────────────────
 <span class="w">  </span>backend-development<span class="w">          </span>v1.0.0<span class="w">   </span><span class="o">[</span>web,<span class="w"> </span>api,<span class="w"> </span>database<span class="o">]</span>
 <span class="w">  </span>capacitor-best-practices<span class="w">     </span>v1.0.0<span class="w">   </span><span class="o">[</span>mobile,<span class="w"> </span>capacitor<span class="o">]</span>
@@ -789,7 +789,7 @@ OMNISKILL<span class="w"> </span>Skills<span class="w"> </span><span class="o">(
 <span class="w">  </span>...
 
 $<span class="w"> </span>omniskill<span class="w"> </span>list<span class="w"> </span>bundles
-OMNISKILL<span class="w"> </span>Bundles<span class="w"> </span><span class="o">(</span><span class="m">6</span><span class="w"> </span>installed<span class="o">)</span>
+OMNISKILL<span class="w"> </span>Bundles<span class="w"> </span><span class="o">(</span><span class="m">12</span><span class="w"> </span>installed<span class="o">)</span>
 ───────────────────────────────
 <span class="w">  </span>godot-kit<span class="w">                    </span><span class="m">5</span><span class="w"> </span>skills<span class="w">    </span>Godot<span class="w"> </span>game<span class="w"> </span>development
 <span class="w">  </span>web-dev-kit<span class="w">                  </span><span class="m">5</span><span class="w"> </span>skills<span class="w">    </span>Full-stack<span class="w"> </span>web<span class="w"> </span>development
@@ -805,7 +805,7 @@ $<span class="w"> </span>omniskill<span class="w"> </span>list<span class="w"> <
 <span class="w">  </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>,
 <span class="w">  </span><span class="s2">&quot;data&quot;</span>:<span class="w"> </span><span class="o">{</span>
 <span class="w">    </span><span class="s2">&quot;type&quot;</span>:<span class="w"> </span><span class="s2">&quot;agents&quot;</span>,
-<span class="w">    </span><span class="s2">&quot;count&quot;</span>:<span class="w"> </span><span class="m">8</span>,
+<span class="w">    </span><span class="s2">&quot;count&quot;</span>:<span class="w"> </span><span class="m">10</span>,
 <span class="w">    </span><span class="s2">&quot;items&quot;</span>:<span class="w"> </span><span class="o">[</span>
 <span class="w">      </span><span class="o">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span>:<span class="w"> </span><span class="s2">&quot;spec-writer&quot;</span>,<span class="w"> </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>,<span class="w"> </span><span class="s2">&quot;description&quot;</span>:<span class="w"> </span><span class="s2">&quot;Transforms plans into specs&quot;</span><span class="w"> </span><span class="o">}</span>,
 <span class="w">      </span><span class="o">{</span><span class="w"> </span><span class="s2">&quot;name&quot;</span>:<span class="w"> </span><span class="s2">&quot;implementer&quot;</span>,<span class="w"> </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;1.0.0&quot;</span>,<span class="w"> </span><span class="s2">&quot;description&quot;</span>:<span class="w"> </span><span class="s2">&quot;Implements from specifications&quot;</span><span class="w"> </span><span class="o">}</span>

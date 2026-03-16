@@ -388,9 +388,9 @@ block-beta
     end
     block:L3["Layer 3: PIPELINE LAYER\nsdd | ux | debug | skill-factory | full-product"]:1
     end
-    block:L2["Layer 2: SKILL LAYER\n58+ skills, each with manifest.yaml"]:1
+    block:L2["Layer 2: SKILL LAYER\n83 skills, each with manifest.yaml"]:1
     end
-    block:L1["Layer 1: AGENT LAYER\n9 agents with guardrails & manifests"]:1
+    block:L1["Layer 1: AGENT LAYER\n10 agents with guardrails & manifests"]:1
     end
     block:L0["Layer 0: BOOTSTRAP & DISCIPLINE\nHooks, synapses, anti-rationalization"]:1
     end
@@ -414,10 +414,10 @@ block-beta
 │  sdd │ ux │ debug │ skill-factory │ full-product │
 ├─────────────────────────────────────────────────┤
 │  Layer 2: SKILL LAYER                           │
-│  58+ skills, each with manifest.yaml            │
+│  83 skills, each with manifest.yaml              │
 ├─────────────────────────────────────────────────┤
 │  Layer 1: AGENT LAYER                           │
-│  9 agents with guardrails & manifests           │
+│  10 agents with guardrails & manifests           │
 ├─────────────────────────────────────────────────┤
 │  Layer 0: BOOTSTRAP & DISCIPLINE                │
 │  Hooks, synapses, anti-rationalization          │
@@ -512,7 +512,7 @@ flowchart TD
 <hr>
 <h2 id="layer-1-agent-layer">Layer 1: Agent Layer</h2>
 <p><strong>Directory:</strong> <code>agents/</code></p>
-<p>Nine specialized agents, each with a single role and an <code>agent-manifest.yaml</code> that defines its guardrails.</p>
+<p>Ten specialized agents, each with a single role and an <code>agent-manifest.yaml</code> that defines its guardrails.</p>
 <table>
 <thead>
 <tr>
@@ -626,7 +626,7 @@ Validated Output</code></pre></details>
 <hr>
 <h2 id="layer-2-skill-layer">Layer 2: Skill Layer</h2>
 <p><strong>Directory:</strong> <code>skills/</code></p>
-<p>48+ skills, each a self-contained capability with a <code>manifest.yaml</code>. Skills contain the actual domain knowledge — how to write React components, how to debug GDScript, how to design wireframes.</p>
+<p>83 skills, each a self-contained capability with a <code>manifest.yaml</code>. Skills contain the actual domain knowledge — how to write React components, how to debug GDScript, how to design wireframes.</p>
 <h3 id="skill-manifest-format">Skill Manifest Format</h3>
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">react-best-practices</span>
 <span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">React development guidelines with hooks, patterns, and optimization</span>
@@ -673,7 +673,7 @@ meta-kit       → 5 meta/tooling skills</code></pre></details>
 <hr>
 <h2 id="layer-3-pipeline-layer">Layer 3: Pipeline Layer</h2>
 <p><strong>Directory:</strong> <code>pipelines/</code></p>
-<p>Five orchestrated workflows that chain agents together with context curation between steps.</p>
+<p>Eight orchestrated workflows that chain agents together with context curation between steps.</p>
 <h3 id="pipeline-state-machine">Pipeline State Machine</h3>
 <div class="mermaid">
 flowchart TD
