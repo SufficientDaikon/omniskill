@@ -18,3 +18,5 @@ See [`_template/`](_template/) for the agent template.
 | ui-design-agent       | Visual Designer         | ui-visual-design, frontend-design                     | design-reviewer-agent    |
 | qa-master-agent       | QA Engineer             | e2e-testing-patterns, qa-test-planner, webapp-testing | reviewer-agent           |
 | context-curator-agent | Context Architect       | context-curator                                       | dynamic (per pipeline)   |
+| dissector-agent       | Codebase Analyst        | dissector                                             | skill-factory pipeline   |
+| security-reviewer-agent | Security Reviewer     | security-review, security-awareness synapse           | implementer-agent (loop) |

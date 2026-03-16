@@ -16,7 +16,7 @@ OMNISKILL is built as a 6-layer stack where each layer has a single responsibili
 │  sdd │ ux │ debug │ skill-factory │ full-product │
 ├─────────────────────────────────────────────────┤
 │  Layer 2: SKILL LAYER                           │
-│  48+ skills, each with manifest.yaml            │
+│  83 skills, each with manifest.yaml             │
 ├─────────────────────────────────────────────────┤
 │  Layer 1: AGENT LAYER                           │
 │  9 agents with guardrails & manifests           │
@@ -268,6 +268,62 @@ Artifacts are JSON (not binary) so that:
 2. Agents can resume from any checkpoint
 3. Version control can track changes
 4. Debugging is straightforward — `cat` the state file
+
+---
+
+## Cognitive Synapses
+
+Synapses are cross-cutting cognitive capabilities that enhance how agents think, independent of what task they perform. They layer structured reasoning on top of any agent interaction.
+
+### Synapse Types
+
+| Type | Behavior | Examples |
+|------|----------|----------|
+| **Core** | Auto-injected into every agent; fires on every task | metacognition, anti-rationalization, sequential-thinking |
+| **Cross-cutting** | Fires for specific task types based on context | security-awareness, pattern-recognition |
+| **Optional** | Fires only when explicitly bound to an agent | risk-assessment, domain-specific synapses |
+
+Core synapses fire always. Cross-cutting synapses fire for specific task types. Optional synapses fire when bound to an agent via its manifest.
+
+### Built-in Synapses
+
+- **metacognition** — plan before acting, monitor confidence, reflect on quality
+- **anti-rationalization** — detect and block excuse-making that skips steps
+- **sequential-thinking** — decompose, reason step-by-step, validate, synthesize
+- **security-awareness** — evaluate security implications of decisions and code
+- **pattern-recognition** — identify recurring patterns, anti-patterns, and architectural smells
+
+---
+
+## DDE (Dissect-Develop-Evolve) Pipeline Framework
+
+The DDE framework defines an 8-stage pipeline for turning existing codebases into OMNISKILL skills and upgrading existing skills.
+
+### DDE Stages
+
+```
+DISSECT → CATALOG → DIFF → SPECIFY → IMPLEMENT → VALIDATE → REGISTER → COMPOSE
+```
+
+| Stage | Purpose |
+|-------|---------|
+| **DISSECT** | Analyze a codebase or domain to extract patterns, conventions, and knowledge |
+| **CATALOG** | Organize extracted knowledge into structured categories |
+| **DIFF** | Compare against existing skills to identify gaps and overlaps |
+| **SPECIFY** | Write a formal skill specification from the cataloged knowledge |
+| **IMPLEMENT** | Build the skill (SKILL.md, manifest.yaml, resources) |
+| **VALIDATE** | Run validation against OMNISKILL schemas and quality gates |
+| **REGISTER** | Add the skill to the registry and assign to bundles |
+| **COMPOSE** | Wire the skill into agents, pipelines, and bundles |
+
+### DDE Pipelines
+
+Two pipelines use the DDE framework:
+
+| Pipeline | Purpose | Stages Used |
+|----------|---------|-------------|
+| **dissect-to-skill** | Create a new skill from an existing codebase | All 8 stages |
+| **skill-upgrade** | Upgrade an existing skill with new patterns | DISSECT → CATALOG → DIFF → IMPLEMENT → VALIDATE |
 
 ---
 

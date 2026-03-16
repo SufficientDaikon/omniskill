@@ -3,6 +3,7 @@ version: 1.0.0
 description: "Comprehensive testing toolkit with E2E patterns, QA planning, webapp testing automation, and systematic debugging methodology"
 author: tahaa
 skills:
+  - vitest-unit-patterns
   - e2e-testing-patterns
   - qa-test-planner
   - webapp-testing

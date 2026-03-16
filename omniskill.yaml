@@ -26,14 +26,36 @@ skills:
     path: skills/add-skill
     version: 1.0.0
     tags: [self-customization, meta]
+  - name: async-side-effects
+    path: skills/async-side-effects
+    version: 1.0.0
+    tags: [async, side-effects, fire-and-forget, background-tasks]
   - name: backend-development
     path: skills/backend-development
-    version: 1.0.0
+    version: 2.0.0
+    tags: [backend, api, architecture, guard-chain]
   - name: brainstorming
     path: skills/brainstorming
   - name: capacitor-best-practices
     path: skills/capacitor-best-practices
     version: 1.0.0
+    tags: [mobile, capacitor, cross-platform, ionic]
+  - name: claude-plugin-archetype
+    path: skills/claude-plugin-archetype
+    version: 1.0.0
+    tags: [claude, plugin, mcp]
+  - name: content-deduplication
+    path: skills/content-deduplication
+    version: 1.0.0
+    tags: [deduplication, similarity, text-processing]
+  - name: content-moderation-pipeline
+    path: skills/content-moderation-pipeline
+    version: 1.0.0
+    tags: [moderation, trust-safety, content-quality, flagging]
+  - name: content-quality-gate
+    path: skills/content-quality-gate
+    version: 1.0.0
+    tags: [quality, validation, ai]
   - name: complexity-router
     path: skills/complexity-router
     version: 1.0.0
@@ -46,7 +68,8 @@ skills:
     priority: P1
   - name: design-handoff
     path: skills/design-handoff
-    version: 1.0.0
+    version: 2.0.0
+    tags: [design, handoff, lifecycle, quality-gates]
   - name: design-review
     path: skills/design-review
     version: 1.0.0
@@ -64,9 +87,21 @@ skills:
     version: 1.0.0
   - name: dispatching-parallel-agents
     path: skills/dispatching-parallel-agents
+  - name: docker-production-build
+    path: skills/docker-production-build
+    version: 1.0.0
+    tags: [docker, containerization, devops, production]
   - name: e2e-testing-patterns
     path: skills/e2e-testing-patterns
     version: 1.0.0
+  - name: error-handling-architecture
+    path: skills/error-handling-architecture
+    version: 1.0.0
+    tags: [error-handling, architecture, reliability]
+  - name: event-webhooks
+    path: skills/event-webhooks
+    version: 1.0.0
+    tags: [webhooks, events, security]
   - name: executing-plans
     path: skills/executing-plans
   - name: fastmcp
@@ -77,9 +112,17 @@ skills:
     version: 1.0.0
   - name: finishing-a-development-branch
     path: skills/finishing-a-development-branch
+  - name: fluent-builder
+    path: skills/fluent-builder
+    version: 1.0.0
+    tags: [builder-pattern, fluent-api, design-patterns]
   - name: frontend-design
     path: skills/frontend-design
     version: 1.0.0
+  - name: guard-chain
+    path: skills/guard-chain
+    version: 1.0.0
+    tags: [security, api, middleware, authentication]
   - name: godot-best-practices
     path: skills/godot-best-practices
     version: 1.0.0
@@ -95,6 +138,10 @@ skills:
   - name: godot-particles
     path: skills/godot-particles
     version: 1.0.0
+  - name: i18n-strategy
+    path: skills/i18n-strategy
+    version: 1.0.0
+    tags: [i18n, internationalization, localization, translations]
   - name: implementer
     path: skills/implementer
     version: 1.0.0
@@ -105,6 +152,10 @@ skills:
     path: skills/knowledge-sources
     version: 1.0.0
     tags: [knowledge, core]
+  - name: lazy-import-patterns
+    path: skills/lazy-import-patterns
+    version: 1.0.0
+    tags: [code-splitting, performance, dynamic-import, bundle-optimization]
   - name: mcp-builder
     path: skills/mcp-builder
     version: 1.0.0
@@ -120,6 +171,14 @@ skills:
   - name: packager
     path: skills/packager
     version: 1.0.0
+  - name: plugin-system
+    path: skills/plugin-system
+    version: 1.0.0
+    tags: [plugin-system, extensibility, architecture]
+  - name: prisma-orm-patterns
+    path: skills/prisma-orm-patterns
+    version: 1.0.0
+    tags: [database, prisma, orm, schema-design]
   - name: prompt-architect
     path: skills/prompt-architect
     version: 1.0.0
@@ -140,17 +199,37 @@ skills:
   - name: reviewer
     path: skills/reviewer
     version: 1.0.0
+  - name: sdk-beside-app
+    path: skills/sdk-beside-app
+    version: 1.0.0
+    tags: [sdk, npm, monorepo, packaging]
+  - name: server-component-patterns
+    path: skills/server-component-patterns
+    version: 1.0.0
+    tags: [react, server-components, nextjs, rsc, streaming]
+  - name: singleton-patterns
+    path: skills/singleton-patterns
+    version: 1.0.0
+    tags: [singleton, design-patterns, serverless, connection-pooling]
   - name: skills-index
     path: skills/skills-index
     version: 1.0.0
   - name: spec-writer
     path: skills/spec-writer
     version: 1.0.0
+  - name: structured-logging
+    path: skills/structured-logging
+    version: 1.0.0
+    tags: [logging, observability, pino, structured-logs]
   - name: subagent-driven-development
     path: skills/subagent-driven-development
   - name: systematic-debugging
     path: skills/systematic-debugging
     version: 1.0.0
+  - name: template-variables
+    path: skills/template-variables
+    version: 1.0.0
+    tags: [templates, variables, text-processing]
   - name: test-driven-development
     path: skills/test-driven-development
   - name: ui-ux-designer
@@ -175,11 +254,19 @@ skills:
   - name: vercel-react-best-practices
     path: skills/vercel-react-best-practices
     version: 1.0.0
+  - name: vitest-unit-patterns
+    path: skills/vitest-unit-patterns
+    version: 1.0.0
+    tags: [testing, vitest, unit-tests, mocking, coverage]
   - name: verification-before-completion
     path: skills/verification-before-completion
   - name: web-design-guidelines
     path: skills/web-design-guidelines
     version: 1.0.0
+  - name: white-label-config
+    path: skills/white-label-config
+    version: 1.0.0
+    tags: [white-label, configuration, feature-flags]
   - name: webapp-testing
     path: skills/webapp-testing
     version: 1.0.0
@@ -191,6 +278,10 @@ skills:
   - name: writing-skills
     path: skills/writing-skills
     version: 1.0.0
+  - name: yaml-prompt-library
+    path: skills/yaml-prompt-library
+    version: 1.0.0
+    tags: [prompts, yaml, ai, prompt-engineering]
 
 # All registered bundles
 bundles:
@@ -212,8 +303,13 @@ bundles:
         frontend-design,
         react-best-practices,
         vercel-react-best-practices,
+        server-component-patterns,
         web-design-guidelines,
         backend-development,
+        i18n-strategy,
+        error-handling-architecture,
+        guard-chain,
+        prisma-orm-patterns,
       ]
 
   - name: ux-design-kit
@@ -247,6 +343,7 @@ bundles:
     path: bundles/testing-kit
     skills:
       [
+        vitest-unit-patterns,
         e2e-testing-patterns,
         qa-test-planner,
         webapp-testing,
@@ -261,6 +358,53 @@ bundles:
     path: bundles/meta-kit
     skills:
       [writing-skills, find-skills, skills-index, packager, prompt-architect]
+
+  - name: prompts-chat-kit
+    path: bundles/prompts-chat-kit
+    skills:
+      [
+        plugin-system,
+        fluent-builder,
+        content-quality-gate,
+        template-variables,
+        white-label-config,
+        claude-plugin-archetype,
+        yaml-prompt-library,
+        event-webhooks,
+        content-deduplication,
+        sdk-beside-app,
+        guard-chain,
+        error-handling-architecture,
+        prisma-orm-patterns,
+        async-side-effects,
+        content-moderation-pipeline,
+        lazy-import-patterns,
+        singleton-patterns,
+      ]
+
+  - name: security-kit
+    path: bundles/security-kit
+    skills:
+      [
+        guard-chain,
+        event-webhooks,
+        error-handling-architecture,
+        structured-logging,
+      ]
+
+  - name: data-layer-kit
+    path: bundles/data-layer-kit
+    skills:
+      [
+        prisma-orm-patterns,
+        singleton-patterns,
+        content-deduplication,
+        backend-development,
+      ]
+
+  - name: devops-kit
+    path: bundles/devops-kit
+    skills: [docker-production-build, structured-logging]
 
 # All registered agents
 agents:
@@ -318,6 +462,12 @@ pipelines:
   - name: batch-sdd-pipeline
     path: pipelines/batch-sdd-pipeline.yaml
     trigger: "batch implement plans in *"
+  - name: dissect-to-skill
+    path: pipelines/dissect-to-skill.yaml
+    trigger: "dissect codebase * into skills"
+  - name: skill-upgrade
+    path: pipelines/skill-upgrade.yaml
+    trigger: "upgrade skill * to gold"
 
 # Supported platforms
 platforms:

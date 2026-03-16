@@ -91,6 +91,19 @@ See `skills/complexity-router/resources/routing-table.md` for the full routing l
 
 See the [agents directory](../agents/) for all available agents.
 
+| Agent | Role | Key Skills |
+|-------|------|------------|
+| spec-writer-agent | Specification Architect | spec-writer, prompt-architect |
+| implementer-agent | Implementation Engineer | implementer |
+| reviewer-agent | Compliance Reviewer | reviewer |
+| debugger-agent | Debug Investigator | systematic-debugging |
+| ux-research-agent | UX Researcher | ux-research |
+| ui-design-agent | Visual Designer | ui-visual-design, frontend-design |
+| qa-master-agent | QA Engineer | e2e-testing-patterns, qa-test-planner |
+| context-curator-agent | Context Architect | context-curator |
+| dissector-agent | Codebase Analyst | dissector |
+| **security-reviewer-agent** | Security Reviewer | security-review, security-awareness synapse |
+
 ## v2.0: Guardrails Enforcement
 
 In v2.0, guardrails are **enforced at runtime**, not just documented. Every guardrail has three fields:

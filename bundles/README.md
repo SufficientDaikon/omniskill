@@ -12,6 +12,11 @@ Domain kits that install related skills as a single unit.
 | [testing-kit](testing-kit/)     | 4      | Testing & debugging            |
 | [mobile-kit](mobile-kit/)       | 2      | Mobile development             |
 | [meta-kit](meta-kit/)           | 5      | Skill creation & tooling       |
+| [devops-kit](devops-kit/)       | 3      | DevOps & infrastructure        |
+| [security-kit](security-kit/)   | 3      | Security review & hardening    |
+| [data-kit](data-kit/)           | 4      | Data engineering & analysis    |
+| [ai-ml-kit](ai-ml-kit/)         | 3      | AI/ML development patterns     |
+| [docs-kit](docs-kit/)           | 2      | Documentation & technical writing |
 
 ## How Bundles Work
 

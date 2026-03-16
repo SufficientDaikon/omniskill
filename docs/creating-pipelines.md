@@ -66,6 +66,16 @@ Use `step:name` to reference output from a previous step:
 
 See the [pipelines directory](../pipelines/) for all available pipelines.
 
+| Pipeline | Description | Trigger |
+|----------|-------------|---------|
+| sdd-pipeline | Spec-Driven Development | "build feature X from scratch" |
+| ux-pipeline | Full UX Design Lifecycle | "design feature X" |
+| debug-pipeline | Systematic Bug Fixing | "fix bug X" |
+| skill-factory | Create New Skills | "create a new skill for X" |
+| full-product | End-to-End Product Dev | "build product X end-to-end" |
+| **dissect-to-skill** | Extract skills from existing codebases via DDE stages (DISSECT → CATALOG → DIFF → SPECIFY → IMPLEMENT → VALIDATE → REGISTER → COMPOSE) | "dissect codebase X into a skill" |
+| **skill-upgrade** | Upgrade existing skills with new patterns via DDE stages (DISSECT → CATALOG → DIFF → IMPLEMENT → VALIDATE) | "upgrade skill X with new patterns" |
+
 ## v2.0: Pipeline Execution Engine
 
 In v2.0, pipelines are **actually executed** by the `PipelineExecutor` engine. This replaces the v0.x approach where pipelines were just YAML documentation of intended workflows.

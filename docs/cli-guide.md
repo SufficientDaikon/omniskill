@@ -182,7 +182,7 @@ Installed 6 skills to 3 platforms
 
 # Install everything
 $ omniskill install --all
-✓ Installing 42 skills, 6 bundles to 3 platforms...
+✓ Installing 83 skills, 13 bundles to 3 platforms...
 Done in 4.2s
 
 # Force reinstall to a specific platform
@@ -261,8 +261,8 @@ Platforms
   ✗ antigravity                 Not detected
 
 Skills
-  ✓ 42 skills installed         0 conflicts detected
-  ✓ 6 bundles installed         All meta-skills present
+  ✓ 83 skills installed         0 conflicts detected
+  ✓ 13 bundles installed        All meta-skills present
   ✓ All manifests valid         0 schema errors
 
 Version
@@ -305,12 +305,12 @@ Result: PASS (4/4 checks)
 
 # Validate everything
 $ omniskill validate
-Validating 42 skills, 6 bundles, 8 agents, 4 pipelines...
-  ✓ 42 skills valid
-  ✓ 6 bundles valid
-  ✓ 8 agents valid
-  ✓ 4 pipelines valid
-Result: PASS (60/60 checks)
+Validating 83 skills, 13 bundles, 10 agents, 7 pipelines...
+  ✓ 83 skills valid
+  ✓ 13 bundles valid
+  ✓ 10 agents valid
+  ✓ 7 pipelines valid
+Result: PASS (113/113 checks)
 
 # Validate with JSON output for CI
 $ omniskill validate skills/broken-skill --json
@@ -358,7 +358,7 @@ omniskill list [skills|agents|bundles|pipelines] [--json]
 
 ```bash
 $ omniskill list skills
-OMNISKILL Skills (42 installed)
+OMNISKILL Skills (83 installed)
 ───────────────────────────────
   backend-development          v1.0.0   [web, api, database]
   capacitor-best-practices     v1.0.0   [mobile, capacitor]
@@ -369,7 +369,7 @@ OMNISKILL Skills (42 installed)
   ...
 
 $ omniskill list bundles
-OMNISKILL Bundles (6 installed)
+OMNISKILL Bundles (13 installed)
 ───────────────────────────────
   godot-kit                    5 skills    Godot game development
   web-dev-kit                  5 skills    Full-stack web development
@@ -385,7 +385,7 @@ $ omniskill list agents --json
   "version": "1.0.0",
   "data": {
     "type": "agents",
-    "count": 8,
+    "count": 10,
     "items": [
       { "name": "spec-writer", "version": "1.0.0", "description": "Transforms plans into specs" },
       { "name": "implementer", "version": "1.0.0", "description": "Implements from specifications" }

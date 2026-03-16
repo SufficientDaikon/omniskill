@@ -9,6 +9,8 @@ Multi-agent workflow definitions for OMNISKILL.
 | [debug-pipeline](debug-pipeline.yaml) | Systematic Bug Fixing    | "fix bug X"                    |
 | [skill-factory](skill-factory.yaml)   | Create New Skills        | "create a new skill for X"     |
 | [full-product](full-product.yaml)     | End-to-End Product Dev   | "build product X end-to-end"   |
+| [dissect-to-skill](dissect-to-skill.yaml) | Extract Skill from Codebase | "dissect codebase X into a skill" |
+| [skill-upgrade](skill-upgrade.yaml)  | Upgrade Existing Skill   | "upgrade skill X with new patterns" |
 
 ## How Pipelines Work
 

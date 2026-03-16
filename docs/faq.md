@@ -129,16 +129,19 @@ A: Set `OMNISKILL_GUARDRAILS=disabled` in your environment. Not recommended for 
 ## Synapses (v2.0)
 
 **Q: What are synapses?**
-A: Synapses are cognitive capabilities that shape HOW agents think, not WHAT they do. Unlike skills (which are domain methodologies), synapses affect the reasoning process itself.
+A: Synapses are cognitive capabilities that shape HOW agents think, not WHAT they do. Unlike skills (which are domain methodologies), synapses affect the reasoning process itself. They are cross-cutting cognitive enhancements that layer structured thinking (planning, monitoring, reflection) on top of any agent task.
 
 **Q: What's the difference between core and optional synapses?**
-A: Core synapses fire automatically for every agent. Optional synapses require explicit binding in the agent manifest.
+A: Core synapses fire automatically for every agent. Cross-cutting synapses fire for specific task types (e.g., security-awareness fires for code-related tasks). Optional synapses require explicit binding in the agent manifest.
+
+**Q: What types of synapses exist?**
+A: There are three types: **core** (always fire for every agent — metacognition, anti-rationalization, sequential-thinking), **cross-cutting** (fire for specific task types — security-awareness, pattern-recognition), and **optional** (fire only when bound to an agent — risk-assessment, custom synapses).
 
 **Q: What core synapses exist?**
 A: Three: **metacognition** (plan → monitor → reflect), **anti-rationalization** (detect → challenge → enforce), and **sequential-thinking** (decompose → reason → validate → synthesize).
 
 **Q: How do I create a custom synapse?**
-A: See [Creating Synapses](creating-synapses.md). Copy `synapses/_template/` and define your SYNAPSE.md and manifest.yaml.
+A: See [Creating Synapses](creating-synapses.md). Copy `synapses/_template/` and define your SYNAPSE.md and manifest.yaml. Choose a synapse-type (core, cross-cutting, or optional) based on how broadly the synapse should fire.
 
 ## Hook System (v2.0)
 

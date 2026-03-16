@@ -6,8 +6,13 @@ skills:
   - frontend-design
   - react-best-practices
   - vercel-react-best-practices
+  - server-component-patterns
   - web-design-guidelines
   - backend-development
+  - i18n-strategy
+  - error-handling-architecture
+  - guard-chain
+  - prisma-orm-patterns
 meta-skill: web-fullstack-expert
 dependencies: []
 conflict-resolution:

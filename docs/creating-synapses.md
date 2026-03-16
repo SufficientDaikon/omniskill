@@ -559,3 +559,89 @@ resources:
 ```
 
 > ✅ **Pattern to Study:** The **metacognition** synapse demonstrates how to build a core synapse with all three firing phase timings, rich resource files, and clear output formats for each phase.
+
+## 📖 Example: Security-Awareness Synapse
+
+The **security-awareness** synapse is a cross-cutting synapse that fires for tasks involving code changes, infrastructure, or data handling:
+
+```yaml
+# synapses/security-awareness/manifest.yaml
+name: security-awareness
+version: 1.0.0
+description: "Evaluate security implications of decisions, code changes, and architectural choices"
+author: tahaa
+synapse-type: cross-cutting
+license: MIT
+
+firing-phases:
+  - name: THREAT-SCAN
+    timing: pre-task
+    description: "Identify potential security concerns in the task scope"
+
+  - name: GUARD
+    timing: active
+    description: "Flag security-sensitive decisions as they occur"
+
+  - name: AUDIT
+    timing: post-task
+    description: "Review completed work for security gaps and vulnerabilities"
+
+tags:
+  - security
+  - cross-cutting
+  - code-review
+
+resources:
+  - path: resources/owasp-checklist.md
+    type: cheat-sheet
+    load: always
+    description: "OWASP top 10 quick-reference for common vulnerability patterns"
+```
+
+> **When it fires:** The security-awareness synapse activates for tasks that involve writing or modifying code, configuring infrastructure, handling user input, or managing authentication/authorization. It does not fire for pure documentation or design tasks.
+
+## 📖 Example: Pattern-Recognition Synapse
+
+The **pattern-recognition** synapse is a cross-cutting synapse that helps agents identify recurring patterns, anti-patterns, and architectural smells:
+
+```yaml
+# synapses/pattern-recognition/manifest.yaml
+name: pattern-recognition
+version: 1.0.0
+description: "Identify recurring patterns, anti-patterns, and architectural smells in code and design"
+author: tahaa
+synapse-type: cross-cutting
+license: MIT
+
+firing-phases:
+  - name: SCAN
+    timing: pre-task
+    description: "Survey the codebase or design for known patterns and anti-patterns"
+
+  - name: MATCH
+    timing: active
+    description: "Flag pattern matches and anti-pattern detections during execution"
+
+  - name: CATALOG
+    timing: post-task
+    description: "Summarize detected patterns with recommendations"
+
+tags:
+  - patterns
+  - architecture
+  - cross-cutting
+  - code-quality
+
+resources:
+  - path: resources/pattern-catalog.md
+    type: reference
+    load: always
+    description: "Catalog of common design patterns and their indicators"
+
+  - path: resources/anti-pattern-heuristics.md
+    type: heuristic
+    load: always
+    description: "Detection heuristics for code smells and anti-patterns"
+```
+
+> **When it fires:** The pattern-recognition synapse activates for tasks involving code review, architecture decisions, refactoring, and codebase analysis. It helps agents spot both positive patterns to preserve and anti-patterns to fix.

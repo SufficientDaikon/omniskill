@@ -14,10 +14,10 @@
 
 [![Version](https://img.shields.io/badge/version-3.0.0-brightgreen)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Skills](https://img.shields.io/badge/skills-61-blue)]()
-[![Bundles](https://img.shields.io/badge/bundles-8-green)]()
+[![Skills](https://img.shields.io/badge/skills-83-blue)]()
+[![Bundles](https://img.shields.io/badge/bundles-12-green)]()
 [![Agents](https://img.shields.io/badge/agents-9-orange)]()
-[![Pipelines](https://img.shields.io/badge/pipelines-6-red)]()
+[![Pipelines](https://img.shields.io/badge/pipelines-8-red)]()
 [![Synapses](https://img.shields.io/badge/synapses-3-blueviolet)]()
 [![Hooks](https://img.shields.io/badge/hooks-5-yellow)]()
 [![Schemas](https://img.shields.io/badge/schemas-15-lightgrey)]()
@@ -36,10 +36,10 @@ OMNISKILL v3.0 extends the v2 enforced intelligence framework with a new **Layer
 
 | Layer | What It Does |
 | --- | --- |
-| **Layer 1 — Skills & Knowledge** | 61 skills, 8 bundles, prompt library, knowledge sources |
+| **Layer 1 — Skills & Knowledge** | 83 skills, 12 bundles, prompt library, knowledge sources |
 | **Layer 2 — Agents & Personas** | 9 agents with formal personas, handoff contracts, and quality gates |
 | **Layer 3 — Synapses & Cognition** | 3 cognitive synapses (metacognition, anti-rationalization, sequential thinking) that shape HOW agents reason |
-| **Layer 4 — Pipelines & Orchestration** | 6 pipelines with real execution, context curation between steps, failure recovery |
+| **Layer 4 — Pipelines & Orchestration** | 8 pipelines with real execution, context curation between steps, failure recovery |
 | **Layer 5 — Guardrails & Hooks** | 5 lifecycle hooks enforcing discipline — not just documented rules, but runtime enforcement |
 | **Layer 6 — Runtime Contracts** | Session state machine, central policy engine, telemetry envelopes, replay harness, MCP trust routing |
 
@@ -97,7 +97,7 @@ omniskill doctor                  # Full health check
 ```bash
 pip install omniskill        # Install from PyPI
 omniskill init               # Auto-detect your AI platforms
-omniskill install --all      # Install all 61 skills
+omniskill install --all      # Install all 83 skills
 omniskill doctor             # Verify everything works
 ```
 
@@ -184,13 +184,17 @@ python scripts/doctor.py               # Check installation health
 | Bundle            | Skills   | Description                                            |
 | ----------------- | -------- | ------------------------------------------------------ |
 | **godot-kit**     | 5 skills | Complete Godot 4 / GDScript development                |
-| **web-dev-kit**   | 5 skills | Frontend, React, backend, design guidelines            |
+| **web-dev-kit**   | 10 skills | Frontend, React, RSC, i18n, error handling, backend   |
 | **ux-design-kit** | 7 skills | Full UX pipeline: research → wireframe → visual → test |
 | **django-kit**    | 4 skills | Django framework, ORM, REST APIs                       |
 | **sdd-kit**       | 6 skills | Spec-Driven Development: spec → implement → review + context curation |
-| **testing-kit**   | 4 skills | E2E testing, QA planning, debugging                    |
+| **testing-kit**   | 5 skills | Unit tests, E2E testing, QA planning, debugging        |
 | **mobile-kit**    | 2 skills | Mobile design, Capacitor best practices                |
 | **meta-kit**      | 5 skills | Skill creation, discovery, packaging, prompts          |
+| **prompts-chat-kit** | 17 skills | Plugin system, builders, quality gates, webhooks, SDK |
+| **security-kit**  | 4 skills | Guard chain, webhooks, error handling, logging         |
+| **data-layer-kit** | 4 skills | Prisma ORM, singletons, deduplication, backend        |
+| **devops-kit**    | 2 skills | Docker production builds, structured logging           |
 
 ---
 
@@ -226,7 +230,7 @@ Synapses are **cognitive capabilities** that enhance HOW agents think, not WHAT 
 
 ```
 omniskill/
-├── skills/           # 49 individual skills (SKILL.md + manifest.yaml)
+├── skills/           # 83 individual skills (SKILL.md + manifest.yaml)
 │   ├── _template/    # Skill template for new skills
 │   ├── complexity-router/  # 🧠 Smart task routing (P0 priority)
 │   ├── context-curator/    # 🔗 Pipeline context management
@@ -236,10 +240,10 @@ omniskill/
 │   ├── add-agent/    # 🔧 AI-assisted agent creation
 │   ├── add-adapter/  # 🔧 AI-assisted adapter creation
 │   ├── rename-project/ # 🔧 Fork & rename OMNISKILL
-│   └── ...           # 40 domain skills
-├── bundles/          # 8 domain bundles (bundle.yaml + meta-skill)
+│   └── ...           # 74 domain skills
+├── bundles/          # 12 domain bundles (bundle.yaml + meta-skill)
 ├── agents/           # 9 agent definitions (AGENT.md + agent-manifest.yaml + guardrails)
-├── pipelines/        # 6 multi-agent workflow definitions with failure recovery
+├── pipelines/        # 8 multi-agent workflow definitions with failure recovery
 ├── synapses/         # 3 cognitive synapses (SYNAPSE.md + manifest.yaml)
 │   ├── _template/           # Synapse template for new synapses
 │   ├── metacognition/       # Core — structured self-awareness
