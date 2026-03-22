@@ -7,35 +7,46 @@
 | **Build backend** | hatchling 1.29.0 |
 | **Package format** | PEP 517/518 via pyproject.toml |
 | **Source layout** | `src/omniskill/` (src-layout) |
-| **Version** | 2.0.0 (pyproject.toml), 0.2.0 (__init__.py) |
-| **Python requirement** | >=3.9 |
+| **Version** | 3.0.0 (synchronized across pyproject.toml, `__init__.py`, omniskill.yaml) |
+| **Python requirement** | >=3.9 (tested: 3.9, 3.12, 3.13) |
 | **License** | MIT |
 
-## pyproject.toml Analysis
+## pyproject.toml Analysis (v3.0.0)
 
 ```toml
 [build-system]
 requires = ["hatchling"]
-build-backend = "hatchling.build"   # Fixed during dissection (was "hatchling.backends")
+build-backend = "hatchling.build"
 
 [project]
 name = "omniskill"
-version = "2.0.0"
+version = "3.0.0"
 requires-python = ">=3.9"
-# NOTE: No [project.dependencies] — runtime deps undeclared
-# NOTE: No [project.scripts] — no CLI entry point
-# NOTE: No [project.optional-dependencies] — no dev deps
+
+dependencies = [
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+    "PyYAML>=6.0",
+    "platformdirs>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pytest-cov>=4.0", "ruff>=0.4.0"]
+
+[project.scripts]
+omniskill = "omniskill.cli:app"
 ```
 
-## CI/CD Status
+> **v3.0.0 FIXED:** Runtime dependencies, dev dependencies, and CLI entry point were all missing in v2. All three gaps resolved.
 
-**No CI/CD pipelines configured.**
-- No `.github/workflows/` directory
-- No `.gitlab-ci.yml`
-- No Dockerfile or docker-compose.yml
-- No Makefile or tox.ini
-- No `.editorconfig`
-- No linting configuration (no ruff.toml, .flake8, .pylintrc)
+## CI/CD Status (v3.0.0)
+
+**GitHub Actions CI added** — `.github/workflows/ci.yml`
+- Matrix testing: Python 3.9, 3.12, 3.13
+- Steps: checkout → install (`pip install -e ".[dev]"`) → `omniskill validate` → `pytest tests/` → `ruff check` (3.12 only)
+- Triggers: push and pull_request to `main`/`master`
+
+> **v3.0.0 FIXED:** No CI/CD existed in v2. GitHub Actions workflow with matrix testing added.
 
 ## Scripts (`scripts/`, 11 files, 5,792 lines)
 
@@ -72,17 +83,17 @@ pip install build && python -m build
 python -m omniskill --version
 ```
 
-## Version Discrepancy
+## Version (v3.0.0 — Synchronized)
 
 | Source | Version |
 |--------|---------|
-| `pyproject.toml` | 2.0.0 |
-| `__init__.py` | 0.2.0 |
-| `omniskill.yaml` | 2.0.0 |
-| `omniskill doctor` output | 2.0.0 |
-| `omniskill --version` output | 0.2.0 |
+| `pyproject.toml` | 3.0.0 |
+| `__init__.py` | 3.0.0 |
+| `omniskill.yaml` | 3.0.0 |
+| `omniskill doctor` output | 3.0.0 |
+| `omniskill --version` output | 3.0.0 |
 
-The CLI reports `0.2.0` from `__init__.py`, while the framework manifest says `2.0.0`. These should be synchronized.
+> **v3.0.0 FIXED:** All three version sources previously disagreed (0.2.0, 2.0.0, 2.0.0). All are now synchronized to 3.0.0.
 
 ## Documentation Site
 

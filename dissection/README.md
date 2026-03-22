@@ -64,19 +64,23 @@ Exhaustive analysis of the OMNISKILL Universal AI Agent & Skills Framework.
 4. **Forward-looking v3 modules** — Session manager and policy engine are code-complete
 5. **Good test coverage** — 513 tests with 98.8% pass rate
 
-### Critical Issues
-1. **Zero runtime dependencies declared** — `pip install omniskill` silently installs a broken package
-2. **Build backend was misconfigured** — `hatchling.backends` instead of `hatchling.build`
-3. **Version discrepancy** — `__init__.py` says 0.2.0, everything else says 2.0.0
-4. **No CI/CD** — No automated testing, validation, or deployment
-5. **63 validation failures** — Many manifests missing required fields
+### What Was Fixed in v3.0.0
+1. **Runtime dependencies declared** — `pip install omniskill` now installs correctly (typer, rich, PyYAML, platformdirs)
+2. **Build backend corrected** — `hatchling.build` (was `hatchling.backends`)
+3. **Version synchronized** — All sources report 3.0.0 (`pyproject.toml`, `__init__.py`, `omniskill.yaml`)
+4. **CI/CD pipeline added** — GitHub Actions with matrix testing (Python 3.9, 3.12, 3.13)
+5. **0 validation failures** on critical/major gaps — skill and agent manifests brought to v3 schema compliance
+6. **All 23 orphan skills bundled** — dev-workflow-kit and mcp-kit created; meta-kit and godot-kit expanded
+7. **All 5 synapses registered** — security-awareness and pattern-recognition now visible to the registry
+8. **CLI entry point declared** — `omniskill` command works post-install
+9. **All 10 agents upgraded** — v3 fields added (persona, skill-bindings, input-contract, output-contract, guardrail-enforcement)
+10. **security-reviewer-agent registered** — was on disk but missing from omniskill.yaml in v2
 
-### Opportunities
-1. Bundle the 23 orphan skills (especially complexity-router P0)
-2. Register the 2 missing synapses
-3. Add async pipeline execution for v3
-4. Create GitHub Actions CI pipeline
-5. Declare all dependencies in pyproject.toml
+### Remaining Opportunities
+1. Add async pipeline execution (synchronous-only is the current architecture)
+2. Populate skill-level `tests/` and `examples/` directories (currently `.gitkeep` stubs)
+3. Add GitHub Pages doc deployment workflow
+4. Enforce type hints consistently across all modules
 
 ## Dissection Metadata
 

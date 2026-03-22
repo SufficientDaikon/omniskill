@@ -91,7 +91,7 @@ skill_data = load_skill("godot-best-practices")
 ### omniskill.yaml (Root Manifest)
 ```yaml
 name: omniskill
-version: 2.0.0
+version: 3.0.0
 skills: [{name, path, version, tags, priority}]
 bundles: [{name, path, skills: []}]
 agents: [{name, path}]

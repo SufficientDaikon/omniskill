@@ -1,6 +1,6 @@
 # Best Practices
 
-Observed practices extracted from the OMNISKILL v2.0.0 codebase, presented as actionable rules with code citations.
+Observed practices extracted from the OMNISKILL v3.0.0 codebase, presented as actionable rules with code citations.
 
 ## Skill Authoring
 

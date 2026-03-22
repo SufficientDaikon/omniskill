@@ -2,7 +2,7 @@
 
 ## Overview
 
-OMNISKILL v2.0.0 uses a **6-layer architecture** where each layer builds on the one below. The codebase is a Python monorepo with a Typer-based CLI, a plugin-style registry, a pipeline execution engine, and platform adapters for cross-tool deployment.
+OMNISKILL v3.0.0 uses a **6-layer architecture** where each layer builds on the one below. The codebase is a Python monorepo with a Typer-based CLI, a plugin-style registry, a pipeline execution engine, and platform adapters for cross-tool deployment.
 
 ## Directory Structure (Annotated)
 
@@ -11,7 +11,7 @@ omniskill/                          # Repository root
 ├── omniskill.yaml                  # Root manifest — single source of truth for all components
 ├── pyproject.toml                  # Python packaging (hatchling build backend)
 ├── src/omniskill/                  # Core Python package (40 files, ~9,243 lines)
-│   ├── __init__.py                 # Version: 0.2.0, app name
+│   ├── __init__.py                 # Version: 3.0.0, app name
 │   ├── __main__.py                 # `python -m omniskill` entry point
 │   ├── cli.py                      # Typer app — 16 CLI commands registered
 │   ├── commands/                   # CLI command implementations (16 modules)
@@ -54,10 +54,10 @@ omniskill/                          # Repository root
 ├── sdk/                            # Python SDK (1 file, 615 lines)
 │   └── omniskill.py                # OmniSkill class — programmatic API
 ├── skills/                         # 84 directories (83 skills + _template)
-├── agents/                         # 11 directories (9 agents + _template + security-reviewer-agent)
-├── bundles/                        # 12 bundles
+├── agents/                         # 11 directories (10 agents + _template)
+├── bundles/                        # 14 bundles
 ├── pipelines/                      # 8 pipeline YAML definitions
-├── synapses/                       # 6 directories (5 synapses + pattern-recognition, security-awareness)
+├── synapses/                       # 6 directories (5 synapses registered: 3 core + 2 cross-cutting)
 ├── schemas/                        # 15 validation schemas (9 v2 + 6 v3)
 ├── adapters/                       # 5 platform adapters
 ├── hooks/                          # 5 lifecycle hooks + hooks.yaml config
@@ -72,19 +72,21 @@ omniskill/                          # Repository root
 
 ### Layer 1 — Skills & Knowledge
 - **83 skills** in universal format (SKILL.md + manifest.yaml)
-- **12 bundles** grouping skills by domain
+- **14 bundles** grouping skills by domain
 - Prompt library (router.md, system.md, shared.md, personas/)
 - Knowledge sources (pluggable GitHub repos, URLs, local dirs)
 
 ### Layer 2 — Agents & Personas
-- **9 agents** with formal agent-manifest.yaml
+- **10 agents** with formal agent-manifest.yaml (including security-reviewer-agent added in v3)
 - Agent cards (machine-readable capabilities metadata)
 - Skill bindings, guardrails (must-do/must-not rules), handoff protocols
 
 ### Layer 3 — Synapses & Cognition
-- **5 synapses** (3 core + 2 cross-cutting/optional)
+- **5 synapses** registered (3 core + 2 cross-cutting) — all 5 now registered in v3
 - Core synapses auto-fire: metacognition, anti-rationalization, sequential-thinking
-- Cross-cutting: security-awareness; Optional: pattern-recognition
+- Cross-cutting: security-awareness (OWASP injection during code tasks); pattern-recognition (auxiliary)
+
+> **v3.0.0 FIXED:** security-awareness and pattern-recognition were on disk but unregistered in v2. Both registered in v3.
 
 ### Layer 4 — Pipelines & Orchestration
 - **8 pipelines** with YAML definitions
@@ -128,7 +130,7 @@ User → CLI (cli.py) → Registry → Component Discovery
 
 ## Entry Points
 
-1. **CLI**: `python -m omniskill` → `cli.py:app` (Typer)
+1. **CLI**: `omniskill` (installed via `[project.scripts]`) or `python -m omniskill` → `cli.py:app` (Typer)
 2. **SDK**: `from sdk.omniskill import OmniSkill` → programmatic API
 3. **Scripts**: `python scripts/install.py` → standalone admin tools
 4. **Hooks**: `hooks/*.py:execute()` → lifecycle event handlers

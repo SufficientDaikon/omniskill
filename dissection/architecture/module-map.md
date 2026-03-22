@@ -55,7 +55,7 @@ graph TD
 ### src/omniskill/ (3 files)
 | File | Lines | Purpose |
 |------|-------|---------|
-| `__init__.py` | 3 | `__version__ = "0.2.0"`, `__app_name__ = "omniskill"` |
+| `__init__.py` | 3 | `__version__ = "3.0.0"`, `__app_name__ = "omniskill"` |
 | `__main__.py` | ~5 | Entry point: imports and calls `cli.app()` |
 | `cli.py` | 86 | Typer app, global flags, 16 command registrations |
 
