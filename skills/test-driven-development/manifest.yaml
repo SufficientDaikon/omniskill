@@ -1,5 +1,12 @@
 name: test-driven-development
 description: "Red-green-refactor TDD enforcement for all code production. Use when implementing features, fixing bugs, or writing any production code."
 version: "2.0.0"
+author: tahaa
+license: MIT
 category: development-workflow
 tags: [tdd, testing, red-green-refactor, iron-law, code-quality, core]
+platforms: [claude-code, copilot-cli, cursor, windsurf, antigravity]
+triggers:
+  keywords: [test-driven-development, tdd, red-green-refactor, failing-test-first, test-first]
+  patterns: []
+priority: P2

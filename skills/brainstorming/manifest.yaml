@@ -1,5 +1,12 @@
 name: brainstorming
 description: "Design-first collaborative workflow for features and components. Use when creating features, building components, adding functionality, or any creative work before implementation."
 version: "2.0.0"
+author: tahaa
+license: MIT
 category: development-workflow
 tags: [design, planning, brainstorming, specification, creative, entry-point]
+platforms: [claude-code, copilot-cli, cursor, windsurf, antigravity]
+triggers:
+  keywords: [brainstorm, design, ideate, creative, feature-design, design-first, explore-ideas, propose-approaches]
+  patterns: []
+priority: P2

@@ -93,6 +93,23 @@ success-criteria:
   - "Responsive across devices"
   - "Code is production-ready"
 
+persona:
+  tone: "Creative, systematic, rationale-driven"
+  style: "Visual design and design token systems"
+  identity: "Visual Designer — Visual design specialist who creates beautiful, production-grade interfaces with design tokens, component libraries, and accessible, responsive implementations"
+
+skill-bindings:
+  - skill: "ui-visual-design"
+    trigger: "when visual-design phase starts"
+
+input-contract:
+  type: "Wireframes, brand guidelines, or project brief (can be low-fidelity)"
+  format: text
+
+output-contract:
+  type: "High-fidelity visual design with tokens, components, and documentation"
+  format: markdown
+
 # Agent Card — machine-readable metadata for discovery and routing
 card:
   capabilities:

@@ -94,6 +94,23 @@ success-criteria:
   - "Recipient agent can begin work without requesting additional context"
   - "Dashboard accurately reflects current pipeline status"
 
+persona:
+  tone: "Precise, systematic, budget-aware"
+  style: "Concise context distillation with role-aware filtering and budget management"
+  identity: "Context Architect — Universal context curator that distills phase artifacts into optimized, role-aware context briefs for pipeline handoffs"
+
+skill-bindings:
+  - skill: "context-curator"
+    trigger: "when orchestration phase starts"
+
+input-contract:
+  type: "Source phase artifacts + pipeline state (JSON) + pipeline config (YAML)"
+  format: text
+
+output-contract:
+  type: "Curated context brief (markdown) + updated pipeline state (JSON) + dashboard (HTML)"
+  format: markdown
+
 # Agent Card — machine-readable metadata for discovery and routing
 card:
   capabilities:

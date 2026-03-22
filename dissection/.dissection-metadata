@@ -1,0 +1,94 @@
+{
+  "framework": "omniskill",
+  "version": "3.0.0",
+  "dissection_date": "2026-03-19",
+  "remediation_date": "2026-03-22",
+  "dissector": "claude-opus-4.6",
+  "methodology": "13-phase dissection with chain-of-thought logic gates",
+  "isPartial": false,
+
+  "counts": {
+    "skills": 83,
+    "agents": 10,
+    "bundles": 14,
+    "pipelines": 8,
+    "synapses_registered": 5,
+    "synapses_on_disk": 5,
+    "schemas": 15,
+    "platform_adapters": 5,
+    "hooks": 5,
+    "tests_total": 513,
+    "tests_passed": 513,
+    "tests_failed": 0,
+    "orphan_skills": 0,
+    "validation_failures": 0,
+    "skills_without_version": 0
+  },
+
+  "tech_stack": {
+    "language": "Python",
+    "python_version": ">=3.9",
+    "build_system": "hatchling",
+    "cli_framework": "typer",
+    "console_library": "rich",
+    "yaml_parser": "pyyaml",
+    "path_resolver": "platformdirs",
+    "test_framework": "pytest"
+  },
+
+  "architecture": {
+    "pattern": "Plugin + Registry + Pipeline + Adapter",
+    "layers": [
+      "Skills (atomic capabilities)",
+      "Agents (personas with skill bindings)",
+      "Synapses (cognitive augmentation)",
+      "Pipelines (multi-agent workflows)",
+      "Guardrails + Hooks (enforcement)",
+      "Runtime Contracts (sessions, policies)"
+    ]
+  },
+
+  "gaps_remediated": {
+    "critical_fixed": 3,
+    "major_fixed": 7,
+    "minor_remaining": 7,
+    "total_fixed": 10,
+    "remediation_summary": [
+      "GAP-C1: Runtime dependencies declared in pyproject.toml",
+      "GAP-C2: Build backend corrected to hatchling.build",
+      "GAP-C3: Version synchronized to 3.0.0 across all sources",
+      "GAP-M1: Skill and agent manifests brought to schema compliance",
+      "GAP-M2: All 6 test failures fixed (security-reviewer-agent guardrails)",
+      "GAP-M3: CI/CD pipeline added (.github/workflows/ci.yml)",
+      "GAP-M4: CLI entry point declared in pyproject.toml",
+      "GAP-M5: All orphan skills bundled (dev-workflow-kit, mcp-kit, meta-kit expansion)",
+      "GAP-M6: All 12 versionless skills given version 1.0.0",
+      "GAP-M7: 2 missing synapses registered (security-awareness, pattern-recognition)"
+    ]
+  },
+
+  "documents_produced": [
+    "README.md",
+    "glossary.md",
+    "tech-stack.md",
+    "testing-patterns.md",
+    "error-handling.md",
+    "build-system.md",
+    "dependencies.md",
+    "security-patterns.md",
+    "performance-patterns.md",
+    "knowledge-graph.md",
+    "gap-analysis.md",
+    "architecture/README.md",
+    "architecture/module-map.md",
+    "patterns/README.md",
+    "conventions/README.md",
+    "api-reference/README.md",
+    "best-practices/README.md",
+    "contribution-guide/README.md",
+    "fork-guide/README.md",
+    "examples/README.md",
+    ".dissection-metadata"
+  ],
+  "document_count": 21
+}

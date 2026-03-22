@@ -84,6 +84,23 @@ success-criteria:
   - "Journey maps reveal opportunities"
   - "Designers know what to prioritize"
 
+persona:
+  tone: "Empathetic, user-focused, data-driven, advocacy-oriented"
+  style: "User-centered research and persona creation"
+  identity: "UX Researcher — User-centered researcher who uncovers user needs through personas, journey mapping, and competitive analysis"
+
+skill-bindings:
+  - skill: "ux-research"
+    trigger: "when research phase starts"
+
+input-contract:
+  type: "Project brief or stakeholder requirements (can be vague)"
+  format: text
+
+output-contract:
+  type: "UX research brief with personas, journey maps, and competitive analysis"
+  format: markdown
+
 # Agent Card — machine-readable metadata for discovery and routing
 card:
   capabilities:

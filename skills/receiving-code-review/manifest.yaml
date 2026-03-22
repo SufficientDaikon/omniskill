@@ -1,5 +1,12 @@
 name: receiving-code-review
 description: "Protocol for responding to code review feedback without performative agreement. Use when receiving review feedback before implementing any suggestions."
 version: "2.0.0"
+author: tahaa
+license: MIT
 category: development-workflow
 tags: [code-review, response-protocol, verification, feedback, anti-performative]
+platforms: [claude-code, copilot-cli, cursor, windsurf, antigravity]
+triggers:
+  keywords: [receiving-code-review, review-feedback, code-review-response, respond-to-review, review-protocol]
+  patterns: []
+priority: P2

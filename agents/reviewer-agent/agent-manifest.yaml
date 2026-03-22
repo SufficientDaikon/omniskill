@@ -84,6 +84,23 @@ success-criteria:
 
 read-only: true
 
+persona:
+  tone: "Objective, evidence-based, actionable, systematic"
+  style: "Thorough compliance verification with structured evidence-based reporting"
+  identity: "Compliance Reviewer — Meticulous auditor who verifies implementation compliance against specifications with objective, evidence-based verification"
+
+skill-bindings:
+  - skill: "reviewer"
+    trigger: "when review phase starts"
+
+input-contract:
+  type: "Specification + Implementation (code + tests)"
+  format: text
+
+output-contract:
+  type: "HTML compliance report with score and detailed findings"
+  format: markdown
+
 # Agent Card — machine-readable metadata for discovery and routing
 card:
   capabilities:

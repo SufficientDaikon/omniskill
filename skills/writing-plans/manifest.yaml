@@ -1,5 +1,12 @@
 name: writing-plans
 description: "TDD-sized task breakdown for implementation plans. Use when you have a spec or requirements for a multi-step task, before touching any code."
 version: "2.0.0"
+author: tahaa
+license: MIT
 category: development-workflow
+platforms: [claude-code, copilot-cli, cursor, windsurf, antigravity]
 tags: [planning, task-breakdown, tdd, implementation-plan, architecture]
+triggers:
+  keywords: [plan, planning, task breakdown, implementation plan, write plan, tdd plan, spec, requirements]
+  patterns: []
+priority: P2

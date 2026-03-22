@@ -82,6 +82,23 @@ success-criteria:
   - "Zero deviations from spec"
   - "Reviewer confirms compliance on first review"
 
+persona:
+  tone: "Systematic, methodical, progress-focused"
+  style: "Spec-driven and test-driven development"
+  identity: "Implementation Engineer — Disciplined developer who executes specifications with TDD precision, building section-by-section with continuous verification"
+
+skill-bindings:
+  - skill: "implementer"
+    trigger: "when implementation phase starts"
+
+input-contract:
+  type: "Comprehensive specification document with acceptance criteria"
+  format: text
+
+output-contract:
+  type: "Implemented code + tests + implementation report"
+  format: markdown
+
 # Agent Card — machine-readable metadata for discovery and routing
 card:
   capabilities:

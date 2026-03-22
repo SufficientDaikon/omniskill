@@ -1,5 +1,12 @@
 name: using-superpowers
 description: "Meta-gatekeeper that forces skill checking before every agent response. Use when starting any task, responding to any message, or when unsure which skill applies."
 version: "2.0.0"
+author: tahaa
+license: MIT
 category: enforcement
+platforms: [claude-code, copilot-cli, cursor, windsurf, antigravity]
 tags: [meta, gatekeeper, skill-routing, enforcement, core]
+triggers:
+  keywords: [superpowers, skill check, gatekeeper, meta-process, skill routing, omniskill]
+  patterns: []
+priority: P2

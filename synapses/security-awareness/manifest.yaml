@@ -1,9 +1,25 @@
 name: security-awareness
 version: 1.0.0
+synapse-type: cross-cutting
 type: cross-cutting
 author: tahaa
+license: MIT
 
 description: "Cross-cutting security synapse that fires during code-producing tasks to inject OWASP-aware security checks into agent reasoning"
+
+tags:
+  - security
+  - owasp
+  - code-review
+  - cross-cutting
+
+firing-phases:
+  - name: SCAN
+    timing: during-production
+    description: "Check input boundaries, auth chain, output safety, and data handling"
+  - name: FLAG
+    timing: post-production
+    description: "Review all fetch/query/template/file/redirect calls for known vulnerability patterns"
 
 activation:
   triggers:

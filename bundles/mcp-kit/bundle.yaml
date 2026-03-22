@@ -1,0 +1,13 @@
+name: mcp-kit
+version: 3.0.0
+description: "Model Context Protocol skills — server building, indexing, and knowledge source management"
+author: tahaa
+license: MIT
+meta-skill: mcp-expert
+dependencies: []
+
+skills:
+  - fastmcp
+  - mcp-builder
+  - mcp-server-index
+  - knowledge-sources

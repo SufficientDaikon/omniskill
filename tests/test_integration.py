@@ -191,22 +191,22 @@ class TestSDKIntegration:
         core = os_sdk.get_core_synapses()
         assert len(core) >= 3
 
-    def test_sdk_version_is_2(self):
+    def test_sdk_version_is_3(self):
         from sdk.omniskill import OmniSkill
 
         os_sdk = OmniSkill(root_path=OMNISKILL_ROOT)
         health = os_sdk.health_check()
-        assert health["omniskill_version"] == "2.0.0"
+        assert health["omniskill_version"] == "3.0.0"
 
 
 class TestManifestConsistency:
     """Test that omniskill.yaml is consistent with filesystem."""
 
-    def test_version_is_2_0_0(self):
+    def test_version_is_3_0_0(self):
         import yaml
         with open(OMNISKILL_ROOT / "omniskill.yaml") as f:
             manifest = yaml.safe_load(f)
-        assert manifest["version"] == "2.0.0"
+        assert manifest["version"] == "3.0.0"
 
     def test_all_synapse_paths_exist(self):
         import yaml

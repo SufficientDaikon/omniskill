@@ -1,5 +1,12 @@
 name: subagent-driven-development
 description: "Execution engine that dispatches fresh subagents per task with two-stage review. Use when executing implementation plans with independent tasks and subagent support available."
 version: "2.0.0"
+author: tahaa
+license: MIT
 category: development-workflow
 tags: [execution, subagent, implementation, two-stage-review, code-production, core]
+platforms: [claude-code, copilot-cli, cursor, windsurf, antigravity]
+triggers:
+  keywords: [subagent-driven-development, subagent, dispatch-task, execution-engine, fresh-context]
+  patterns: []
+priority: P2

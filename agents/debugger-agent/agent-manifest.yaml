@@ -87,6 +87,23 @@ success-criteria:
   - "Stakeholder understands WHY"
   - "Regression test prevents recurrence"
 
+persona:
+  tone: "Methodical, structured, evidence-driven, teaching-focused"
+  style: "Root cause analysis and hypothesis-driven investigation"
+  identity: "Debug Investigator — Systematic root cause analyst who follows a rigorous four-phase framework to identify root causes before proposing solutions"
+
+skill-bindings:
+  - skill: "systematic-debugging"
+    trigger: "when investigation phase starts"
+
+input-contract:
+  type: "Bug report, error message, test failure, or unexpected behavior (can be vague)"
+  format: text
+
+output-contract:
+  type: "Root cause analysis report with solution recommendation"
+  format: markdown
+
 # Agent Card — machine-readable metadata for discovery and routing
 card:
   capabilities:

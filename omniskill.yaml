@@ -2,7 +2,7 @@
 # This file registers all skills, bundles, agents, and pipelines in the framework.
 
 name: omniskill
-version: 2.0.0
+version: 3.0.0
 description: "Universal AI Agent & Skills Framework with Enforced Intelligence — guardrails, sequential thinking, pipeline orchestration"
 author: tahaa
 license: MIT
@@ -36,6 +36,8 @@ skills:
     tags: [backend, api, architecture, guard-chain]
   - name: brainstorming
     path: skills/brainstorming
+    version: 1.0.0
+    tags: [ideation, brainstorming, creativity, planning]
   - name: capacitor-best-practices
     path: skills/capacitor-best-practices
     version: 1.0.0
@@ -87,6 +89,8 @@ skills:
     version: 1.0.0
   - name: dispatching-parallel-agents
     path: skills/dispatching-parallel-agents
+    version: 1.0.0
+    tags: [agents, parallel, orchestration, workflow]
   - name: docker-production-build
     path: skills/docker-production-build
     version: 1.0.0
@@ -104,6 +108,8 @@ skills:
     tags: [webhooks, events, security]
   - name: executing-plans
     path: skills/executing-plans
+    version: 1.0.0
+    tags: [execution, planning, implementation, workflow]
   - name: fastmcp
     path: skills/fastmcp
     version: 1.0.0
@@ -112,6 +118,8 @@ skills:
     version: 1.0.0
   - name: finishing-a-development-branch
     path: skills/finishing-a-development-branch
+    version: 1.0.0
+    tags: [git, branch, merge, workflow, deployment]
   - name: fluent-builder
     path: skills/fluent-builder
     version: 1.0.0
@@ -190,8 +198,12 @@ skills:
     version: 1.0.0
   - name: receiving-code-review
     path: skills/receiving-code-review
+    version: 1.0.0
+    tags: [code-review, feedback, collaboration, workflow]
   - name: requesting-code-review
     path: skills/requesting-code-review
+    version: 1.0.0
+    tags: [code-review, pull-request, collaboration, workflow]
   - name: rename-project
     path: skills/rename-project
     version: 1.0.0
@@ -223,6 +235,8 @@ skills:
     tags: [logging, observability, pino, structured-logs]
   - name: subagent-driven-development
     path: skills/subagent-driven-development
+    version: 1.0.0
+    tags: [agents, subagents, parallel, development, workflow]
   - name: systematic-debugging
     path: skills/systematic-debugging
     version: 1.0.0
@@ -232,6 +246,8 @@ skills:
     tags: [templates, variables, text-processing]
   - name: test-driven-development
     path: skills/test-driven-development
+    version: 1.0.0
+    tags: [testing, tdd, red-green-refactor, workflow]
   - name: ui-ux-designer
     path: skills/ui-ux-designer
     version: 1.0.0
@@ -249,8 +265,12 @@ skills:
     version: 1.0.0
   - name: using-git-worktrees
     path: skills/using-git-worktrees
+    version: 1.0.0
+    tags: [git, worktrees, parallel-development, workflow]
   - name: using-superpowers
     path: skills/using-superpowers
+    version: 1.0.0
+    tags: [advanced, power-user, cli, workflow]
   - name: vercel-react-best-practices
     path: skills/vercel-react-best-practices
     version: 1.0.0
@@ -260,6 +280,8 @@ skills:
     tags: [testing, vitest, unit-tests, mocking, coverage]
   - name: verification-before-completion
     path: skills/verification-before-completion
+    version: 1.0.0
+    tags: [verification, quality, completion, workflow]
   - name: web-design-guidelines
     path: skills/web-design-guidelines
     version: 1.0.0
@@ -275,6 +297,8 @@ skills:
     version: 1.0.0
   - name: writing-plans
     path: skills/writing-plans
+    version: 1.0.0
+    tags: [planning, architecture, design, workflow]
   - name: writing-skills
     path: skills/writing-skills
     version: 1.0.0
@@ -294,6 +318,7 @@ bundles:
         godot-gdscript-mastery,
         godot-gdscript-patterns,
         godot-particles,
+        omega-gdscript-expert,
       ]
 
   - name: web-dev-kit
@@ -357,7 +382,19 @@ bundles:
   - name: meta-kit
     path: bundles/meta-kit
     skills:
-      [writing-skills, find-skills, skills-index, packager, prompt-architect]
+      [
+        writing-skills,
+        find-skills,
+        skills-index,
+        packager,
+        prompt-architect,
+        complexity-router,
+        add-adapter,
+        add-agent,
+        add-bundle,
+        add-skill,
+        rename-project,
+      ]
 
   - name: prompts-chat-kit
     path: bundles/prompts-chat-kit
@@ -406,6 +443,28 @@ bundles:
     path: bundles/devops-kit
     skills: [docker-production-build, structured-logging]
 
+  - name: dev-workflow-kit
+    path: bundles/dev-workflow-kit
+    skills:
+      [
+        brainstorming,
+        writing-plans,
+        executing-plans,
+        test-driven-development,
+        subagent-driven-development,
+        dispatching-parallel-agents,
+        using-git-worktrees,
+        finishing-a-development-branch,
+        requesting-code-review,
+        receiving-code-review,
+        verification-before-completion,
+        using-superpowers,
+      ]
+
+  - name: mcp-kit
+    path: bundles/mcp-kit
+    skills: [fastmcp, mcp-builder, mcp-server-index, knowledge-sources]
+
 # All registered agents
 agents:
   - name: spec-writer-agent
@@ -426,6 +485,8 @@ agents:
     path: agents/context-curator-agent
   - name: dissector-agent
     path: agents/dissector-agent
+  - name: security-reviewer-agent
+    path: agents/security-reviewer-agent
 
 # All registered synapses
 synapses:
@@ -441,6 +502,14 @@ synapses:
     path: synapses/sequential-thinking
     version: 1.0.0
     type: core
+  - name: security-awareness
+    path: synapses/security-awareness
+    version: 1.0.0
+    type: cross-cutting
+  - name: pattern-recognition
+    path: synapses/pattern-recognition
+    version: 1.0.0
+    type: optional
 
 # All registered pipelines
 pipelines:

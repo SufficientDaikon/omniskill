@@ -1,5 +1,12 @@
 name: verification-before-completion
 description: "Prevents unverified completion claims with 5-step gate function. Use when about to claim work is done, fixed, passing, or complete."
 version: "2.0.0"
+author: tahaa
+license: MIT
 category: development-workflow
+platforms: [claude-code, copilot-cli, cursor, windsurf, antigravity]
 tags: [verification, honesty, completion-gate, evidence, trust, core]
+triggers:
+  keywords: [verify, verification, done, complete, fixed, passing, completion, evidence, proof]
+  patterns: []
+priority: P2

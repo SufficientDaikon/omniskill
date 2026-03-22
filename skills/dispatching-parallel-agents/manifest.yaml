@@ -1,5 +1,12 @@
 name: dispatching-parallel-agents
 description: "Parallel agent dispatch for independent tasks in different subsystems. Use when 2+ independent failures or features exist that don't share state or files."
 version: "2.0.0"
+author: tahaa
+license: MIT
 category: development-workflow
 tags: [parallel, agents, dispatch, independent-tasks, performance, parallelizer]
+platforms: [claude-code, copilot-cli, cursor, windsurf, antigravity]
+triggers:
+  keywords: [parallel, dispatch, parallelize, multi-agent, concurrent-tasks, independent-tasks, fan-out]
+  patterns: []
+priority: P2

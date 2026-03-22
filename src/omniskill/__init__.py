@@ -1,4 +1,4 @@
 """OMNISKILL — Universal AI Agent & Skills Framework CLI."""
 
-__version__ = "0.2.0"
+__version__ = "3.0.0"
 __app_name__ = "omniskill"

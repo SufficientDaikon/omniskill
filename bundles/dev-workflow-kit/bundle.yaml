@@ -1,0 +1,21 @@
+name: dev-workflow-kit
+version: 3.0.0
+description: "Development workflow skills — planning, branching, testing, code review, and deployment patterns"
+author: tahaa
+license: MIT
+meta-skill: dev-workflow-expert
+dependencies: []
+
+skills:
+  - brainstorming
+  - writing-plans
+  - executing-plans
+  - test-driven-development
+  - subagent-driven-development
+  - dispatching-parallel-agents
+  - using-git-worktrees
+  - finishing-a-development-branch
+  - requesting-code-review
+  - receiving-code-review
+  - verification-before-completion
+  - using-superpowers

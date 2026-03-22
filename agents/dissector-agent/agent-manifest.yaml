@@ -108,6 +108,10 @@ output-contract:
   format: "17+ interlinked markdown documents with .dissection-metadata JSON"
   location: "CWD/{project-name} dissection/"
 
+skill-bindings:
+  - skill: "codebase-analysis"
+    trigger: "when analysis phase starts"
+
 quality-gates:
   - "Every code citation has real file path and line range"
   - "All 17+ mandatory documents exist in output"
